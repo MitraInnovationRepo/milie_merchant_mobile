@@ -1,0 +1,4 @@
+enum DeliveryOptions{
+  deliver,
+  pickup
+}
