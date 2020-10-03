@@ -7,11 +7,9 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:milie_merchant_mobile/src/data/model/app_metadata.dart';
-import 'package:milie_merchant_mobile/src/data/model/shop.dart';
 import 'package:milie_merchant_mobile/src/data/model/user.dart';
 import 'package:milie_merchant_mobile/src/data/model/user_profile.dart';
 import 'package:milie_merchant_mobile/src/screens/navigator.dart';
-import 'package:milie_merchant_mobile/src/screens/shop/shop_service.dart';
 import 'package:milie_merchant_mobile/src/services/security/oauth2_service.dart';
 import 'package:milie_merchant_mobile/src/services/service_locator.dart';
 import 'package:milie_merchant_mobile/src/services/user/user_service.dart';
@@ -27,7 +25,6 @@ import 'package:store_redirect/store_redirect.dart';
 
 
 class Login extends StatefulWidget {
-  Login({Key key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -387,8 +384,8 @@ class _LoginPageState extends State<Login> {
         });
 
         if (user.role != null && userProfile.roles.contains("merchant")) {
-          // await this.checkUserDeviceData(
-          //     user); //Check if device id, Firebase registration id has changed
+          await this.checkUserDeviceData(
+              user); //Check if device id, Firebase registration id has changed
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => HomeNavigator()),
               //User already has a role. Let him go in

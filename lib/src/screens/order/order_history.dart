@@ -20,8 +20,6 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'order_list_skeleton_view.dart';
 
 class OrderHistory extends StatefulWidget {
-  OrderHistory({Key key}) : super(key: key);
-
   @override
   _OrderHistoryPageState createState() => _OrderHistoryPageState();
 }

@@ -84,7 +84,7 @@ class OrderContent extends StatelessWidget {
                             children: [
                               if (primaryAction != null)
                                 InkWell(
-                                  onTap: () => primaryAction.action(order.id),
+                                  onTap: () => primaryAction.action(order),
                                   child: SquareButton(
                                       title: primaryAction.title,
                                       backgroundColor:
@@ -95,7 +95,7 @@ class OrderContent extends StatelessWidget {
                               ),
                               if (secondaryAction != null)
                                 InkWell(
-                                  onTap: () => secondaryAction.action(order.id),
+                                  onTap: () => secondaryAction.action(order),
                                   child: SquareButton(
                                       title: secondaryAction.title,
                                       backgroundColor:

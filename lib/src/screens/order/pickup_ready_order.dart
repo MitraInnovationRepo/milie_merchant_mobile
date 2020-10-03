@@ -13,7 +13,6 @@ import 'order_item.dart';
 import 'order_list_skeleton_view.dart';
 
 class PickupReadyOrder extends StatefulWidget {
-  PickupReadyOrder({Key key}) : super(key: key);
 
   @override
   _PickupReadyOrderPageState createState() => _PickupReadyOrderPageState();
@@ -111,7 +110,13 @@ class _PickupReadyOrderPageState extends State<PickupReadyOrder> {
             ));
   }
 
-  void completeOrder(orderId) async {
-    print("COMPLETE ORDER FUNCTION");
+  void completeOrder(OrderView order) async {
+    if(order.deliveryOption == DeliveryOptions.pickup.index){
+      this._orderService.updateOrderToOrderDelivered(order.id);
+    }
+    else{
+      this._orderService.updateOrderToReadyForRider(order.id);
+    }
+    fetchReadyToPickupOrders();
   }
 }

@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "969387108044",
+    "firebase_url": "https://milie-32d3f.firebaseio.com",
+    "project_id": "milie-32d3f",
+    "storage_bucket": "milie-32d3f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969387108044:android:854c4b20af77f5a6d04469",
+        "android_client_info": {
+          "package_name": "com.milie.milie_merchant_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969387108044-h58gqjjc1ep2bkpsv8c7glc154gfbtp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0GZNI_Rzi-N3_HOLi8iO0XJ7TEQ2Miv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969387108044-h58gqjjc1ep2bkpsv8c7glc154gfbtp9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "969387108044-mta6cl295lf6apaeftk4huejn8hu0m4t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mitrai.milieapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969387108044:android:c51396ff1bf42a74d04469",
+        "android_client_info": {
+          "package_name": "com.mitrai.milieapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969387108044-h58gqjjc1ep2bkpsv8c7glc154gfbtp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0GZNI_Rzi-N3_HOLi8iO0XJ7TEQ2Miv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969387108044-h58gqjjc1ep2bkpsv8c7glc154gfbtp9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "969387108044-mta6cl295lf6apaeftk4huejn8hu0m4t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mitrai.milieapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

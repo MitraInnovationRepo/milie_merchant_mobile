@@ -9,7 +9,6 @@ import 'package:milie_merchant_mobile/src/services/service_locator.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
 class ProductTypeCatalog extends StatefulWidget {
-  ProductTypeCatalog({Key key}) : super(key: key);
 
   @override
   _ProductTypeCatalogPageState createState() => _ProductTypeCatalogPageState();

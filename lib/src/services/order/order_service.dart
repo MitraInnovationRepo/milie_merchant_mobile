@@ -53,4 +53,24 @@ class OrderService {
     );
     return response.statusCode;
   }
+
+  Future<int> updateOrderToReadyForRider(int orderId) async {
+    final http.Response response = await _oAuth2Service.getClient().put(
+      '$backendEndpoint/orders/merchant/ready-rider/$orderId',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    return response.statusCode;
+  }
+
+  Future<int> updateOrderToOrderDelivered(int orderId) async {
+    final http.Response response = await _oAuth2Service.getClient().put(
+      '$backendEndpoint/orders/merchant/customer-picked/$orderId',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    return response.statusCode;
+  }
 }

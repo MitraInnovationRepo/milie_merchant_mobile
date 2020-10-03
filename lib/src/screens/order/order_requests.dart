@@ -5,7 +5,6 @@ import 'package:milie_merchant_mobile/src/screens/order/preparing_order.dart';
 import 'package:tabbar/tabbar.dart';
 
 class OrderRequests extends StatefulWidget {
-  OrderRequests({Key key}) : super(key: key);
 
   @override
   _OrderRequestsPageState createState() => _OrderRequestsPageState();

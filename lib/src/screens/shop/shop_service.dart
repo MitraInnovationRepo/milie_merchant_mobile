@@ -42,7 +42,7 @@ class ShopService {
   Future<Shop> fetchShopByUser() async {
     final http.Response response = await _oAuth2Service
         .getClient()
-        .get("$backendEndpoint/shops/user", headers: <String, String>{
+        .get("$backendEndpoint/shops/mine", headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
 

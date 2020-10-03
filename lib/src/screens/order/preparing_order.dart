@@ -13,7 +13,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'order_item.dart';
 
 class PreparingOrder extends StatefulWidget {
-  PreparingOrder({Key key}) : super(key: key);
 
   @override
   _PreparingOrderPageState createState() => _PreparingOrderPageState();

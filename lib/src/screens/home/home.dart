@@ -3,18 +3,16 @@ import 'package:milie_merchant_mobile/src/data/enums/shop_status.dart';
 import 'package:milie_merchant_mobile/src/data/model/analytics/merchant_analytics_map.dart';
 import 'package:milie_merchant_mobile/src/data/model/shop.dart';
 import 'package:milie_merchant_mobile/src/data/model/user_profile.dart';
-import 'package:milie_merchant_mobile/src/screens/home/pending_order_chart.dart';
 import 'package:milie_merchant_mobile/src/screens/home/promotion_slider.dart';
-import 'package:milie_merchant_mobile/src/screens/order/order_requests.dart';
+import 'package:milie_merchant_mobile/src/screens/login.dart';
 import 'package:milie_merchant_mobile/src/screens/shop/shop_service.dart';
 import 'package:milie_merchant_mobile/src/services/analytics/analytics_service.dart';
 import 'package:milie_merchant_mobile/src/services/service_locator.dart';
+import 'package:milie_merchant_mobile/src/services/user/user_service.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -22,6 +20,7 @@ class Home extends StatefulWidget {
 class _HomePageState extends State<Home> {
   ShopService _shopService = locator<ShopService>();
   AnalyticsService _analyticsService = locator<AnalyticsService>();
+  UserService _userService = locator<UserService>();
   Shop _shop;
   MerchantAnalyticsMap _merchantAnalyticsMap;
 
@@ -44,9 +43,11 @@ class _HomePageState extends State<Home> {
   _getMerchantNotHandledOrders() async {
     MerchantAnalyticsMap _merchantAnalyticsMap =
         await this._analyticsService.findMerchantOrdersToComplete();
-    setState(() {
-      this._merchantAnalyticsMap = _merchantAnalyticsMap;
-    });
+    if(mounted) {
+      setState(() {
+        this._merchantAnalyticsMap = _merchantAnalyticsMap;
+      });
+    }
   }
 
   @override
@@ -97,7 +98,26 @@ class _HomePageState extends State<Home> {
                                             color: Colors.green, fontSize: 18))
                                     : Text("Offline",
                                         style: TextStyle(
-                                            color: Colors.red, fontSize: 18))
+                                            color: Colors.red, fontSize: 18)),
+                                RaisedButton(
+                                  onPressed: () {
+                                    UserProfile userProfile =
+                                    Provider.of<UserProfile>(context, listen: false);
+                                    userProfile.clearAll();
+                                    _userService.logoutUser();
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) => Login()),
+                                            (Route<dynamic> route) => false);
+                                  },
+                                  child: Text("Logout"),
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.teal)
+                                  ),
+                                )
                               ],
                             )),
                     ),

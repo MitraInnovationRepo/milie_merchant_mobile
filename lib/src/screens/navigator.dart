@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:milie_merchant_mobile/src/screens/home/home.dart';
 import 'package:milie_merchant_mobile/src/screens/order/order_history.dart';
 import 'package:milie_merchant_mobile/src/screens/order/order_requests.dart';
 import 'package:milie_merchant_mobile/src/screens/product/product_type_catalog.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class HomeNavigator extends StatefulWidget {
@@ -20,7 +22,7 @@ class HomeNavigator extends StatefulWidget {
 }
 
 class _HomeNavigatorState extends State<HomeNavigator> {
-  // final FirebaseMessaging _fcm = FirebaseMessaging();
+  final FirebaseMessaging _fcm = FirebaseMessaging();
   StreamSubscription iosSubscription;
 
   PersistentTabController _controller;
@@ -37,7 +39,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
         inactiveColor: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.ac_unit),
+        icon: Icon(Icons.list),
         title: ("Order Requests"),
         activeColor: Theme.of(context).primaryColor,
         inactiveColor: CupertinoColors.systemGrey,
@@ -49,7 +51,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
         inactiveColor: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.ac_unit),
+        icon: Icon(Icons.fastfood),
         title: ("Menu"),
         activeColor: Theme.of(context).primaryColor,
         inactiveColor: CupertinoColors.systemGrey,
@@ -59,41 +61,40 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
   @override
   void initState() {
-    // super.initState();
-    // if (Platform.isIOS) {
-    //   iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
-    //     // save the token  OR subscribe to a topic here
-    //   });
-    //   _fcm.requestNotificationPermissions(IosNotificationSettings());
-    // }
-    // _fcm.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     String messageBody = _getMessage(message);
-    //     showSimpleNotification(
-    //       InkWell(
-    //         onTap: () => {
-    //           _navigateToOrders()
-    //         },
-    //         child: Text(
-    //           messageBody,
-    //           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-    //           textAlign: TextAlign.center,
-    //         ),
-    //       ),
-    //       elevation: 10,
-    //       slideDismiss: true,
-    //       autoDismiss: false,
-    //       leading: Icon(Icons.add_shopping_cart, color: Colors.white),
-    //       background: Theme.of(context).accentColor,
-    //     );
-    //   },
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //
-    //   },
-    //   onResume: (Map<String, dynamic> message) async {
-    //
-    //   },
-    // );
+    super.initState();
+    if (Platform.isIOS) {
+      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
+        // save the token  OR subscribe to a topic here
+      });
+      _fcm.requestNotificationPermissions(IosNotificationSettings());
+    }
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        String messageBody = _getMessage(message);
+        showSimpleNotification(
+          InkWell(
+            onTap: () => {
+            },
+            child: Text(
+              messageBody,
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          elevation: 10,
+          slideDismiss: true,
+          autoDismiss: false,
+          leading: Icon(Icons.add_shopping_cart, color: Colors.white),
+          background: Theme.of(context).accentColor,
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+
+      },
+      onResume: (Map<String, dynamic> message) async {
+
+      },
+    );
   }
 
   _getMessage(Map<String, dynamic> message) {

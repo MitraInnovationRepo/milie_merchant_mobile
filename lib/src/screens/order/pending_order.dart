@@ -13,8 +13,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'order_item.dart';
 
 class PendingOrder extends StatefulWidget {
-  PendingOrder({Key key}) : super(key: key);
-
   @override
   _PendingOrderPageState createState() => _PendingOrderPageState();
 }
@@ -97,8 +95,8 @@ class _PendingOrderPageState extends State<PendingOrder> {
             ));
   }
 
-  acceptOrder(orderId) async {
-    int status = await _orderService.approveOrder(orderId);
+  acceptOrder(OrderView order) async {
+    int status = await _orderService.approveOrder(order.id);
     if (status == 200) {
       showSimpleNotification(
         Text("Order Approved"),
@@ -108,8 +106,8 @@ class _PendingOrderPageState extends State<PendingOrder> {
     }
   }
 
-  rejectOrder(orderId) async {
-    int status = await _orderService.rejectOrder(orderId);
+  rejectOrder(OrderView order) async {
+    int status = await _orderService.rejectOrder(order.id);
     if (status == 200) {
       showSimpleNotification(
         Text("Order Rejected"),
