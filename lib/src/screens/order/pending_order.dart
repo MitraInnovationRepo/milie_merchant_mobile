@@ -23,6 +23,7 @@ class _PendingOrderPageState extends State<PendingOrder> {
   List<OrderItem> _pendingOrderItems = [];
   bool enableProgress = false;
   OrderService _orderService = locator<OrderService>();
+  bool orderProcessing = false;
 
   @override
   void initState() {
@@ -36,7 +37,7 @@ class _PendingOrderPageState extends State<PendingOrder> {
     });
 
     List<OrderView> _pendingOrderList =
-        await _orderService.findMerchantOrder(OrderStatus.pending.index);
+        await _orderService.findPendingOrders();
     if (mounted) {
       setState(() {
         this._pendingOrderList = _pendingOrderList;
@@ -84,14 +85,18 @@ class _PendingOrderPageState extends State<PendingOrder> {
                                       showOrderDetails: showOrderDetails));
                             },
                             isExpanded: item.isExpanded,
-                            body: OrderContent(
-                                showExpandedOrder: true,
-                                order: item.order,
-                                primaryAction:
-                                    OrderAction("ACCEPT", acceptOrder),
-                                secondaryAction:
-                                    OrderAction("REJECT", rejectOrder),
-                                showOrderDetails: showOrderDetails),
+                            body: orderProcessing
+                                ? Center(
+                                    child: LinearProgressIndicator(),
+                                  )
+                                : OrderContent(
+                                    showExpandedOrder: true,
+                                    order: item.order,
+                                    primaryAction:
+                                        OrderAction("ACCEPT", acceptOrder),
+                                    secondaryAction:
+                                        OrderAction("REJECT", rejectOrder),
+                                    showOrderDetails: showOrderDetails),
                           );
                         }).toList(),
                       ))
@@ -104,7 +109,13 @@ class _PendingOrderPageState extends State<PendingOrder> {
   }
 
   acceptOrder(OrderView order) async {
+    setState(() {
+      orderProcessing = true;
+    });
     int status = await _orderService.approveOrder(order.id);
+    setState(() {
+      orderProcessing = false;
+    });
     if (status == 200) {
       showSimpleNotification(
         Text("Order Approved"),
@@ -150,7 +161,6 @@ class _PendingOrderPageState extends State<PendingOrder> {
       },
     );
 
-
     AlertDialog alert = AlertDialog(
       title: Row(
         children: [
@@ -161,7 +171,8 @@ class _PendingOrderPageState extends State<PendingOrder> {
           Text("Cancel Order"),
         ],
       ),
-      content: Text("Would you like to cancel order ${Constant.orderPrefix}${order.id}"),
+      content: Text(
+          "Would you like to cancel order ${Constant.orderPrefix}${order.id}"),
       actions: [
         cancelButton,
         continueButton,

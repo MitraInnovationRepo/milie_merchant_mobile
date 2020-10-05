@@ -22,6 +22,7 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
   List<OrderItem> _preparingOrderItems = [];
   bool enableProgress = false;
   OrderService _orderService = locator<OrderService>();
+  bool orderProcessing = false;
 
   @override
   void initState() {
@@ -81,12 +82,16 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
                                       showOrderDetails: showOrderDetails));
                             },
                             isExpanded: item.isExpanded,
-                            body: OrderContent(
-                                showExpandedOrder: true,
-                                order: item.order,
-                                primaryAction: OrderAction(
-                                    "FOOD IS READY", updateToFoodIsReady),
-                                showOrderDetails: showOrderDetails),
+                            body: orderProcessing
+                                ? Center(
+                                    child: LinearProgressIndicator(),
+                                  )
+                                : OrderContent(
+                                    showExpandedOrder: true,
+                                    order: item.order,
+                                    primaryAction: OrderAction(
+                                        "FOOD IS READY", updateToFoodIsReady),
+                                    showOrderDetails: showOrderDetails),
                           );
                         }).toList(),
                       ))
@@ -99,7 +104,13 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
   }
 
   updateToFoodIsReady(OrderView order) async {
+    setState(() {
+      orderProcessing = true;
+    });
     int status = await _orderService.updateOrderToFoodReady(order.id);
+    setState(() {
+      orderProcessing = false;
+    });
     if (status == 200) {
       showSimpleNotification(
         Text("Order is updated to Food Ready"),

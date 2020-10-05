@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:milie_merchant_mobile/src/screens/order/pending_order.dart';
 import 'package:milie_merchant_mobile/src/screens/order/pickup_ready_order.dart';
 import 'package:milie_merchant_mobile/src/screens/order/preparing_order.dart';
+import 'package:milie_merchant_mobile/src/screens/order/upcoming_order.dart';
 import 'package:tabbar/tabbar.dart';
 
 class OrderRequests extends StatefulWidget {
@@ -35,6 +36,7 @@ class _OrderRequestsPageState extends State<OrderRequests> {
               Tab(text: "PENDING"),
               Tab(text: "PREPARING"),
               Tab(text: "READY"),
+              Tab(text: "UPCOMING")
             ],
           ),
         ),
@@ -44,7 +46,8 @@ class _OrderRequestsPageState extends State<OrderRequests> {
         children: <Widget>[
           PendingOrder(),
           PreparingOrder(),
-          PickupReadyOrder()
+          PickupReadyOrder(),
+          UpcomingOrder()
         ],
       ),
     );

@@ -59,6 +59,14 @@ class OrderHeader extends StatelessWidget {
         children: [
           Row(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: CachedNetworkImage(
+                  imageUrl: (order.scheduleDelivery ? "https://i.imgur.com/i0V7RAr.png" : "https://i.imgur.com/hnr4rRj.png"),
+                  fit: BoxFit.fill,
+                  width: 40,
+                )
+              ),
               CachedNetworkImage(
                 imageUrl: (order.deliveryOption == DeliveryOptions.deliver.index
                     ? "https://i.imgur.com/Po93WEl.png"

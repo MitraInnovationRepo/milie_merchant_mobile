@@ -77,14 +77,14 @@ class _HomeNavigatorState extends State<HomeNavigator> {
             },
             child: Text(
               messageBody,
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.white),
               textAlign: TextAlign.center,
             ),
           ),
           elevation: 10,
           slideDismiss: true,
           autoDismiss: false,
-          leading: Icon(Icons.add_shopping_cart, color: Colors.white),
+          leading: Icon(Icons.fastfood, color: Colors.white),
           background: Theme.of(context).accentColor,
         );
       },

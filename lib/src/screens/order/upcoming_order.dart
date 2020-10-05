@@ -14,12 +14,12 @@ import 'package:milie_merchant_mobile/src/util/constant.dart';
 
 import 'order_list_skeleton_view.dart';
 
-class OrderHistory extends StatefulWidget {
+class UpcomingOrder extends StatefulWidget {
   @override
-  _OrderHistoryPageState createState() => _OrderHistoryPageState();
+  _UpcomingOrderPageState createState() => _UpcomingOrderPageState();
 }
 
-class _OrderHistoryPageState extends State<OrderHistory> {
+class _UpcomingOrderPageState extends State<UpcomingOrder> {
   bool enableProgress;
   OrderService _orderService = locator<OrderService>();
   List<OrderItem> _orderItemList = [];
@@ -35,7 +35,7 @@ class _OrderHistoryPageState extends State<OrderHistory> {
       enableProgress = true;
     });
 
-    List<OrderView> _orderList = await _orderService.findCompletedOrders();
+    List<OrderView> _orderList = await _orderService.findUpcomingOrders();
     if (mounted) {
       setState(() {
         setUpMerchantOrderList(_orderList);
@@ -63,49 +63,66 @@ class _OrderHistoryPageState extends State<OrderHistory> {
         ),
         body: SingleChildScrollView(
             child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: enableProgress
-              ? OrderListSkeletonView()
-              : Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: ListView(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: ExpansionPanelList(
-                          expansionCallback: (int index, bool isExpanded) {
-                            setState(() {
-                              _orderItemList[index].isExpanded =
-                                  !_orderItemList[index].isExpanded;
-                            });
-                          },
-                          children: _orderItemList.map((OrderItem item) {
-                            return ExpansionPanel(
-                              canTapOnHeader: true,
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(title: orderHeader(item.order));
-                              },
-                              isExpanded: item.isExpanded,
-                              body: OrderContent(
-                                  order: item.order, showExpandedOrder: false),
-                            );
-                          }).toList(),
-                        ),
-                      )
-                    ],
-                  )),
-        )));
+                height: MediaQuery.of(context).size.height,
+                child: enableProgress
+                    ? OrderListSkeletonView()
+                    : _orderItemList.length > 0
+                        ? Container(
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: ExpansionPanelList(
+                                    expansionCallback:
+                                        (int index, bool isExpanded) {
+                                      setState(() {
+                                        _orderItemList[index].isExpanded =
+                                            !_orderItemList[index].isExpanded;
+                                      });
+                                    },
+                                    children:
+                                        _orderItemList.map((OrderItem item) {
+                                      return ExpansionPanel(
+                                        canTapOnHeader: true,
+                                        headerBuilder: (BuildContext context,
+                                            bool isExpanded) {
+                                          return ListTile(
+                                              title: orderHeader(item.order));
+                                        },
+                                        isExpanded: item.isExpanded,
+                                        body: OrderContent(
+                                            order: item.order,
+                                            showExpandedOrder: false),
+                                      );
+                                    }).toList(),
+                                  ),
+                                )
+                              ],
+                            ))
+                        : Center(
+                            child: Container(
+                              child: Text("No upcoming orders at the moment"),
+                            ),
+                          ))));
   }
 
   Widget orderHeader(OrderView order) {
-    return (Padding(
+    return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
+              Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: CachedNetworkImage(
+                    imageUrl: ("https://i.imgur.com/i0V7RAr.png"),
+                    fit: BoxFit.fill,
+                    width: 50,
+                  )
+              ),
               CachedNetworkImage(
                 imageUrl: (order.deliveryOption == DeliveryOptions.deliver.index
                     ? "https://i.imgur.com/Po93WEl.png"
@@ -241,7 +258,7 @@ class _OrderHistoryPageState extends State<OrderHistory> {
           ),
         ],
       ),
-    ));
+    );
   }
 
   void showOrderDetails(BuildContext context, OrderView order,

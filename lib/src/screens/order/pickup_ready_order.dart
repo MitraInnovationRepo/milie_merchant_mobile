@@ -23,6 +23,7 @@ class _PickupReadyOrderPageState extends State<PickupReadyOrder> {
   List<OrderItem> _readyToPickupOrderItems = [];
   bool enableProgress = false;
   OrderService _orderService = locator<OrderService>();
+  bool orderProcessing = false;
 
   @override
   void initState() {
@@ -37,11 +38,13 @@ class _PickupReadyOrderPageState extends State<PickupReadyOrder> {
 
     List<OrderView> _readyToPickupOrderList =
         await _orderService.findMerchantOrder(OrderStatus.readyToPickUp.index);
-    setState(() {
-      this._readyToPickupOrderList = _readyToPickupOrderList;
-      setupReadyToPickupOrderItemList();
-      enableProgress = false;
-    });
+    if(mounted) {
+      setState(() {
+        this._readyToPickupOrderList = _readyToPickupOrderList;
+        setupReadyToPickupOrderItemList();
+        enableProgress = false;
+      });
+    }
   }
 
   setupReadyToPickupOrderItemList() {
@@ -85,16 +88,20 @@ class _PickupReadyOrderPageState extends State<PickupReadyOrder> {
                                 ));
                               },
                               isExpanded: item.isExpanded,
-                              body: OrderContent(
-                                  showExpandedOrder: true,
-                                  order: item.order,
-                                  primaryAction: OrderAction(
-                                      item.order.deliveryOption ==
-                                              DeliveryOptions.pickup.index
-                                          ? "ORDER COMPLETE"
-                                          : "PICKED UP BY RIDER",
-                                      completeOrder),
-                                  showOrderDetails: showOrderDetails),
+                              body: orderProcessing
+                                  ? Center(
+                                      child: LinearProgressIndicator(),
+                                    )
+                                  : OrderContent(
+                                      showExpandedOrder: true,
+                                      order: item.order,
+                                      primaryAction: OrderAction(
+                                          item.order.deliveryOption ==
+                                                  DeliveryOptions.pickup.index
+                                              ? "ORDER COMPLETE"
+                                              : "PICKED UP BY RIDER",
+                                          completeOrder),
+                                      showOrderDetails: showOrderDetails),
                             );
                           }).toList(),
                         ))
@@ -118,17 +125,27 @@ class _PickupReadyOrderPageState extends State<PickupReadyOrder> {
   }
 
   void completeOrder(OrderView order) async {
+    setState(() {
+      orderProcessing = true;
+    });
     if (order.deliveryOption == DeliveryOptions.pickup.index) {
-      int status = await this._orderService.updateOrderToOrderDelivered(order.id);
-      if(status == 200){
+      int status =
+          await this._orderService.updateOrderToOrderDelivered(order.id);
+      setState(() {
+        orderProcessing = false;
+      });
+      if (status == 200) {
         showSimpleNotification(
           Text("Order successfully delivered"),
           background: Theme.of(context).backgroundColor,
         );
       }
     } else {
-      int status =  await this._orderService.updateOrderToRiderPicked(order.id);
-      if(status == 200){
+      int status = await this._orderService.updateOrderToRiderPicked(order.id);
+      setState(() {
+        orderProcessing = false;
+      });
+      if (status == 200) {
         showSimpleNotification(
           Text("Order successfully delivered to the rider"),
           background: Theme.of(context).backgroundColor,
