@@ -54,9 +54,9 @@ class OrderService {
     return response.statusCode;
   }
 
-  Future<int> updateOrderToReadyForRider(int orderId) async {
+  Future<int> updateOrderToRiderPicked(int orderId) async {
     final http.Response response = await _oAuth2Service.getClient().put(
-      '$backendEndpoint/orders/merchant/ready-rider/$orderId',
+      '$backendEndpoint/orders/merchant/rider-picked/$orderId',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

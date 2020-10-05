@@ -13,7 +13,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'order_item.dart';
 
 class PreparingOrder extends StatefulWidget {
-
   @override
   _PreparingOrderPageState createState() => _PreparingOrderPageState();
 }
@@ -58,45 +57,49 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
   Widget build(BuildContext context) {
     return enableProgress
         ? OrderListSkeletonView()
-        : Container(
-            height: MediaQuery.of(context).size.height,
-            child: ListView(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: ExpansionPanelList(
-                    expansionCallback: (int index, bool isExpanded) {
-                      setState(() {
-                        _preparingOrderItems[index].isExpanded =
-                            !_preparingOrderItems[index].isExpanded;
-                      });
-                    },
-                    children: _preparingOrderItems.map((OrderItem item) {
-                      return ExpansionPanel(
-                        canTapOnHeader: true,
-                        headerBuilder: (BuildContext context, bool isExpanded) {
-                          return ListTile(
-                              title: OrderHeader(
-                                  order: item.order,
-                                  showOrderDetails: showOrderDetails));
+        : _preparingOrderItems.length > 0
+            ? Container(
+                height: MediaQuery.of(context).size.height,
+                child: ListView(children: [
+                  Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: ExpansionPanelList(
+                        expansionCallback: (int index, bool isExpanded) {
+                          setState(() {
+                            _preparingOrderItems[index].isExpanded =
+                                !_preparingOrderItems[index].isExpanded;
+                          });
                         },
-                        isExpanded: item.isExpanded,
-                        body: OrderContent(
-                            showExpandedOrder: true,
-                            order: item.order,
-                            primaryAction: OrderAction(
-                                "FOOD IS READY", updateToFoodIsReady),
-                            showOrderDetails: showOrderDetails),
-                      );
-                    }).toList(),
-                  ),
+                        children: _preparingOrderItems.map((OrderItem item) {
+                          return ExpansionPanel(
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                  title: OrderHeader(
+                                      order: item.order,
+                                      showOrderDetails: showOrderDetails));
+                            },
+                            isExpanded: item.isExpanded,
+                            body: OrderContent(
+                                showExpandedOrder: true,
+                                order: item.order,
+                                primaryAction: OrderAction(
+                                    "FOOD IS READY", updateToFoodIsReady),
+                                showOrderDetails: showOrderDetails),
+                          );
+                        }).toList(),
+                      ))
+                ]))
+            : Center(
+                child: Container(
+                  child: Text("No preparing orders at the moment"),
                 ),
-              ],
-            ));
+              );
   }
 
-  updateToFoodIsReady(orderId) async {
-    int status = await _orderService.updateOrderToFoodReady(orderId);
+  updateToFoodIsReady(OrderView order) async {
+    int status = await _orderService.updateOrderToFoodReady(order.id);
     if (status == 200) {
       showSimpleNotification(
         Text("Order is updated to Food Ready"),

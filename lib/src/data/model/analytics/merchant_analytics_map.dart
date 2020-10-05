@@ -4,7 +4,7 @@ part 'merchant_analytics_map.g.dart';
 
 @JsonSerializable()
 class MerchantAnalyticsMap{
-  Map<String, int> orderMap;
+  Map<int, int> orderMap;
 
   MerchantAnalyticsMap.empty();
 

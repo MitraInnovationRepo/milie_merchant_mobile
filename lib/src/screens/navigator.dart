@@ -114,7 +114,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset:
           true, // This needs to be true if you want to move up the screen when keyboard appears.
-      stateManagement: false,
+      stateManagement: true,
       hideNavigationBarWhenKeyboardShows:
           true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument.
       decoration: NavBarDecoration(

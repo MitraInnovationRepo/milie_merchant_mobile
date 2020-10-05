@@ -8,6 +8,7 @@ import 'package:milie_merchant_mobile/src/screens/order/order_header.dart';
 import 'package:milie_merchant_mobile/src/screens/order/order_list_skeleton_view.dart';
 import 'package:milie_merchant_mobile/src/services/order/order_service.dart';
 import 'package:milie_merchant_mobile/src/services/service_locator.dart';
+import 'package:milie_merchant_mobile/src/util/constant.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import 'order_item.dart';
@@ -46,6 +47,7 @@ class _PendingOrderPageState extends State<PendingOrder> {
   }
 
   setupPendingOrderItemList() {
+    this._pendingOrderItems = [];
     _pendingOrderList.forEach((element) {
       OrderItem orderItem = OrderItem(
           false, // isExpanded ?
@@ -58,41 +60,47 @@ class _PendingOrderPageState extends State<PendingOrder> {
   Widget build(BuildContext context) {
     return enableProgress
         ? OrderListSkeletonView()
-        : Container(
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: ListView(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: ExpansionPanelList(
-                    expansionCallback: (int index, bool isExpanded) {
-                      setState(() {
-                        _pendingOrderItems[index].isExpanded =
-                            !_pendingOrderItems[index].isExpanded;
-                      });
-                    },
-                    children: _pendingOrderItems.map((OrderItem item) {
-                      return ExpansionPanel(
-                        canTapOnHeader: true,
-                        headerBuilder: (BuildContext context, bool isExpanded) {
-                          return ListTile(
-                              title: OrderHeader(
-                                  order: item.order,
-                                  showOrderDetails: showOrderDetails));
+        : _pendingOrderItems.length > 0
+            ? Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: ListView(children: [
+                  Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: ExpansionPanelList(
+                        expansionCallback: (int index, bool isExpanded) {
+                          setState(() {
+                            _pendingOrderItems[index].isExpanded =
+                                !_pendingOrderItems[index].isExpanded;
+                          });
                         },
-                        isExpanded: item.isExpanded,
-                        body: OrderContent(
-                            showExpandedOrder: true,
-                            order: item.order,
-                            primaryAction: OrderAction("ACCEPT", acceptOrder),
-                            secondaryAction: OrderAction("REJECT", rejectOrder),
-                            showOrderDetails: showOrderDetails),
-                      );
-                    }).toList(),
-                  ),
+                        children: _pendingOrderItems.map((OrderItem item) {
+                          return ExpansionPanel(
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                  title: OrderHeader(
+                                      order: item.order,
+                                      showOrderDetails: showOrderDetails));
+                            },
+                            isExpanded: item.isExpanded,
+                            body: OrderContent(
+                                showExpandedOrder: true,
+                                order: item.order,
+                                primaryAction:
+                                    OrderAction("ACCEPT", acceptOrder),
+                                secondaryAction:
+                                    OrderAction("REJECT", rejectOrder),
+                                showOrderDetails: showOrderDetails),
+                          );
+                        }).toList(),
+                      ))
+                ]))
+            : Center(
+                child: Container(
+                  child: Text("No pending orders at the moment"),
                 ),
-              ],
-            ));
+              );
   }
 
   acceptOrder(OrderView order) async {
@@ -107,14 +115,7 @@ class _PendingOrderPageState extends State<PendingOrder> {
   }
 
   rejectOrder(OrderView order) async {
-    int status = await _orderService.rejectOrder(order.id);
-    if (status == 200) {
-      showSimpleNotification(
-        Text("Order Rejected"),
-        background: Colors.amber,
-      );
-      fetchPendingOrders();
-    }
+    showRejectConfirmationDialog(context, order);
   }
 
   void showOrderDetails(BuildContext context, OrderView order,
@@ -126,5 +127,52 @@ class _PendingOrderPageState extends State<PendingOrder> {
               height: height,
               order: order,
             ));
+  }
+
+  showRejectConfirmationDialog(BuildContext context, OrderView order) {
+    Widget cancelButton = FlatButton(
+      child: Text("Dismiss"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed: () async {
+        int status = await _orderService.rejectOrder(order.id);
+        if (status == 200) {
+          showSimpleNotification(
+            Text("Order Rejected"),
+            background: Colors.amber,
+          );
+          fetchPendingOrders();
+        }
+      },
+    );
+
+
+    AlertDialog alert = AlertDialog(
+      title: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.no_food),
+          ),
+          Text("Cancel Order"),
+        ],
+      ),
+      content: Text("Would you like to cancel order ${Constant.orderPrefix}${order.id}"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

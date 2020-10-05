@@ -9,6 +9,10 @@ class Constant {
   static String keycloakEndpoint = "https://dev-api.milieapp.com:8443";
   static String contentEndpoint = "http://10.0.2.2:1337";
 
+  static String deliveryEndpoint = "http://link.lakmobile.com/vconnect/ext/api";
+  static String deliveryAPIUserName = "mithra";
+  static String deliveryAPIPassword = "mithra@875w65";
+
   //Prod
   // static String clientSecret = "6a535787-2507-42cc-80eb-2c2eccca6af3";
   // static String backendEndpoint = "https://api.milieapp.com/api";
@@ -22,7 +26,7 @@ class Constant {
   static String cartLocalStoragePostFix = "CART_ITEMS";
   static String clientCredentialKey ="CLIENT_CREDENTIAL";
 
-  static String orderPrefix = "YCF";
+  static String orderPrefix = "YCF0";
 
   static String androidAppVersion = "0.0.1";
   static String iosAppVersion = "0.0.1";

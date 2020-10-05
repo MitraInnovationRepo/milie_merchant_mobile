@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:milie_merchant_mobile/src/data/enums/order_status.dart';
 import 'package:milie_merchant_mobile/src/data/enums/shop_status.dart';
 import 'package:milie_merchant_mobile/src/data/model/analytics/merchant_analytics_map.dart';
 import 'package:milie_merchant_mobile/src/data/model/shop.dart';
@@ -43,7 +44,7 @@ class _HomePageState extends State<Home> {
   _getMerchantNotHandledOrders() async {
     MerchantAnalyticsMap _merchantAnalyticsMap =
         await this._analyticsService.findMerchantOrdersToComplete();
-    if(mounted) {
+    if (mounted) {
       setState(() {
         this._merchantAnalyticsMap = _merchantAnalyticsMap;
       });
@@ -102,21 +103,21 @@ class _HomePageState extends State<Home> {
                                 RaisedButton(
                                   onPressed: () {
                                     UserProfile userProfile =
-                                    Provider.of<UserProfile>(context, listen: false);
+                                        Provider.of<UserProfile>(context,
+                                            listen: false);
                                     userProfile.clearAll();
                                     _userService.logoutUser();
                                     Navigator.of(context, rootNavigator: true)
                                         .pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) => Login()),
+                                            MaterialPageRoute(
+                                                builder: (context) => Login()),
                                             (Route<dynamic> route) => false);
                                   },
                                   child: Text("Logout"),
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: Colors.teal)
-                                  ),
+                                      side: BorderSide(color: Colors.teal)),
                                 )
                               ],
                             )),
@@ -180,7 +181,13 @@ class _HomePageState extends State<Home> {
                                             color: Colors.grey[800]),
                                       ),
                                       Text(
-                                        "3 ",
+                                        _merchantAnalyticsMap.orderMap[
+                                                    OrderStatus.pending.index] ==
+                                                null
+                                            ? "0"
+                                            : _merchantAnalyticsMap
+                                                .orderMap[OrderStatus.pending.index]
+                                                .toString(),
                                         style: TextStyle(
                                             fontSize: 32,
                                             color: Colors.black87),
@@ -234,7 +241,13 @@ class _HomePageState extends State<Home> {
                                             color: Colors.grey[800]),
                                       ),
                                       Text(
-                                        "4 ",
+                                        _merchantAnalyticsMap.orderMap[
+                                                    OrderStatus.preparing.index] ==
+                                                null
+                                            ? "0"
+                                            : _merchantAnalyticsMap
+                                                .orderMap[OrderStatus.preparing.index]
+                                                .toString(),
                                         style: TextStyle(
                                             fontSize: 32,
                                             color: Colors.black87),
@@ -288,7 +301,13 @@ class _HomePageState extends State<Home> {
                                             color: Colors.grey[800]),
                                       ),
                                       Text(
-                                        "1 ",
+                                        _merchantAnalyticsMap.orderMap[
+                                                    OrderStatus.readyToPickUp.index] ==
+                                                null
+                                            ? "0"
+                                            : _merchantAnalyticsMap
+                                                .orderMap[OrderStatus.readyToPickUp.index]
+                                                .toString(),
                                         style: TextStyle(
                                             fontSize: 32,
                                             color: Colors.black87),

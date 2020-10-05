@@ -9,7 +9,7 @@ part of 'merchant_analytics_map.dart';
 MerchantAnalyticsMap _$MerchantAnalyticsMapFromJson(Map<String, dynamic> json) {
   return MerchantAnalyticsMap(
     (json['orderMap'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as int),
+      (k, e) => MapEntry(int.parse(k), e as int),
     ),
   );
 }
@@ -17,5 +17,5 @@ MerchantAnalyticsMap _$MerchantAnalyticsMapFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$MerchantAnalyticsMapToJson(
         MerchantAnalyticsMap instance) =>
     <String, dynamic>{
-      'orderMap': instance.orderMap,
+      'orderMap': instance.orderMap?.map((k, e) => MapEntry(k.toString(), e)),
     };

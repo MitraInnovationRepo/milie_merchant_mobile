@@ -1,21 +1,16 @@
-import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:milie_merchant_mobile/src/data/enums/delivery_option.dart';
 import 'package:milie_merchant_mobile/src/data/enums/payment_option.dart';
-import 'package:milie_merchant_mobile/src/data/model/order.dart';
 import 'package:milie_merchant_mobile/src/data/model/order_detail_view.dart';
 import 'package:milie_merchant_mobile/src/data/model/order_view.dart';
 import 'package:milie_merchant_mobile/src/screens/order/order_content.dart';
 import 'package:milie_merchant_mobile/src/screens/order/order_details_dialog.dart';
 import 'package:milie_merchant_mobile/src/screens/order/order_item.dart';
-import 'package:milie_merchant_mobile/src/screens/widget/square_button.dart';
 import 'package:milie_merchant_mobile/src/services/order/order_service.dart';
 import 'package:milie_merchant_mobile/src/services/service_locator.dart';
 import 'package:milie_merchant_mobile/src/util/constant.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'order_list_skeleton_view.dart';
 
@@ -28,7 +23,6 @@ class _OrderHistoryPageState extends State<OrderHistory> {
   bool enableProgress;
   OrderService _orderService = locator<OrderService>();
   List<OrderItem> _orderItemList = [];
-  List<OrderView> _orderList = [];
 
   @override
   void initState() {
@@ -44,7 +38,6 @@ class _OrderHistoryPageState extends State<OrderHistory> {
     List<OrderView> _orderList = await _orderService.findMerchantOrder(0);
     if (mounted) {
       setState(() {
-        this._orderList = _orderList;
         setUpMerchantOrderList(_orderList);
         enableProgress = false;
       });
