@@ -31,13 +31,12 @@ class _PendingOrderPageState extends State<PendingOrder> {
     fetchPendingOrders();
   }
 
-  fetchPendingOrders() async {
+  Future<void> fetchPendingOrders() async {
     setState(() {
       enableProgress = true;
     });
 
-    List<OrderView> _pendingOrderList =
-        await _orderService.findPendingOrders();
+    List<OrderView> _pendingOrderList = await _orderService.findPendingOrders();
     if (mounted) {
       setState(() {
         this._pendingOrderList = _pendingOrderList;
@@ -45,6 +44,7 @@ class _PendingOrderPageState extends State<PendingOrder> {
         enableProgress = false;
       });
     }
+    return Future<void>(() {});
   }
 
   setupPendingOrderItemList() {
@@ -59,53 +59,58 @@ class _PendingOrderPageState extends State<PendingOrder> {
 
   @override
   Widget build(BuildContext context) {
-    return enableProgress
-        ? OrderListSkeletonView()
-        : _pendingOrderItems.length > 0
-            ? Container(
-                height: MediaQuery.of(context).size.height * 0.5,
-                child: ListView(children: [
-                  Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: ExpansionPanelList(
-                        expansionCallback: (int index, bool isExpanded) {
-                          setState(() {
-                            _pendingOrderItems[index].isExpanded =
-                                !_pendingOrderItems[index].isExpanded;
-                          });
-                        },
-                        children: _pendingOrderItems.map((OrderItem item) {
-                          return ExpansionPanel(
-                            canTapOnHeader: true,
-                            headerBuilder:
-                                (BuildContext context, bool isExpanded) {
-                              return ListTile(
-                                  title: OrderHeader(
-                                      order: item.order,
-                                      showOrderDetails: showOrderDetails));
+    return RefreshIndicator(
+        child: enableProgress
+            ? OrderListSkeletonView()
+            : _pendingOrderItems.length > 0
+                ? Container(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: ListView(children: [
+                      Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: ExpansionPanelList(
+                            expansionCallback: (int index, bool isExpanded) {
+                              setState(() {
+                                _pendingOrderItems[index].isExpanded =
+                                    !_pendingOrderItems[index].isExpanded;
+                              });
                             },
-                            isExpanded: item.isExpanded,
-                            body: orderProcessing
-                                ? Center(
-                                    child: LinearProgressIndicator(),
-                                  )
-                                : OrderContent(
-                                    showExpandedOrder: true,
-                                    order: item.order,
-                                    primaryAction:
-                                        OrderAction("ACCEPT", acceptOrder),
-                                    secondaryAction:
-                                        OrderAction("REJECT", rejectOrder),
-                                    showOrderDetails: showOrderDetails),
-                          );
-                        }).toList(),
-                      ))
-                ]))
-            : Center(
-                child: Container(
-                  child: Text("No pending orders at the moment"),
-                ),
-              );
+                            children: _pendingOrderItems.map((OrderItem item) {
+                              return ExpansionPanel(
+                                canTapOnHeader: true,
+                                headerBuilder:
+                                    (BuildContext context, bool isExpanded) {
+                                  return ListTile(
+                                      title: OrderHeader(
+                                          order: item.order,
+                                          showOrderDetails: showOrderDetails));
+                                },
+                                isExpanded: item.isExpanded,
+                                body: orderProcessing
+                                    ? Center(
+                                        child: LinearProgressIndicator(),
+                                      )
+                                    : OrderContent(
+                                        showExpandedOrder: true,
+                                        order: item.order,
+                                        primaryAction:
+                                            OrderAction("ACCEPT", acceptOrder),
+                                        secondaryAction:
+                                            OrderAction("REJECT", rejectOrder),
+                                        showOrderDetails: showOrderDetails),
+                              );
+                            }).toList(),
+                          ))
+                    ]))
+                : Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: ListView(children: [
+                      Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Text("No pending orders at the moment",
+                              textAlign: TextAlign.center))
+                    ])),
+        onRefresh: fetchPendingOrders);
   }
 
   acceptOrder(OrderView order) async {
@@ -156,6 +161,7 @@ class _PendingOrderPageState extends State<PendingOrder> {
             Text("Order Rejected"),
             background: Colors.amber,
           );
+          Navigator.of(context, rootNavigator: true).pop('dialog');
           fetchPendingOrders();
         }
       },

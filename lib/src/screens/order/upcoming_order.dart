@@ -30,7 +30,7 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
     fetchPendingOrders();
   }
 
-  fetchPendingOrders() async {
+  Future<void> fetchPendingOrders() async {
     setState(() {
       enableProgress = true;
     });
@@ -42,6 +42,7 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
         enableProgress = false;
       });
     }
+    return Future<void>(() {});
   }
 
   setUpMerchantOrderList(List<OrderView> orderList) {
@@ -64,47 +65,54 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
         body: SingleChildScrollView(
             child: Container(
                 height: MediaQuery.of(context).size.height,
-                child: enableProgress
-                    ? OrderListSkeletonView()
-                    : _orderItemList.length > 0
-                        ? Container(
-                            height: MediaQuery.of(context).size.height,
-                            child: ListView(
-                              children: [
+                child: RefreshIndicator(
+                  child: enableProgress
+                      ? OrderListSkeletonView()
+                      : _orderItemList.length > 0
+                          ? Container(
+                              height: MediaQuery.of(context).size.height,
+                              child: ListView(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: ExpansionPanelList(
+                                      expansionCallback:
+                                          (int index, bool isExpanded) {
+                                        setState(() {
+                                          _orderItemList[index].isExpanded =
+                                              !_orderItemList[index].isExpanded;
+                                        });
+                                      },
+                                      children:
+                                          _orderItemList.map((OrderItem item) {
+                                        return ExpansionPanel(
+                                          canTapOnHeader: true,
+                                          headerBuilder: (BuildContext context,
+                                              bool isExpanded) {
+                                            return ListTile(
+                                                title: orderHeader(item.order));
+                                          },
+                                          isExpanded: item.isExpanded,
+                                          body: OrderContent(
+                                              order: item.order,
+                                              showExpandedOrder: false),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                ],
+                              ))
+                          : Container(
+                              height: MediaQuery.of(context).size.height,
+                              child: ListView(children: [
                                 Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: ExpansionPanelList(
-                                    expansionCallback:
-                                        (int index, bool isExpanded) {
-                                      setState(() {
-                                        _orderItemList[index].isExpanded =
-                                            !_orderItemList[index].isExpanded;
-                                      });
-                                    },
-                                    children:
-                                        _orderItemList.map((OrderItem item) {
-                                      return ExpansionPanel(
-                                        canTapOnHeader: true,
-                                        headerBuilder: (BuildContext context,
-                                            bool isExpanded) {
-                                          return ListTile(
-                                              title: orderHeader(item.order));
-                                        },
-                                        isExpanded: item.isExpanded,
-                                        body: OrderContent(
-                                            order: item.order,
-                                            showExpandedOrder: false),
-                                      );
-                                    }).toList(),
-                                  ),
-                                )
-                              ],
-                            ))
-                        : Center(
-                            child: Container(
-                              child: Text("No upcoming orders at the moment"),
-                            ),
-                          ))));
+                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                    child: Text(
+                                        "No upcoming orders at the moment",
+                                        textAlign: TextAlign.center))
+                              ])),
+                  onRefresh: fetchPendingOrders,
+                ))));
   }
 
   Widget orderHeader(OrderView order) {
@@ -121,8 +129,7 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
                     imageUrl: ("https://i.imgur.com/i0V7RAr.png"),
                     fit: BoxFit.fill,
                     width: 50,
-                  )
-              ),
+                  )),
               CachedNetworkImage(
                 imageUrl: (order.deliveryOption == DeliveryOptions.deliver.index
                     ? "https://i.imgur.com/Po93WEl.png"

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:milie_merchant_mobile/src/data/enums/order_status.dart';
 import 'package:milie_merchant_mobile/src/data/enums/shop_status.dart';
@@ -24,12 +26,23 @@ class _HomePageState extends State<Home> {
   UserService _userService = locator<UserService>();
   Shop _shop;
   MerchantAnalyticsMap _merchantAnalyticsMap;
+  Timer timer;
 
   @override
   void initState() {
     super.initState();
     _fetchShopDetails();
     _getMerchantNotHandledOrders();
+    timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
+      this._getMerchantNotHandledOrders();
+    });
+  }
+
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   _fetchShopDetails() async {
@@ -182,11 +195,12 @@ class _HomePageState extends State<Home> {
                                       ),
                                       Text(
                                         _merchantAnalyticsMap.orderMap[
-                                                    OrderStatus.pending.index] ==
+                                                    OrderStatus
+                                                        .pending.index] ==
                                                 null
                                             ? "0"
-                                            : _merchantAnalyticsMap
-                                                .orderMap[OrderStatus.pending.index]
+                                            : _merchantAnalyticsMap.orderMap[
+                                                    OrderStatus.pending.index]
                                                 .toString(),
                                         style: TextStyle(
                                             fontSize: 32,
@@ -242,11 +256,12 @@ class _HomePageState extends State<Home> {
                                       ),
                                       Text(
                                         _merchantAnalyticsMap.orderMap[
-                                                    OrderStatus.preparing.index] ==
+                                                    OrderStatus
+                                                        .preparing.index] ==
                                                 null
                                             ? "0"
-                                            : _merchantAnalyticsMap
-                                                .orderMap[OrderStatus.preparing.index]
+                                            : _merchantAnalyticsMap.orderMap[
+                                                    OrderStatus.preparing.index]
                                                 .toString(),
                                         style: TextStyle(
                                             fontSize: 32,
@@ -302,11 +317,13 @@ class _HomePageState extends State<Home> {
                                       ),
                                       Text(
                                         _merchantAnalyticsMap.orderMap[
-                                                    OrderStatus.readyToPickUp.index] ==
+                                                    OrderStatus
+                                                        .readyToPickUp.index] ==
                                                 null
                                             ? "0"
-                                            : _merchantAnalyticsMap
-                                                .orderMap[OrderStatus.readyToPickUp.index]
+                                            : _merchantAnalyticsMap.orderMap[
+                                                    OrderStatus
+                                                        .readyToPickUp.index]
                                                 .toString(),
                                         style: TextStyle(
                                             fontSize: 32,

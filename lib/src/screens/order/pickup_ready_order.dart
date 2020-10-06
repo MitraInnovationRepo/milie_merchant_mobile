@@ -31,20 +31,21 @@ class _PickupReadyOrderPageState extends State<PickupReadyOrder> {
     fetchReadyToPickupOrders();
   }
 
-  fetchReadyToPickupOrders() async {
+  Future<void> fetchReadyToPickupOrders() async {
     setState(() {
       enableProgress = true;
     });
 
     List<OrderView> _readyToPickupOrderList =
         await _orderService.findMerchantOrder(OrderStatus.readyToPickUp.index);
-    if(mounted) {
+    if (mounted) {
       setState(() {
         this._readyToPickupOrderList = _readyToPickupOrderList;
         setupReadyToPickupOrderItemList();
         enableProgress = false;
       });
     }
+    return Future<void>(() {});
   }
 
   setupReadyToPickupOrderItemList() {
@@ -59,58 +60,66 @@ class _PickupReadyOrderPageState extends State<PickupReadyOrder> {
 
   @override
   Widget build(BuildContext context) {
-    return enableProgress
-        ? OrderListSkeletonView()
-        : _readyToPickupOrderItems.length > 0
-            ? Container(
-                height: MediaQuery.of(context).size.height,
-                child: ListView(
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: ExpansionPanelList(
-                          expansionCallback: (int index, bool isExpanded) {
-                            setState(() {
-                              _readyToPickupOrderItems[index].isExpanded =
-                                  !_readyToPickupOrderItems[index].isExpanded;
-                            });
-                          },
-                          children:
-                              _readyToPickupOrderItems.map((OrderItem item) {
-                            return ExpansionPanel(
-                              canTapOnHeader: true,
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(
-                                    title: OrderHeader(
-                                  order: item.order,
-                                  showOrderDetails: showOrderDetails,
-                                ));
+    return RefreshIndicator(
+        child: enableProgress
+            ? OrderListSkeletonView()
+            : _readyToPickupOrderItems.length > 0
+                ? Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: ListView(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: ExpansionPanelList(
+                              expansionCallback: (int index, bool isExpanded) {
+                                setState(() {
+                                  _readyToPickupOrderItems[index].isExpanded =
+                                      !_readyToPickupOrderItems[index]
+                                          .isExpanded;
+                                });
                               },
-                              isExpanded: item.isExpanded,
-                              body: orderProcessing
-                                  ? Center(
-                                      child: LinearProgressIndicator(),
-                                    )
-                                  : OrderContent(
-                                      showExpandedOrder: true,
+                              children: _readyToPickupOrderItems
+                                  .map((OrderItem item) {
+                                return ExpansionPanel(
+                                  canTapOnHeader: true,
+                                  headerBuilder:
+                                      (BuildContext context, bool isExpanded) {
+                                    return ListTile(
+                                        title: OrderHeader(
                                       order: item.order,
-                                      primaryAction: OrderAction(
-                                          item.order.deliveryOption ==
-                                                  DeliveryOptions.pickup.index
-                                              ? "ORDER COMPLETE"
-                                              : "PICKED UP BY RIDER",
-                                          completeOrder),
-                                      showOrderDetails: showOrderDetails),
-                            );
-                          }).toList(),
-                        ))
-                  ],
-                ))
-            : Center(
-                child: Container(
-                child: Text("No orders are ready at the moment"),
-              ));
+                                      showOrderDetails: showOrderDetails,
+                                    ));
+                                  },
+                                  isExpanded: item.isExpanded,
+                                  body: orderProcessing
+                                      ? Center(
+                                          child: LinearProgressIndicator(),
+                                        )
+                                      : OrderContent(
+                                          showExpandedOrder: true,
+                                          order: item.order,
+                                          primaryAction: OrderAction(
+                                              item.order.deliveryOption ==
+                                                      DeliveryOptions
+                                                          .pickup.index
+                                                  ? "ORDER COMPLETE"
+                                                  : "PICKED UP BY RIDER",
+                                              completeOrder),
+                                          showOrderDetails: showOrderDetails),
+                                );
+                              }).toList(),
+                            ))
+                      ],
+                    ))
+                : Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: ListView(children: [
+                      Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Text("No pick up ready orders at the moment",
+                              textAlign: TextAlign.center))
+                    ])),
+        onRefresh: fetchReadyToPickupOrders);
   }
 
   void showOrderDetails(BuildContext context, OrderView order,

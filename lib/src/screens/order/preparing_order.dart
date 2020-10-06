@@ -30,7 +30,7 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
     fetchPreparingOrders();
   }
 
-  fetchPreparingOrders() async {
+  Future<void> fetchPreparingOrders() async {
     setState(() {
       enableProgress = true;
     });
@@ -44,6 +44,7 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
         enableProgress = false;
       });
     }
+    return Future<void>(() {});
   }
 
   setupPreparingOrderItemList() {
@@ -56,51 +57,56 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
 
   @override
   Widget build(BuildContext context) {
-    return enableProgress
-        ? OrderListSkeletonView()
-        : _preparingOrderItems.length > 0
-            ? Container(
-                height: MediaQuery.of(context).size.height,
-                child: ListView(children: [
-                  Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: ExpansionPanelList(
-                        expansionCallback: (int index, bool isExpanded) {
-                          setState(() {
-                            _preparingOrderItems[index].isExpanded =
-                                !_preparingOrderItems[index].isExpanded;
-                          });
-                        },
-                        children: _preparingOrderItems.map((OrderItem item) {
-                          return ExpansionPanel(
-                            canTapOnHeader: true,
-                            headerBuilder:
-                                (BuildContext context, bool isExpanded) {
-                              return ListTile(
-                                  title: OrderHeader(
-                                      order: item.order,
-                                      showOrderDetails: showOrderDetails));
+    return RefreshIndicator(
+        child: enableProgress
+            ? OrderListSkeletonView()
+            : _preparingOrderItems.length > 0
+                ? Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: ListView(children: [
+                      Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: ExpansionPanelList(
+                            expansionCallback: (int index, bool isExpanded) {
+                              setState(() {
+                                _preparingOrderItems[index].isExpanded =
+                                    !_preparingOrderItems[index].isExpanded;
+                              });
                             },
-                            isExpanded: item.isExpanded,
-                            body: orderProcessing
-                                ? Center(
-                                    child: LinearProgressIndicator(),
-                                  )
-                                : OrderContent(
-                                    showExpandedOrder: true,
-                                    order: item.order,
-                                    primaryAction: OrderAction(
-                                        "FOOD IS READY", updateToFoodIsReady),
-                                    showOrderDetails: showOrderDetails),
-                          );
-                        }).toList(),
-                      ))
-                ]))
-            : Center(
-                child: Container(
-                  child: Text("No preparing orders at the moment"),
-                ),
-              );
+                            children:
+                                _preparingOrderItems.map((OrderItem item) {
+                              return ExpansionPanel(
+                                canTapOnHeader: true,
+                                headerBuilder:
+                                    (BuildContext context, bool isExpanded) {
+                                  return ListTile(
+                                      title: OrderHeader(
+                                          order: item.order,
+                                          showOrderDetails: showOrderDetails));
+                                },
+                                isExpanded: item.isExpanded,
+                                body: orderProcessing
+                                    ? Center(
+                                        child: LinearProgressIndicator(),
+                                      )
+                                    : OrderContent(
+                                        showExpandedOrder: true,
+                                        order: item.order,
+                                        primaryAction: OrderAction(
+                                            "FOOD IS READY",
+                                            updateToFoodIsReady),
+                                        showOrderDetails: showOrderDetails),
+                              );
+                            }).toList(),
+                          ))
+                    ]))
+                : Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: ListView(children: [
+                      Padding(padding: EdgeInsets.symmetric(vertical: 20),
+                      child: Text("No preparing orders at the moment", textAlign: TextAlign.center))
+                    ])),
+        onRefresh: fetchPreparingOrders);
   }
 
   updateToFoodIsReady(OrderView order) async {
