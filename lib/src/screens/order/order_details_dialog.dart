@@ -2,8 +2,8 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_detail_view.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_view.dart';
+import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
+import 'package:foodie_merchant/src/data/model/order_view.dart';
 
 class OrderDetailsDialog extends StatelessWidget {
   final OrderView order;

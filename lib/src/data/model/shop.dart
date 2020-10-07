@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:milie_merchant_mobile/src/data/model/shop_tag.dart';
-import 'package:milie_merchant_mobile/src/data/model/shop_type.dart';
+import 'package:foodie_merchant/src/data/model/shop_tag.dart';
+import 'package:foodie_merchant/src/data/model/shop_type.dart';
 
 import 'address.dart';
 

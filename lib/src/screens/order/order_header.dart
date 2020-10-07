@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:milie_merchant_mobile/src/data/enums/delivery_option.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_view.dart';
-import 'package:milie_merchant_mobile/src/util/constant.dart';
+import 'package:foodie_merchant/src/data/enums/delivery_option.dart';
+import 'package:foodie_merchant/src/data/model/order_view.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 import 'package:intl/intl.dart';
-import 'package:milie_merchant_mobile/src/data/enums/payment_option.dart';
+import 'package:foodie_merchant/src/data/enums/payment_option.dart';
 
 class OrderHeader extends StatelessWidget {
   final OrderView order;

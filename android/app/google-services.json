@@ -1,42 +1,35 @@
 {
   "project_info": {
-    "project_number": "969387108044",
-    "firebase_url": "https://milie-32d3f.firebaseio.com",
-    "project_id": "milie-32d3f",
-    "storage_bucket": "milie-32d3f.appspot.com"
+    "project_number": "899880890678",
+    "firebase_url": "https://youcabfoodie-f8482.firebaseio.com",
+    "project_id": "youcabfoodie-f8482",
+    "storage_bucket": "youcabfoodie-f8482.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:969387108044:android:854c4b20af77f5a6d04469",
+        "mobilesdk_app_id": "1:899880890678:android:1efecfbe2f87fbb1d44397",
         "android_client_info": {
-          "package_name": "com.milie.milie_merchant_mobile"
+          "package_name": "com.youcab.foodie"
         }
       },
       "oauth_client": [
         {
-          "client_id": "969387108044-h58gqjjc1ep2bkpsv8c7glc154gfbtp9.apps.googleusercontent.com",
+          "client_id": "899880890678-05c1op6hapqubjs1dnsoigqulfiv0r15.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA0GZNI_Rzi-N3_HOLi8iO0XJ7TEQ2Miv4"
+          "current_key": "AIzaSyDUDh5MaDCrqtZ-BuU_AP3BGYyPdlGl-SE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "969387108044-h58gqjjc1ep2bkpsv8c7glc154gfbtp9.apps.googleusercontent.com",
+              "client_id": "899880890678-05c1op6hapqubjs1dnsoigqulfiv0r15.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "969387108044-mta6cl295lf6apaeftk4huejn8hu0m4t.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.mitrai.milieapp"
-              }
             }
           ]
         }
@@ -44,35 +37,28 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:969387108044:android:c51396ff1bf42a74d04469",
+        "mobilesdk_app_id": "1:899880890678:android:a07fb769f966085dd44397",
         "android_client_info": {
-          "package_name": "com.mitrai.milieapp"
+          "package_name": "com.youcab.foodie_merchant"
         }
       },
       "oauth_client": [
         {
-          "client_id": "969387108044-h58gqjjc1ep2bkpsv8c7glc154gfbtp9.apps.googleusercontent.com",
+          "client_id": "899880890678-05c1op6hapqubjs1dnsoigqulfiv0r15.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA0GZNI_Rzi-N3_HOLi8iO0XJ7TEQ2Miv4"
+          "current_key": "AIzaSyDUDh5MaDCrqtZ-BuU_AP3BGYyPdlGl-SE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "969387108044-h58gqjjc1ep2bkpsv8c7glc154gfbtp9.apps.googleusercontent.com",
+              "client_id": "899880890678-05c1op6hapqubjs1dnsoigqulfiv0r15.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "969387108044-mta6cl295lf6apaeftk4huejn8hu0m4t.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.mitrai.milieapp"
-              }
             }
           ]
         }

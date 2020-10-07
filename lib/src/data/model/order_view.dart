@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_detail.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_detail_view.dart';
-import 'package:milie_merchant_mobile/src/data/model/shop.dart';
-import 'package:milie_merchant_mobile/src/data/model/user.dart';
+import 'package:foodie_merchant/src/data/model/order_detail.dart';
+import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
+import 'package:foodie_merchant/src/data/model/shop.dart';
+import 'package:foodie_merchant/src/data/model/user.dart';
 
 part 'order_view.g.dart';
 

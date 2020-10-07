@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:milie_merchant_mobile/src/data/model/shop.dart';
-import 'package:milie_merchant_mobile/src/data/model/user_address.dart';
+import 'package:foodie_merchant/src/data/model/shop.dart';
+import 'package:foodie_merchant/src/data/model/user_address.dart';
 
 class UserProfile extends ChangeNotifier{
   String name;

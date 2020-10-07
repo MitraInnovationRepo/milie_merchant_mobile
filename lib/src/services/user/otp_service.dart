@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:milie_merchant_mobile/src/data/model/otp.dart';
-import 'package:milie_merchant_mobile/src/util/constant.dart';
+import 'package:foodie_merchant/src/data/model/otp.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 
 class OTPService{
   String backendEndpoint = Constant.backendEndpoint;

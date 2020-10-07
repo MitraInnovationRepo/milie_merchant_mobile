@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_additional.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_addon.dart';
-import 'package:milie_merchant_mobile/src/data/model/product.dart';
+import 'package:foodie_merchant/src/data/model/order_additional.dart';
+import 'package:foodie_merchant/src/data/model/order_addon.dart';
+import 'package:foodie_merchant/src/data/model/product.dart';
 
 part 'order_detail_view.g.dart';
 

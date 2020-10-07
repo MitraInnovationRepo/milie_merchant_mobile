@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:milie_merchant_mobile/src/data/model/product.dart';
-import 'package:milie_merchant_mobile/src/services/security/oauth2_service.dart';
-import 'package:milie_merchant_mobile/src/services/service_locator.dart';
-import 'package:milie_merchant_mobile/src/util/constant.dart';
+import 'package:foodie_merchant/src/data/model/product.dart';
+import 'package:foodie_merchant/src/services/security/oauth2_service.dart';
+import 'package:foodie_merchant/src/services/service_locator.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 
 class ProductService {
   String backendEndpoint = Constant.backendEndpoint;

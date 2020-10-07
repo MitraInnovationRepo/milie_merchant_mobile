@@ -6,15 +6,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
-import 'package:milie_merchant_mobile/src/data/model/app_metadata.dart';
-import 'package:milie_merchant_mobile/src/data/model/user.dart';
-import 'package:milie_merchant_mobile/src/data/model/user_profile.dart';
-import 'package:milie_merchant_mobile/src/screens/navigator.dart';
-import 'package:milie_merchant_mobile/src/services/security/oauth2_service.dart';
-import 'package:milie_merchant_mobile/src/services/service_locator.dart';
-import 'package:milie_merchant_mobile/src/services/user/user_service.dart';
-import 'package:milie_merchant_mobile/src/services/util/app_service.dart';
-import 'package:milie_merchant_mobile/src/util/constant.dart';
+import 'package:foodie_merchant/src/data/model/app_metadata.dart';
+import 'package:foodie_merchant/src/data/model/user.dart';
+import 'package:foodie_merchant/src/data/model/user_profile.dart';
+import 'package:foodie_merchant/src/screens/navigator.dart';
+import 'package:foodie_merchant/src/services/security/oauth2_service.dart';
+import 'package:foodie_merchant/src/services/service_locator.dart';
+import 'package:foodie_merchant/src/services/user/user_service.dart';
+import 'package:foodie_merchant/src/services/util/app_service.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:overlay_support/overlay_support.dart';
 

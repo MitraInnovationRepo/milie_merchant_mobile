@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:milie_merchant_mobile/src/data/enums/order_status.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_detail_view.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_view.dart';
-import 'package:milie_merchant_mobile/src/screens/order/order_content.dart';
-import 'package:milie_merchant_mobile/src/screens/order/order_details_dialog.dart';
-import 'package:milie_merchant_mobile/src/screens/order/order_header.dart';
-import 'package:milie_merchant_mobile/src/screens/order/order_list_skeleton_view.dart';
-import 'package:milie_merchant_mobile/src/services/order/order_service.dart';
-import 'package:milie_merchant_mobile/src/services/service_locator.dart';
+import 'package:foodie_merchant/src/data/enums/order_status.dart';
+import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
+import 'package:foodie_merchant/src/data/model/order_view.dart';
+import 'package:foodie_merchant/src/screens/order/order_content.dart';
+import 'package:foodie_merchant/src/screens/order/order_details_dialog.dart';
+import 'package:foodie_merchant/src/screens/order/order_header.dart';
+import 'package:foodie_merchant/src/screens/order/order_list_skeleton_view.dart';
+import 'package:foodie_merchant/src/services/order/order_service.dart';
+import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import 'order_item.dart';

@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:milie_merchant_mobile/src/data/model/product_additional.dart';
+import 'package:foodie_merchant/src/data/model/product_additional.dart';
 
 part 'order_additional.g.dart';
 

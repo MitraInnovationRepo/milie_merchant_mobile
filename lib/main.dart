@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:milie_merchant_mobile/src/data/model/user_profile.dart';
-import 'package:milie_merchant_mobile/src/screens/login.dart';
-import 'package:milie_merchant_mobile/src/services/service_locator.dart';
+import 'package:foodie_merchant/src/data/model/user_profile.dart';
+import 'package:foodie_merchant/src/screens/login.dart';
+import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 

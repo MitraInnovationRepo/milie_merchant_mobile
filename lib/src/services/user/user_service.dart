@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:milie_merchant_mobile/src/data/model/reset_password.dart';
-import 'package:milie_merchant_mobile/src/data/model/user.dart';
-import 'package:milie_merchant_mobile/src/data/model/user_profile.dart';
-import 'package:milie_merchant_mobile/src/data/model/user_verification.dart';
-import 'package:milie_merchant_mobile/src/services/security/oauth2_service.dart';
-import 'package:milie_merchant_mobile/src/services/service_locator.dart';
-import 'package:milie_merchant_mobile/src/util/constant.dart';
+import 'package:foodie_merchant/src/data/model/reset_password.dart';
+import 'package:foodie_merchant/src/data/model/user.dart';
+import 'package:foodie_merchant/src/data/model/user_profile.dart';
+import 'package:foodie_merchant/src/data/model/user_verification.dart';
+import 'package:foodie_merchant/src/services/security/oauth2_service.dart';
+import 'package:foodie_merchant/src/services/service_locator.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {

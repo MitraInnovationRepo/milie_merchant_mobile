@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:milie_merchant_mobile/src/data/enums/delivery_option.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_detail_view.dart';
-import 'package:milie_merchant_mobile/src/data/model/order_view.dart';
-import 'package:milie_merchant_mobile/src/screens/widget/square_button.dart';
-import 'package:milie_merchant_mobile/src/data/enums/payment_option.dart';
+import 'package:foodie_merchant/src/data/enums/delivery_option.dart';
+import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
+import 'package:foodie_merchant/src/data/model/order_view.dart';
+import 'package:foodie_merchant/src/screens/widget/square_button.dart';
+import 'package:foodie_merchant/src/data/enums/payment_option.dart';
 
 class OrderAction {
   String title;

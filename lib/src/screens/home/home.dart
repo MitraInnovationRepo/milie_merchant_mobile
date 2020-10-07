@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:milie_merchant_mobile/src/data/enums/order_status.dart';
-import 'package:milie_merchant_mobile/src/data/enums/shop_status.dart';
-import 'package:milie_merchant_mobile/src/data/model/analytics/merchant_analytics_map.dart';
-import 'package:milie_merchant_mobile/src/data/model/shop.dart';
-import 'package:milie_merchant_mobile/src/data/model/user_profile.dart';
-import 'package:milie_merchant_mobile/src/screens/home/promotion_slider.dart';
-import 'package:milie_merchant_mobile/src/screens/login.dart';
-import 'package:milie_merchant_mobile/src/screens/shop/shop_service.dart';
-import 'package:milie_merchant_mobile/src/services/analytics/analytics_service.dart';
-import 'package:milie_merchant_mobile/src/services/service_locator.dart';
-import 'package:milie_merchant_mobile/src/services/user/user_service.dart';
+import 'package:foodie_merchant/src/data/enums/order_status.dart';
+import 'package:foodie_merchant/src/data/enums/shop_status.dart';
+import 'package:foodie_merchant/src/data/model/analytics/merchant_analytics_map.dart';
+import 'package:foodie_merchant/src/data/model/shop.dart';
+import 'package:foodie_merchant/src/data/model/user_profile.dart';
+import 'package:foodie_merchant/src/screens/home/promotion_slider.dart';
+import 'package:foodie_merchant/src/screens/login.dart';
+import 'package:foodie_merchant/src/screens/shop/shop_service.dart';
+import 'package:foodie_merchant/src/services/analytics/analytics_service.dart';
+import 'package:foodie_merchant/src/services/service_locator.dart';
+import 'package:foodie_merchant/src/services/user/user_service.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 

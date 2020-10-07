@@ -2,7 +2,7 @@
 import 'dart:io' show Platform;
 
 import 'package:http/http.dart' as http;
-import 'package:milie_merchant_mobile/src/util/constant.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 
 class AppService{
   String backendEndpoint = Constant.backendEndpoint;

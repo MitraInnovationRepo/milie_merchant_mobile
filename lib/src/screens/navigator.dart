@@ -5,10 +5,10 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:milie_merchant_mobile/src/screens/home/home.dart';
-import 'package:milie_merchant_mobile/src/screens/order/order_history.dart';
-import 'package:milie_merchant_mobile/src/screens/order/order_requests.dart';
-import 'package:milie_merchant_mobile/src/screens/product/product_type_catalog.dart';
+import 'package:foodie_merchant/src/screens/home/home.dart';
+import 'package:foodie_merchant/src/screens/order/order_history.dart';
+import 'package:foodie_merchant/src/screens/order/order_requests.dart';
+import 'package:foodie_merchant/src/screens/product/product_type_catalog.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
