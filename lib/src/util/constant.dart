@@ -5,8 +5,8 @@ class Constant {
 
   //Dev
   static String clientSecret = "b44d59e3-0b25-4aee-9668-12e66ace71eb";
-  static String backendEndpoint = "https://dev-api.milieapp.com/api";
-  // static String backendEndpoint = "http://10.0.2.2:8083/api";
+  // static String backendEndpoint = "https://dev-api.milieapp.com/api";
+  static String backendEndpoint = "http://10.0.2.2:8083/api";
   static String keycloakEndpoint = "https://dev-api.milieapp.com:8443";
   static String contentEndpoint = "http://10.0.2.2:1337";
 

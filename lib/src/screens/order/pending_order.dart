@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodie_merchant/src/data/enums/order_status.dart';
 import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
+import 'package:foodie_merchant/src/data/model/order_reject_response.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';
 import 'package:foodie_merchant/src/screens/order/order_content.dart';
 import 'package:foodie_merchant/src/screens/order/order_details_dialog.dart';
@@ -117,17 +118,23 @@ class _PendingOrderPageState extends State<PendingOrder> {
     setState(() {
       orderProcessing = true;
     });
-    int status = await _orderService.approveOrder(order.id);
+    OrderRejectResponse orderRejectResponse = await _orderService.approveOrder(order.id);
     setState(() {
       orderProcessing = false;
     });
-    if (status == 200) {
+    if (orderRejectResponse.status != 100) {
       showSimpleNotification(
         Text("Order Approved"),
         background: Theme.of(context).backgroundColor,
       );
-      fetchPendingOrders();
     }
+    else{
+      showSimpleNotification(
+        Text(orderRejectResponse.message),
+        background: Colors.amber
+      );
+    }
+    fetchPendingOrders();
   }
 
   rejectOrder(OrderView order) async {
