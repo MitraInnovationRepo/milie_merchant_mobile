@@ -66,7 +66,8 @@ class _OrderHistoryPageState extends State<OrderHistory> {
           height: MediaQuery.of(context).size.height,
           child: enableProgress
               ? OrderListSkeletonView()
-              : Container(
+              : _orderItemList.length > 0
+              ? Container(
                   height: MediaQuery.of(context).size.height,
                   child: ListView(
                     children: [
@@ -94,7 +95,14 @@ class _OrderHistoryPageState extends State<OrderHistory> {
                         ),
                       )
                     ],
-                  )),
+                  )) :  Container(
+        height: MediaQuery.of(context).size.height,
+    child: ListView(children: [
+    Padding(
+    padding: EdgeInsets.symmetric(vertical: 20),
+    child: Text("No completed orders at the moment",
+    textAlign: TextAlign.center))
+    ]))
         )));
   }
 

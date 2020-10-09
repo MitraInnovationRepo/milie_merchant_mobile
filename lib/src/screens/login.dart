@@ -23,9 +23,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_redirect/store_redirect.dart';
 
-
 class Login extends StatefulWidget {
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -45,6 +43,7 @@ class _LoginPageState extends State<Login> {
   bool isLoggedIn = false;
   bool shouldLogout = true;
 
+  bool isLoginButtonEnabled = false;
   bool enableProgress = false;
 
   @override
@@ -208,18 +207,20 @@ class _LoginPageState extends State<Login> {
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                            ClipPath(
-                              child: CachedNetworkImage(
-                                  imageUrl: 'https://i.imgur.com/i1bje6O.jpg'),
-                              clipper: BottomClipper(),
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              width: MediaQuery.of(context).size.width,
+                              child: ClipPath(
+                                child: CachedNetworkImage(
+                                    fit: BoxFit.fitWidth,
+                                    imageUrl: 'https://i.imgur.com/i1bje6O.jpg'),
+                                clipper: BottomClipper(),
+                              ),
                             ),
                             Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Column(
-                                  children: [
-                                    _formWidget(),
-                                    _submitButton()
-                                  ],
+                                  children: [_formWidget(), _submitButton()],
                                 ))
                           ]))));
   }
@@ -242,6 +243,9 @@ class _LoginPageState extends State<Login> {
             onFieldSubmitted: (term) {
               phoneNumberFocusNode.unfocus();
               FocusScope.of(context).requestFocus(passwordFocusNode);
+            },
+            onChanged: (value) {
+              isEmpty();
             },
             focusNode: phoneNumberFocusNode,
             controller: phoneNumberController,
@@ -291,6 +295,9 @@ class _LoginPageState extends State<Login> {
                 this.authenticate();
               }
             },
+            onChanged: (value) {
+              isEmpty();
+            },
             onTap: () {},
             controller: passwordController,
             focusNode: passwordFocusNode,
@@ -334,17 +341,8 @@ class _LoginPageState extends State<Login> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: Offset(2, 4),
-                    blurRadius: 5,
-                    spreadRadius: 2)
-              ],
-              gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [Colors.blueAccent, Colors.blueAccent])),
+              color: this.isLoginButtonEnabled ? Colors.black : Colors.grey[500]
+          ),
           child: Text(
             'Login',
             style: TextStyle(fontSize: 20, color: Colors.white),
@@ -390,8 +388,7 @@ class _LoginPageState extends State<Login> {
               MaterialPageRoute(builder: (context) => HomeNavigator()),
               //User already has a role. Let him go in
               (Route<dynamic> route) => false);
-        }
-        else{
+        } else {
           setState(() {
             enableProgress = false;
           });
@@ -449,7 +446,8 @@ class _LoginPageState extends State<Login> {
   Future<bool> _setupUserProfile(var parsedJwt) async {
     UserProfile userProfile = Provider.of<UserProfile>(context, listen: false);
     _userService.setUpUserProfile(userProfile, parsedJwt);
-    return userProfile.roles.length > 0 && userProfile.roles.contains("merchant");
+    return userProfile.roles.length > 0 &&
+        userProfile.roles.contains("merchant");
   }
 
   Future<User> _fetchUserDetails() async {
@@ -488,6 +486,12 @@ class _LoginPageState extends State<Login> {
     } else {
       return false;
     }
+  }
+
+  isEmpty(){
+    setState(() {
+      this.isLoginButtonEnabled = phoneNumberController.text.isNotEmpty && passwordController.text.isNotEmpty;
+    });
   }
 }
 

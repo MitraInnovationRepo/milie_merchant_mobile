@@ -155,18 +155,12 @@ class _HomePageState extends State<Home> {
                             height: 120,
                             width: MediaQuery.of(context).size.width * 0.3,
                             decoration: new BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.grey[500],
-                                      Colors.grey[100]
-                                    ]),
+                              color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 3,
-                                    blurRadius: 10,
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
                                     offset: Offset(
                                         0, 2), // changes position of shadow
                                   ),
@@ -182,7 +176,12 @@ class _HomePageState extends State<Home> {
                                   fit: BoxFit.scaleDown,
                                 ),
                                 Container(
-                                  color: Color(0xFFFFFFFF).withOpacity(0.5),
+                                  decoration: new BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      borderRadius: new BorderRadius.only(
+                                        topLeft: Radius.circular(12.0),
+                                        topRight: Radius.circular(12.0),
+                                      )),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -216,18 +215,12 @@ class _HomePageState extends State<Home> {
                             height: 120,
                             width: MediaQuery.of(context).size.width * 0.3,
                             decoration: new BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.grey[500],
-                                      Colors.grey[100]
-                                    ]),
+                                color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 3,
-                                    blurRadius: 10,
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
                                     offset: Offset(
                                         0, 2), // changes position of shadow
                                   ),
@@ -243,7 +236,12 @@ class _HomePageState extends State<Home> {
                                   fit: BoxFit.scaleDown,
                                 ),
                                 Container(
-                                  color: Color(0xFFFFFFFF).withOpacity(0.5),
+                                  decoration: new BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      borderRadius: new BorderRadius.only(
+                                        topLeft: Radius.circular(12.0),
+                                        topRight: Radius.circular(12.0),
+                                      )),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -277,18 +275,12 @@ class _HomePageState extends State<Home> {
                             height: 120,
                             width: MediaQuery.of(context).size.width * 0.3,
                             decoration: new BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.grey[500],
-                                      Colors.grey[100]
-                                    ]),
+                                color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 3,
-                                    blurRadius: 10,
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
                                     offset: Offset(
                                         0, 2), // changes position of shadow
                                   ),
@@ -304,7 +296,12 @@ class _HomePageState extends State<Home> {
                                   fit: BoxFit.scaleDown,
                                 ),
                                 Container(
-                                  color: Color(0xFFFFFFFF).withOpacity(0.5),
+                                  decoration: new BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    borderRadius: new BorderRadius.only(
+                                      topLeft: Radius.circular(12.0),
+                                      topRight: Radius.circular(12.0),
+                                  )),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -336,25 +333,7 @@ class _HomePageState extends State<Home> {
                             ),
                           ),
                         ],
-                      ),
-                    // Row(
-                    //   children: [
-                    //     if (_merchantAnalyticsMap != null)
-                    //       Column(
-                    //         children: [
-                    //           Container(
-                    //             height:
-                    //                 MediaQuery.of(context).size.height * 0.4,
-                    //             width: MediaQuery.of(context).size.width * 0.45,
-                    //             margin: EdgeInsets.only(top: 50),
-                    //             child: PendingOrderChart.setup(
-                    //                 _merchantAnalyticsMap),
-                    //           ),
-                    //           Text("ORDERS TO HANDLE")
-                    //         ],
-                    //       )
-                    //   ],
-                    // ),
+                      )
                   ],
                 ))));
   }
