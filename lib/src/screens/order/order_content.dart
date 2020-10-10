@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:foodie_merchant/src/data/enums/delivery_option.dart';
 import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';
+import 'package:foodie_merchant/src/screens/util/driver_info_card.dart';
 import 'package:foodie_merchant/src/screens/widget/square_button.dart';
 import 'package:foodie_merchant/src/data/enums/payment_option.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 
 class OrderAction {
   String title;
@@ -44,7 +46,7 @@ class OrderContent extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (order.orderAcceptedTime != null &&
+              if (order.foodPreparedTime != null &&
                   order.deliveryOption == DeliveryOptions.deliver.index)
                 Padding(
                   padding:
@@ -61,11 +63,7 @@ class OrderContent extends StatelessWidget {
                       SizedBox(
                         width: 10.0,
                       ),
-                      Text("Lakshitha " + "- CBD6549",
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style:
-                              TextStyle(color: Colors.black87, fontSize: 18)),
+                      DriverInfoCard(cabNo: order.cabNo),
                     ],
                   ),
                 ),
@@ -153,12 +151,6 @@ class OrderContent extends StatelessWidget {
                               SizedBox(
                                 width: 20.0,
                               ),
-                              CircleAvatar(
-                                radius: 30,
-                                backgroundImage: NetworkImage(
-                                  "https://i.imgur.com/BEnHQ1v.png",
-                                ),
-                              ),
                             ],
                           ),
                         ],
@@ -227,7 +219,7 @@ class OrderDetails extends StatelessWidget {
                       color: Colors.grey[100],
                       padding: EdgeInsets.all(8.0),
                       child: Image.network(
-                        orderDetail.product.imageUrl,
+                        "${Constant.filePath}${orderDetail.product.imageUrl}",
                         height: 40.0,
                         width: 45.0,
                         fit: BoxFit.cover,

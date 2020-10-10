@@ -1,5 +1,5 @@
+import 'package:foodie_merchant/src/services/delivery/delivery_service.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foodie_merchant/src/screens/product/product_type_catalog.dart';
 import 'package:foodie_merchant/src/screens/shop/shop_service.dart';
 import 'package:foodie_merchant/src/services/analytics/analytics_service.dart';
 import 'package:foodie_merchant/src/services/order/order_service.dart';
@@ -26,4 +26,5 @@ setupServiceLocator() {
   locator.registerLazySingleton<ShopService>(() => ShopService());
   locator.registerLazySingleton<OrderService>(() => OrderService());
   locator.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
+  locator.registerLazySingleton<DeliveryService>(() => DeliveryService());
 }

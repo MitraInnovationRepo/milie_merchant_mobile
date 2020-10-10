@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:foodie_merchant/src/data/enums/delivery_option.dart';
@@ -63,47 +62,52 @@ class _OrderHistoryPageState extends State<OrderHistory> {
         ),
         body: SingleChildScrollView(
             child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: enableProgress
-              ? OrderListSkeletonView()
-              : _orderItemList.length > 0
-              ? Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: ListView(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: ExpansionPanelList(
-                          expansionCallback: (int index, bool isExpanded) {
-                            setState(() {
-                              _orderItemList[index].isExpanded =
-                                  !_orderItemList[index].isExpanded;
-                            });
-                          },
-                          children: _orderItemList.map((OrderItem item) {
-                            return ExpansionPanel(
-                              canTapOnHeader: true,
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(title: orderHeader(item.order));
-                              },
-                              isExpanded: item.isExpanded,
-                              body: OrderContent(
-                                  order: item.order, showExpandedOrder: false),
-                            );
-                          }).toList(),
-                        ),
-                      )
-                    ],
-                  )) :  Container(
-        height: MediaQuery.of(context).size.height,
-    child: ListView(children: [
-    Padding(
-    padding: EdgeInsets.symmetric(vertical: 20),
-    child: Text("No completed orders at the moment",
-    textAlign: TextAlign.center))
-    ]))
-        )));
+                height: MediaQuery.of(context).size.height,
+                child: enableProgress
+                    ? OrderListSkeletonView()
+                    : _orderItemList.length > 0
+                        ? Container(
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: ExpansionPanelList(
+                                    expansionCallback:
+                                        (int index, bool isExpanded) {
+                                      setState(() {
+                                        _orderItemList[index].isExpanded =
+                                            !_orderItemList[index].isExpanded;
+                                      });
+                                    },
+                                    children:
+                                        _orderItemList.map((OrderItem item) {
+                                      return ExpansionPanel(
+                                        canTapOnHeader: true,
+                                        headerBuilder: (BuildContext context,
+                                            bool isExpanded) {
+                                          return ListTile(
+                                              title: orderHeader(item.order));
+                                        },
+                                        isExpanded: item.isExpanded,
+                                        body: OrderContent(
+                                            order: item.order,
+                                            showExpandedOrder: false),
+                                      );
+                                    }).toList(),
+                                  ),
+                                )
+                              ],
+                            ))
+                        : Container(
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView(children: [
+                              Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  child: Text(
+                                      "No completed orders at the moment",
+                                      textAlign: TextAlign.center))
+                            ])))));
   }
 
   Widget orderHeader(OrderView order) {
@@ -114,10 +118,10 @@ class _OrderHistoryPageState extends State<OrderHistory> {
         children: [
           Row(
             children: [
-              CachedNetworkImage(
-                imageUrl: (order.deliveryOption == DeliveryOptions.deliver.index
-                    ? "https://i.imgur.com/Po93WEl.png"
-                    : "https://i.imgur.com/buDFXBx.png"),
+              Image.asset(
+                order.deliveryOption == DeliveryOptions.deliver.index
+                    ? "assets/lorry.png"
+                    : "assets/store-pickup.png",
                 fit: BoxFit.fill,
                 width: 50,
               ),

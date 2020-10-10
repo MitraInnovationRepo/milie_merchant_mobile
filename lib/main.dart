@@ -38,7 +38,6 @@ class MyApp extends StatelessWidget {
                   bodyText2: GoogleFonts.montserrat(textStyle: textTheme.bodyText2),
                 ),
               ),
-              debugShowCheckedModeBanner: true,
               home: Login(),
             )));
   }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -211,9 +210,9 @@ class _LoginPageState extends State<Login> {
                               height: MediaQuery.of(context).size.height * 0.4,
                               width: MediaQuery.of(context).size.width,
                               child: ClipPath(
-                                child: CachedNetworkImage(
-                                    fit: BoxFit.fitWidth,
-                                    imageUrl: 'https://i.imgur.com/i1bje6O.jpg'),
+                                child: Image.asset(
+                                    "assets/cover.jpg",
+                                    fit: BoxFit.fitWidth),
                                 clipper: BottomClipper(),
                               ),
                             ),

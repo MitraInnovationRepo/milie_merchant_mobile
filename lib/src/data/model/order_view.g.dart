@@ -19,6 +19,7 @@ OrderView _$OrderViewFromJson(Map<String, dynamic> json) {
     (json['addonTotal'] as num)?.toDouble(),
     (json['additionalTotal'] as num)?.toDouble(),
     (json['deliveryTotal'] as num)?.toDouble(),
+    (json['itemSubTotal'] as num)?.toDouble(),
     json['deliveryOption'] as int,
     (json['subTotal'] as num)?.toDouble(),
     json['addressType'] as String,
@@ -47,6 +48,7 @@ OrderView _$OrderViewFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['foodPreparedTime'] as String),
     json['promoCode'] as String,
+    json['cabNo'] as String,
   );
 }
 
@@ -58,6 +60,7 @@ Map<String, dynamic> _$OrderViewToJson(OrderView instance) => <String, dynamic>{
       'addonTotal': instance.addonTotal,
       'additionalTotal': instance.additionalTotal,
       'deliveryTotal': instance.deliveryTotal,
+      'itemSubTotal': instance.itemSubTotal,
       'deliveryOption': instance.deliveryOption,
       'paymentMethod': instance.paymentMethod,
       'subTotal': instance.subTotal,
@@ -71,6 +74,7 @@ Map<String, dynamic> _$OrderViewToJson(OrderView instance) => <String, dynamic>{
       'scheduledTime': instance.scheduledTime?.toIso8601String(),
       'orderAcceptedTime': instance.orderAcceptedTime?.toIso8601String(),
       'foodPreparedTime': instance.foodPreparedTime?.toIso8601String(),
+      'cabNo': instance.cabNo,
       'createdDate': instance.createdDate?.toIso8601String(),
       'promoCode': instance.promoCode,
       'orderDetailList': instance.orderDetailList,

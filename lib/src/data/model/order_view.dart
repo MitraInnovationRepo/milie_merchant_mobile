@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:foodie_merchant/src/data/model/order_detail.dart';
 import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
 import 'package:foodie_merchant/src/data/model/shop.dart';
 import 'package:foodie_merchant/src/data/model/user.dart';
@@ -15,6 +14,7 @@ class OrderView {
   double addonTotal;
   double additionalTotal;
   double deliveryTotal;
+  double itemSubTotal;
   int deliveryOption;
   int paymentMethod;
   double subTotal;
@@ -28,6 +28,7 @@ class OrderView {
   DateTime scheduledTime;
   DateTime orderAcceptedTime;
   DateTime foodPreparedTime;
+  String cabNo;
 
   DateTime createdDate;
   String promoCode;
@@ -41,6 +42,7 @@ class OrderView {
       this.addonTotal,
       this.additionalTotal,
       this.deliveryTotal,
+      this.itemSubTotal,
       this.deliveryOption,
       this.subTotal,
       this.addressType,
@@ -56,7 +58,8 @@ class OrderView {
       this.scheduledTime,
       this.orderAcceptedTime,
       this.foodPreparedTime,
-      this.promoCode);
+      this.promoCode,
+      this.cabNo);
 
   OrderView.empty();
 

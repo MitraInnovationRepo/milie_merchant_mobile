@@ -6,6 +6,7 @@ import 'package:foodie_merchant/src/route/scale_route.dart';
 import 'package:foodie_merchant/src/screens/product/product_catalog.dart';
 import 'package:foodie_merchant/src/services/product/product_type_service.dart';
 import 'package:foodie_merchant/src/services/service_locator.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
 class ProductTypeCatalog extends StatefulWidget {
@@ -69,7 +70,7 @@ class _ProductTypeCatalogPageState extends State<ProductTypeCatalog> {
                                   padding: EdgeInsets.all(5),
                                   child: ClipRRect(
                                     child: CachedNetworkImage(
-                                        imageUrl: _productTypeList[index].image,
+                                        imageUrl: "${Constant.filePath}${_productTypeList[index].image}",
                                         fit: BoxFit.fitWidth,
                                         height: MediaQuery.of(context).size.height * 0.4,
                                         width: MediaQuery.of(context).size.width * 0.5),

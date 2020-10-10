@@ -31,4 +31,6 @@ class Constant {
 
   static String androidAppVersion = "0.0.1";
   static String iosAppVersion = "0.0.1";
+
+  static String filePath = backendEndpoint + "/file/download/";
 }

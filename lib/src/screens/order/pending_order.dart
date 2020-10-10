@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foodie_merchant/src/data/enums/order_status.dart';
 import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
 import 'package:foodie_merchant/src/data/model/order_reject_response.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 
 class OrderDetailsDialog extends StatelessWidget {
   final OrderView order;
@@ -54,9 +55,7 @@ class OrderDetailsDialog extends StatelessWidget {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: CachedNetworkImage(
-                                      imageUrl: orderDetailList[index]
-                                          .product
-                                          .imageUrl,
+                                      imageUrl: "${Constant.filePath}${orderDetailList[index].product.imageUrl}",
                                       height: 100.0,
                                       width: 100.0,
                                       fit: BoxFit.cover,

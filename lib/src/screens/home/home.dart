@@ -170,8 +170,8 @@ class _HomePageState extends State<Home> {
                                 )),
                             child: Stack(
                               children: [
-                                Image.network(
-                                  'https://i.imgur.com/EqrN0v8.png',
+                                Image.asset(
+                                  'assets/home-icon1.png',
                                   width: double.infinity,
                                   fit: BoxFit.scaleDown,
                                 ),
@@ -230,8 +230,8 @@ class _HomePageState extends State<Home> {
                                 )),
                             child: Stack(
                               children: [
-                                Image.network(
-                                  'https://i.imgur.com/b8gVNI6.png',
+                                Image.asset(
+                                  'assets/home-icon2.png',
                                   width: double.infinity,
                                   fit: BoxFit.scaleDown,
                                 ),
@@ -290,8 +290,8 @@ class _HomePageState extends State<Home> {
                                 )),
                             child: Stack(
                               children: [
-                                Image.network(
-                                  'https://i.imgur.com/fATru6k.png',
+                                Image.asset(
+                                  'assets/home-icon3.png',
                                   width: double.infinity,
                                   fit: BoxFit.scaleDown,
                                 ),

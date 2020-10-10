@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:foodie_merchant/src/data/enums/delivery_option.dart';
@@ -125,15 +124,15 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
             children: [
               Padding(
                   padding: const EdgeInsets.only(right: 10),
-                  child: CachedNetworkImage(
-                    imageUrl: ("https://i.imgur.com/i0V7RAr.png"),
+                  child: Image.asset(
+                    "assets/bell.png",
                     fit: BoxFit.fill,
                     width: 50,
                   )),
-              CachedNetworkImage(
-                imageUrl: (order.deliveryOption == DeliveryOptions.deliver.index
-                    ? "https://i.imgur.com/Po93WEl.png"
-                    : "https://i.imgur.com/buDFXBx.png"),
+              Image.asset(
+                order.deliveryOption == DeliveryOptions.deliver.index
+                    ? "assets/lorry.png"
+                    : "assets/store-pickup.png",
                 fit: BoxFit.fill,
                 width: 50,
               ),

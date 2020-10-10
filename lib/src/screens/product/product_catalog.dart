@@ -7,9 +7,9 @@ import 'package:foodie_merchant/src/data/enums/product_status.dart';
 import 'package:foodie_merchant/src/data/enums/shop_status.dart';
 import 'package:foodie_merchant/src/data/model/product.dart';
 import 'package:foodie_merchant/src/data/model/product_type.dart';
-import 'package:foodie_merchant/src/screens/widget/square_button.dart';
 import 'package:foodie_merchant/src/services/product/product_service.dart';
 import 'package:foodie_merchant/src/services/service_locator.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:http/http.dart' as http;
@@ -121,7 +121,7 @@ class _ProductCatalogPageState extends State<ProductCatalog> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: CachedNetworkImage(
-                            imageUrl: _filteredProductList[index].imageUrl,
+                            imageUrl: "${Constant.filePath}${_filteredProductList[index].imageUrl}",
                             fit: BoxFit.fill,
                             height: 80.0,
                             width: 100.0,

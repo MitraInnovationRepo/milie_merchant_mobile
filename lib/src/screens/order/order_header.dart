@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:foodie_merchant/src/data/enums/delivery_option.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';
 import 'package:foodie_merchant/src/util/constant.dart';
@@ -61,16 +60,16 @@ class OrderHeader extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: CachedNetworkImage(
-                  imageUrl: (order.scheduleDelivery ? "https://i.imgur.com/i0V7RAr.png" : "https://i.imgur.com/hnr4rRj.png"),
+                child: Image.asset(
+                  order.scheduleDelivery ? "assets/bell.png" : "assets/complete.png",
                   fit: BoxFit.fill,
                   width: 40,
                 )
               ),
-              CachedNetworkImage(
-                imageUrl: (order.deliveryOption == DeliveryOptions.deliver.index
-                    ? "https://i.imgur.com/Po93WEl.png"
-                    : "https://i.imgur.com/buDFXBx.png"),
+              Image.asset(
+                order.deliveryOption == DeliveryOptions.deliver.index
+                    ? "assets/lorry.png"
+                    : "assets/store-pickup.png",
                 fit: BoxFit.fill,
                 width: 50,
               ),
@@ -184,7 +183,7 @@ class OrderHeader extends StatelessWidget {
                     ),
                     children: <TextSpan>[
                       TextSpan(text: ' '),
-                      TextSpan(text: order.subTotal.toStringAsFixed(2)),
+                      TextSpan(text: order.itemSubTotal.toStringAsFixed(2)),
                       TextSpan(text: " ("),
                       TextSpan(
                         text: (PaymentOption.values
