@@ -27,6 +27,7 @@ class _HomePageState extends State<Home> {
   Shop _shop;
   MerchantAnalyticsMap _merchantAnalyticsMap;
   Timer timer;
+  bool enableProgress = false;
 
   @override
   void initState() {
@@ -37,7 +38,6 @@ class _HomePageState extends State<Home> {
       this._getMerchantNotHandledOrders();
     });
   }
-
 
   @override
   void dispose() {
@@ -55,11 +55,15 @@ class _HomePageState extends State<Home> {
   }
 
   _getMerchantNotHandledOrders() async {
+    setState(() {
+      enableProgress = true;
+    });
     MerchantAnalyticsMap _merchantAnalyticsMap =
         await this._analyticsService.findMerchantOrdersToComplete();
     if (mounted) {
       setState(() {
         this._merchantAnalyticsMap = _merchantAnalyticsMap;
+        this.enableProgress = false;
       });
     }
   }
@@ -113,25 +117,43 @@ class _HomePageState extends State<Home> {
                                     : Text("Offline",
                                         style: TextStyle(
                                             color: Colors.red, fontSize: 18)),
-                                RaisedButton(
-                                  onPressed: () {
-                                    UserProfile userProfile =
-                                        Provider.of<UserProfile>(context,
-                                            listen: false);
-                                    userProfile.clearAll();
-                                    _userService.logoutUser();
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder: (context) => Login()),
-                                            (Route<dynamic> route) => false);
-                                  },
-                                  child: Text("Logout"),
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: Colors.teal)),
-                                )
+                                Row(children: [
+                                  RaisedButton(
+                                    onPressed: () {
+                                      _getMerchantNotHandledOrders();
+                                    },
+                                    child: Icon(Icons.refresh),
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(18.0),
+                                        side: BorderSide(color: Colors.green)),
+                                  ),
+                                  SizedBox(
+                                    width: 20
+                                  ),
+                                  RaisedButton(
+                                    onPressed: () {
+                                      UserProfile userProfile =
+                                          Provider.of<UserProfile>(context,
+                                              listen: false);
+                                      userProfile.clearAll();
+                                      _userService.logoutUser();
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Login()),
+                                              (Route<dynamic> route) => false);
+                                    },
+                                    child: Text("Logout"),
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side: BorderSide(color: Colors.green)),
+                                  )
+                                ])
                               ],
                             )),
                     ),
@@ -155,7 +177,7 @@ class _HomePageState extends State<Home> {
                             height: 120,
                             width: MediaQuery.of(context).size.width * 0.3,
                             decoration: new BoxDecoration(
-                              color: Colors.white,
+                                color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.2),
@@ -297,11 +319,11 @@ class _HomePageState extends State<Home> {
                                 ),
                                 Container(
                                   decoration: new BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    borderRadius: new BorderRadius.only(
-                                      topLeft: Radius.circular(12.0),
-                                      topRight: Radius.circular(12.0),
-                                  )),
+                                      color: Colors.grey.withOpacity(0.3),
+                                      borderRadius: new BorderRadius.only(
+                                        topLeft: Radius.circular(12.0),
+                                        topRight: Radius.circular(12.0),
+                                      )),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,

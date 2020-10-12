@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodie_merchant/src/data/enums/order_status.dart';
 import 'package:intl/intl.dart';
 import 'package:foodie_merchant/src/data/enums/delivery_option.dart';
 import 'package:foodie_merchant/src/data/enums/payment_option.dart';
@@ -29,7 +30,7 @@ class _OrderHistoryPageState extends State<OrderHistory> {
     fetchPendingOrders();
   }
 
-  fetchPendingOrders() async {
+  Future<void> fetchPendingOrders() async {
     setState(() {
       enableProgress = true;
     });
@@ -41,9 +42,11 @@ class _OrderHistoryPageState extends State<OrderHistory> {
         enableProgress = false;
       });
     }
+    return Future<void>(() {});
   }
 
   setUpMerchantOrderList(List<OrderView> orderList) {
+    _orderItemList = [];
     orderList.forEach((element) {
       OrderItem orderItem = OrderItem(
           false, // isExpanded ?
@@ -63,51 +66,58 @@ class _OrderHistoryPageState extends State<OrderHistory> {
         body: SingleChildScrollView(
             child: Container(
                 height: MediaQuery.of(context).size.height,
-                child: enableProgress
-                    ? OrderListSkeletonView()
-                    : _orderItemList.length > 0
-                        ? Container(
-                            height: MediaQuery.of(context).size.height,
-                            child: ListView(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: ExpansionPanelList(
-                                    expansionCallback:
-                                        (int index, bool isExpanded) {
-                                      setState(() {
-                                        _orderItemList[index].isExpanded =
-                                            !_orderItemList[index].isExpanded;
-                                      });
-                                    },
-                                    children:
-                                        _orderItemList.map((OrderItem item) {
-                                      return ExpansionPanel(
-                                        canTapOnHeader: true,
-                                        headerBuilder: (BuildContext context,
-                                            bool isExpanded) {
-                                          return ListTile(
-                                              title: orderHeader(item.order));
+                child: RefreshIndicator(
+                  onRefresh: fetchPendingOrders,
+                    child: enableProgress
+                        ? OrderListSkeletonView()
+                        : _orderItemList.length > 0
+                            ? Container(
+                                height: MediaQuery.of(context).size.height,
+                                child: ListView(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: ExpansionPanelList(
+                                        dividerColor: Colors.red,
+                                        expansionCallback:
+                                            (int index, bool isExpanded) {
+                                          setState(() {
+                                            _orderItemList[index].isExpanded =
+                                                !_orderItemList[index]
+                                                    .isExpanded;
+                                          });
                                         },
-                                        isExpanded: item.isExpanded,
-                                        body: OrderContent(
-                                            order: item.order,
-                                            showExpandedOrder: false),
-                                      );
-                                    }).toList(),
-                                  ),
-                                )
-                              ],
-                            ))
-                        : Container(
-                            height: MediaQuery.of(context).size.height,
-                            child: ListView(children: [
-                              Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 20),
-                                  child: Text(
-                                      "No completed orders at the moment",
-                                      textAlign: TextAlign.center))
-                            ])))));
+                                        children: _orderItemList
+                                            .map((OrderItem item) {
+                                          return ExpansionPanel(
+                                            canTapOnHeader: true,
+                                            headerBuilder:
+                                                (BuildContext context,
+                                                    bool isExpanded) {
+                                              return ListTile(
+                                                  title:
+                                                      orderHeader(item.order));
+                                            },
+                                            isExpanded: item.isExpanded,
+                                            body: OrderContent(
+                                                order: item.order,
+                                                showExpandedOrder: false),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    )
+                                  ],
+                                ))
+                            : Container(
+                                height: MediaQuery.of(context).size.height,
+                                child: ListView(children: [
+                                  Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20),
+                                      child: Text(
+                                          "No completed orders at the moment",
+                                          textAlign: TextAlign.center))
+                                ]))))));
   }
 
   Widget orderHeader(OrderView order) {
@@ -119,9 +129,9 @@ class _OrderHistoryPageState extends State<OrderHistory> {
           Row(
             children: [
               Image.asset(
-                order.deliveryOption == DeliveryOptions.deliver.index
+                order.orderStatus != OrderStatus.completed.index
                     ? "assets/lorry.png"
-                    : "assets/store-pickup.png",
+                    : "assets/complete.png",
                 fit: BoxFit.fill,
                 width: 50,
               ),
@@ -234,7 +244,7 @@ class _OrderHistoryPageState extends State<OrderHistory> {
                 ),
                 children: <TextSpan>[
                   TextSpan(text: ' '),
-                  TextSpan(text: order.subTotal.toStringAsFixed(2)),
+                  TextSpan(text: order.itemSubTotal.toStringAsFixed(2)),
                   TextSpan(text: " ("),
                   TextSpan(
                     text: (PaymentOption.values

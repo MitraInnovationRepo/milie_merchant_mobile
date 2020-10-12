@@ -235,7 +235,7 @@ class _LoginPageState extends State<Login> {
           ),
           TextFormField(
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp("^[1-9][0-9]*")),
+              FilteringTextInputFormatter.deny(RegExp(r"^0*"))
             ],
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,

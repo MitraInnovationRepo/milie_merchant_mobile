@@ -396,7 +396,7 @@ class CostDetails extends StatelessWidget {
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: order.subTotal.toStringAsFixed(2),
+                    text: order.itemSubTotal.toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
