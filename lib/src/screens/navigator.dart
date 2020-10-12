@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
-// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodie_merchant/src/data/model/user.dart';
 import 'package:foodie_merchant/src/screens/home/home.dart';
 import 'package:foodie_merchant/src/screens/order/order_history.dart';
 import 'package:foodie_merchant/src/screens/order/order_requests.dart';
 import 'package:foodie_merchant/src/screens/product/product_type_catalog.dart';
+import 'package:foodie_merchant/src/services/service_locator.dart';
+import 'package:foodie_merchant/src/services/user/user_service.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
@@ -24,8 +26,10 @@ class HomeNavigator extends StatefulWidget {
 class _HomeNavigatorState extends State<HomeNavigator> {
   final FirebaseMessaging _fcm = FirebaseMessaging();
   StreamSubscription iosSubscription;
+  UserService _userService = locator<UserService>();
 
   PersistentTabController _controller;
+
   List<Widget> _buildScreens() {
     return [Home(), OrderRequests(), OrderHistory(), ProductTypeCatalog()];
   }
@@ -68,6 +72,11 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       });
       _fcm.requestNotificationPermissions(IosNotificationSettings());
     }
+    _fcm.onTokenRefresh.listen((newToken) {
+      User deviceUpdateUser = new User.empty();
+      deviceUpdateUser.fireBaseRegistration = newToken;
+      this._userService.updateDeviceInfo(deviceUpdateUser);
+    });
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         String messageBody = _getMessage(message);
@@ -112,11 +121,11 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       confineInSafeArea: true,
       backgroundColor: Theme.of(context).bottomAppBarColor,
       handleAndroidBackButtonPress: true,
-      resizeToAvoidBottomInset:
-          true, // This needs to be true if you want to move up the screen when keyboard appears.
+      resizeToAvoidBottomInset: true,
+      // This needs to be true if you want to move up the screen when keyboard appears.
       stateManagement: true,
-      hideNavigationBarWhenKeyboardShows:
-          true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument.
+      hideNavigationBarWhenKeyboardShows: true,
+      // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument.
       decoration: NavBarDecoration(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(0.0), topRight: Radius.circular(0.0)),

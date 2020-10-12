@@ -161,15 +161,21 @@ class _PendingOrderPageState extends State<PendingOrder> {
     Widget continueButton = FlatButton(
       child: Text("Continue"),
       onPressed: () async {
-        int status = await _orderService.rejectOrder(order.id);
-        if (status == 200) {
+        OrderRejectResponse orderRejectResponse = await _orderService.rejectOrder(order.id);
+        if (orderRejectResponse.status != 100) {
           showSimpleNotification(
             Text("Order Rejected"),
-            background: Colors.amber,
+            background: Theme.of(context).backgroundColor,
           );
-          Navigator.of(context, rootNavigator: true).pop('dialog');
-          fetchPendingOrders();
         }
+        else{
+          showSimpleNotification(
+              Text(orderRejectResponse.message),
+              background: Colors.amber
+          );
+        }
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        fetchPendingOrders();
       },
     );
 

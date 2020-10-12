@@ -85,14 +85,19 @@ class OrderService {
     return orderRejectResponse;
   }
 
-  Future<int> rejectOrder(int orderId) async {
+  Future<OrderRejectResponse> rejectOrder(int orderId) async {
     final http.Response response = await _oAuth2Service.getClient().put(
       '$backendEndpoint/orders/shop/reject/$orderId',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    return response.statusCode;
+    OrderRejectResponse orderRejectResponse;
+    if (response.statusCode == 200) {
+      var data = json.decode(utf8.decode(response.bodyBytes));
+      orderRejectResponse = OrderRejectResponse.fromJson(data);
+    }
+    return orderRejectResponse;
   }
 
   Future<int> updateOrderToFoodReady(int orderId) async {
