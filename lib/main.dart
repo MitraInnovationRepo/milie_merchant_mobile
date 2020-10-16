@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         child: OverlaySupport(
             child: MaterialApp(
               title: 'Mitra',
+              debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 primaryColor: Colors.teal,
                 accentColor: CupertinoColors.darkBackgroundGray,

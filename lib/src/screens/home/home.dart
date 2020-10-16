@@ -71,293 +71,280 @@ class _HomePageState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.dark,
-          toolbarHeight: 0.0,
+      appBar: AppBar(
+        brightness: Brightness.dark,
+        toolbarHeight: 0.0,
+      ),
+      body: CustomScrollView(slivers: <Widget>[
+        SliverAppBar(
+          pinned: true,
+          backgroundColor: Colors.white,
+          toolbarHeight: MediaQuery.of(context).size.height * 0.05,
+          expandedHeight: MediaQuery.of(context).size.height * 0.05,
+          collapsedHeight: MediaQuery.of(context).size.height * 0.1,
+          flexibleSpace: Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: (_shop == null
+                ? Container()
+                : Container(child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ToggleSwitch(
+                  minWidth: 90.0,
+                  fontSize: 16.0,
+                  initialLabelIndex:
+                  _shop.status == ShopStatus.active.index ? 0 : 1,
+                  activeBgColor: _shop.status == ShopStatus.active.index
+                      ? Colors.green
+                      : Colors.red,
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: Colors.grey[400],
+                  inactiveFgColor: Colors.grey[900],
+                  labels: ['Active', 'Inactive'],
+                  onToggle: (index) {
+                    updateShopStatus(index);
+                  },
+                ),
+                Text(_shop.name + " - " + _shop.displayCity,
+                    style: TextStyle(fontSize: 22)),
+                _shop.status == 1
+                    ? Text("Online",
+                    style:
+                    TextStyle(color: Colors.green, fontSize: 18))
+                    : Text("Offline",
+                    style:
+                    TextStyle(color: Colors.red, fontSize: 18)),
+                Row(children: [
+                  RaisedButton(
+                    onPressed: () {
+                      _getMerchantNotHandledOrders();
+                    },
+                    child: Icon(Icons.refresh),
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.green)),
+                  ),
+                  SizedBox(width: 20),
+                  RaisedButton(
+                    onPressed: () {
+                      UserProfile userProfile = Provider.of<UserProfile>(
+                          context,
+                          listen: false);
+                      userProfile.clearAll();
+                      _userService.logoutUser();
+                      Navigator.of(context, rootNavigator: true)
+                          .pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => Login()),
+                              (Route<dynamic> route) => false);
+                    },
+                    child: Text("Logout"),
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.green)),
+                  )
+                ])
+              ],
+            ))),
+          ),
         ),
-        body: SingleChildScrollView(
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: (_shop == null
-                          ? Container()
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ToggleSwitch(
-                                  minWidth: 90.0,
-                                  fontSize: 16.0,
-                                  initialLabelIndex:
-                                      _shop.status == ShopStatus.active.index
-                                          ? 0
-                                          : 1,
-                                  activeBgColor:
-                                      _shop.status == ShopStatus.active.index
-                                          ? Colors.green
-                                          : Colors.red,
-                                  activeFgColor: Colors.white,
-                                  inactiveBgColor: Colors.grey[400],
-                                  inactiveFgColor: Colors.grey[900],
-                                  labels: ['Active', 'Inactive'],
-                                  onToggle: (index) {
-                                    updateShopStatus(index);
-                                  },
-                                ),
-                                Text(_shop.name + " - " + _shop.displayCity,
-                                    style: TextStyle(fontSize: 22)),
-                                _shop.status == 1
-                                    ? Text("Online",
-                                        style: TextStyle(
-                                            color: Colors.green, fontSize: 18))
-                                    : Text("Offline",
-                                        style: TextStyle(
-                                            color: Colors.red, fontSize: 18)),
-                                Row(children: [
-                                  RaisedButton(
-                                    onPressed: () {
-                                      _getMerchantNotHandledOrders();
-                                    },
-                                    child: Icon(Icons.refresh),
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(18.0),
-                                        side: BorderSide(color: Colors.green)),
-                                  ),
-                                  SizedBox(
-                                    width: 20
-                                  ),
-                                  RaisedButton(
-                                    onPressed: () {
-                                      UserProfile userProfile =
-                                          Provider.of<UserProfile>(context,
-                                              listen: false);
-                                      userProfile.clearAll();
-                                      _userService.logoutUser();
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pushAndRemoveUntil(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Login()),
-                                              (Route<dynamic> route) => false);
-                                    },
-                                    child: Text("Logout"),
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                        side: BorderSide(color: Colors.green)),
-                                  )
-                                ])
-                              ],
-                            )),
-                    ),
-                    Divider(),
-                    PromotionSlider(),
-                    Divider(),
-                    if (_merchantAnalyticsMap != null)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 18.0),
-                        child: Text(
-                          "Orders to handle",
-                          style: TextStyle(fontSize: 24, color: Colors.black87),
-                        ),
-                      ),
-                    if (_merchantAnalyticsMap != null)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            alignment: Alignment.topRight,
-                            height: 120,
-                            width: MediaQuery.of(context).size.width * 0.3,
-                            decoration: new BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(
-                                        0, 2), // changes position of shadow
-                                  ),
-                                ],
-                                borderRadius: new BorderRadius.all(
-                                  Radius.circular(12.0),
-                                )),
-                            child: Stack(
-                              children: [
-                                Image.asset(
-                                  'assets/home-icon1.png',
-                                  width: double.infinity,
-                                  fit: BoxFit.scaleDown,
-                                ),
-                                Container(
-                                  decoration: new BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      borderRadius: new BorderRadius.only(
-                                        topLeft: Radius.circular(12.0),
-                                        topRight: Radius.circular(12.0),
-                                      )),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "Pending ",
-                                        style: TextStyle(
-                                            fontSize: 24,
-                                            color: Colors.grey[800]),
-                                      ),
-                                      Text(
-                                        _merchantAnalyticsMap.orderMap[
-                                                    OrderStatus
-                                                        .pending.index] ==
-                                                null
-                                            ? "0"
-                                            : _merchantAnalyticsMap.orderMap[
-                                                    OrderStatus.pending.index]
-                                                .toString(),
-                                        style: TextStyle(
-                                            fontSize: 32,
-                                            color: Colors.black87),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 120,
-                            width: MediaQuery.of(context).size.width * 0.3,
-                            decoration: new BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(
-                                        0, 2), // changes position of shadow
-                                  ),
-                                ],
-                                borderRadius: new BorderRadius.all(
-                                  Radius.circular(12.0),
-                                )),
-                            child: Stack(
-                              children: [
-                                Image.asset(
-                                  'assets/home-icon2.png',
-                                  width: double.infinity,
-                                  fit: BoxFit.scaleDown,
-                                ),
-                                Container(
-                                  decoration: new BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      borderRadius: new BorderRadius.only(
-                                        topLeft: Radius.circular(12.0),
-                                        topRight: Radius.circular(12.0),
-                                      )),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "Preparing ",
-                                        style: TextStyle(
-                                            fontSize: 24,
-                                            color: Colors.grey[800]),
-                                      ),
-                                      Text(
-                                        _merchantAnalyticsMap.orderMap[
-                                                    OrderStatus
-                                                        .preparing.index] ==
-                                                null
-                                            ? "0"
-                                            : _merchantAnalyticsMap.orderMap[
-                                                    OrderStatus.preparing.index]
-                                                .toString(),
-                                        style: TextStyle(
-                                            fontSize: 32,
-                                            color: Colors.black87),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 120,
-                            width: MediaQuery.of(context).size.width * 0.3,
-                            decoration: new BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(
-                                        0, 2), // changes position of shadow
-                                  ),
-                                ],
-                                borderRadius: new BorderRadius.all(
-                                  Radius.circular(12.0),
-                                )),
-                            child: Stack(
-                              children: [
-                                Image.asset(
-                                  'assets/home-icon3.png',
-                                  width: double.infinity,
-                                  fit: BoxFit.scaleDown,
-                                ),
-                                Container(
-                                  decoration: new BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      borderRadius: new BorderRadius.only(
-                                        topLeft: Radius.circular(12.0),
-                                        topRight: Radius.circular(12.0),
-                                      )),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "Ready to go ",
-                                        style: TextStyle(
-                                            fontSize: 24,
-                                            color: Colors.grey[800]),
-                                      ),
-                                      Text(
-                                        _merchantAnalyticsMap.orderMap[
-                                                    OrderStatus
-                                                        .readyToPickUp.index] ==
-                                                null
-                                            ? "0"
-                                            : _merchantAnalyticsMap.orderMap[
-                                                    OrderStatus
-                                                        .readyToPickUp.index]
-                                                .toString(),
-                                        style: TextStyle(
-                                            fontSize: 32,
-                                            color: Colors.black87),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+        SliverToBoxAdapter(
+          child: PromotionSlider(),
+        ),
+        if (_merchantAnalyticsMap != null)
+          SliverToBoxAdapter(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 10),
+            child: Text(
+              "Orders to handle",
+              style: TextStyle(fontSize: 24, color: Colors.black87),
+            ),
+          )),
+        if (_merchantAnalyticsMap != null)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    alignment: Alignment.topRight,
+                    height: 120,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    decoration: new BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 2), // changes position of shadow
                           ),
                         ],
-                      )
-                  ],
-                ))));
+                        borderRadius: new BorderRadius.all(
+                          Radius.circular(12.0),
+                        )),
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          'assets/home-icon1.png',
+                          width: double.infinity,
+                          fit: BoxFit.scaleDown,
+                        ),
+                        Container(
+                          decoration: new BoxDecoration(
+                              color: Colors.grey.withOpacity(0.3),
+                              borderRadius: new BorderRadius.only(
+                                topLeft: Radius.circular(12.0),
+                                topRight: Radius.circular(12.0),
+                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Pending ",
+                                style: TextStyle(
+                                    fontSize: 24, color: Colors.grey[800]),
+                              ),
+                              Text(
+                                _merchantAnalyticsMap
+                                    .orderMap[OrderStatus.pending.index] ==
+                                    null
+                                    ? "0"
+                                    : _merchantAnalyticsMap
+                                    .orderMap[OrderStatus.pending.index]
+                                    .toString(),
+                                style:
+                                TextStyle(fontSize: 32, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 120,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    decoration: new BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 2), // changes position of shadow
+                          ),
+                        ],
+                        borderRadius: new BorderRadius.all(
+                          Radius.circular(12.0),
+                        )),
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          'assets/home-icon2.png',
+                          width: double.infinity,
+                          fit: BoxFit.scaleDown,
+                        ),
+                        Container(
+                          decoration: new BoxDecoration(
+                              color: Colors.grey.withOpacity(0.3),
+                              borderRadius: new BorderRadius.only(
+                                topLeft: Radius.circular(12.0),
+                                topRight: Radius.circular(12.0),
+                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Preparing ",
+                                style: TextStyle(
+                                    fontSize: 24, color: Colors.grey[800]),
+                              ),
+                              Text(
+                                _merchantAnalyticsMap.orderMap[
+                                OrderStatus.preparing.index] ==
+                                    null
+                                    ? "0"
+                                    : _merchantAnalyticsMap
+                                    .orderMap[OrderStatus.preparing.index]
+                                    .toString(),
+                                style:
+                                TextStyle(fontSize: 32, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 120,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    decoration: new BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 2), // changes position of shadow
+                          ),
+                        ],
+                        borderRadius: new BorderRadius.all(
+                          Radius.circular(12.0),
+                        )),
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          'assets/home-icon3.png',
+                          width: double.infinity,
+                          fit: BoxFit.scaleDown,
+                        ),
+                        Container(
+                          decoration: new BoxDecoration(
+                              color: Colors.grey.withOpacity(0.3),
+                              borderRadius: new BorderRadius.only(
+                                topLeft: Radius.circular(12.0),
+                                topRight: Radius.circular(12.0),
+                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Ready to go ",
+                                style: TextStyle(
+                                    fontSize: 24, color: Colors.grey[800]),
+                              ),
+                              Text(
+                                _merchantAnalyticsMap.orderMap[
+                                OrderStatus.readyToPickUp.index] ==
+                                    null
+                                    ? "0"
+                                    : _merchantAnalyticsMap
+                                    .orderMap[OrderStatus.readyToPickUp.index]
+                                    .toString(),
+                                style:
+                                TextStyle(fontSize: 32, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+
+      ]),
+    );
   }
 
   updateShopStatus(int index) async {

@@ -41,6 +41,10 @@ class _ProductTypeCatalogPageState extends State<ProductTypeCatalog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          brightness: Brightness.dark,
+          toolbarHeight: 0.0,
+        ),
         body: CustomScrollView(slivers: <Widget>[
           enableProgress
               ? ProductTypeSkeletonListView()
