@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodie_merchant/src/data/enums/order_status.dart';
 import 'package:intl/intl.dart';
-import 'package:foodie_merchant/src/data/enums/delivery_option.dart';
 import 'package:foodie_merchant/src/data/enums/payment_option.dart';
 import 'package:foodie_merchant/src/data/model/order_detail_view.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';
