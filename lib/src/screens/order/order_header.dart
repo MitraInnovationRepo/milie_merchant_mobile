@@ -142,10 +142,7 @@ class OrderHeader extends StatelessWidget {
                   maxWidth: MediaQuery.of(context).size.width * 0.3),
               child: (Wrap(
                 children: [
-                  if (order.orderAcceptedTime == null)
-                    buildTime("Received at: ", order.createdDate, Icons.archive,
-                        Colors.blueGrey)
-                  else if (order.orderAcceptedTime != null &&
+                  if (order.orderAcceptedTime != null &&
                       order.foodPreparedTime == null)
                     buildTime("Accepted at: ", order.orderAcceptedTime,
                         Icons.playlist_add_check, Colors.yellow[800])

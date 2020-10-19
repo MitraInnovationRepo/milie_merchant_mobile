@@ -7,6 +7,7 @@ import 'package:foodie_merchant/src/screens/util/driver_info_card.dart';
 import 'package:foodie_merchant/src/screens/widget/square_button.dart';
 import 'package:foodie_merchant/src/data/enums/payment_option.dart';
 import 'package:foodie_merchant/src/util/constant.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderAction {
   String title;
@@ -21,6 +22,7 @@ class OrderContent extends StatelessWidget {
   final OrderAction secondaryAction;
   final Function showOrderDetails;
   final bool showExpandedOrder;
+  final bool isHistory;
 
   OrderContent(
       {Key key,
@@ -28,10 +30,9 @@ class OrderContent extends StatelessWidget {
       this.primaryAction,
       this.secondaryAction,
       this.showOrderDetails,
-      this.showExpandedOrder})
+      this.showExpandedOrder,
+      this.isHistory})
       : super(key: key);
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class OrderContent extends StatelessWidget {
                       SizedBox(
                         width: 10.0,
                       ),
-                      DriverInfoCard(cabNo: order.cabNo),
+                      DriverInfoCard(cabNo: order.cabNo, showMobile: !this.isHistory),
                     ],
                   ),
                 ),
@@ -88,7 +89,7 @@ class OrderContent extends StatelessWidget {
                                   child: SquareButton(
                                       title: primaryAction.title,
                                       backgroundColor:
-                                          Theme.of(context).accentColor),
+                                          Theme.of(context).primaryColor),
                                 ),
                               SizedBox(
                                 width: 50.0,
@@ -98,8 +99,7 @@ class OrderContent extends StatelessWidget {
                                   onTap: () => secondaryAction.action(order),
                                   child: SquareButton(
                                       title: secondaryAction.title,
-                                      backgroundColor:
-                                          Theme.of(context).primaryColor),
+                                      backgroundColor: Colors.orangeAccent),
                                 ),
                             ],
                           ),
@@ -130,10 +130,15 @@ class OrderContent extends StatelessWidget {
                                               fontSize: 16))),
                                   Row(
                                     children: [
-                                      Icon(
-                                        Icons.phone,
-                                        size: 20,
-                                        color: Colors.black54,
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.phone,
+                                          size: 20,
+                                          color: Colors.black54,
+                                        ),
+                                        onPressed: () {
+                                          launch("tel://${order.user.phoneNumber}");
+                                        },
                                       ),
                                       SizedBox(
                                         width: 5.0,

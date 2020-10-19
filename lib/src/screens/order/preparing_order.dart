@@ -95,7 +95,8 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
                                         primaryAction: OrderAction(
                                             "FOOD IS READY",
                                             updateToFoodIsReady),
-                                        showOrderDetails: showOrderDetails),
+                                        showOrderDetails: showOrderDetails,
+                                        isHistory: false),
                               );
                             }).toList(),
                           ))
@@ -103,8 +104,10 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
                 : Container(
                     height: MediaQuery.of(context).size.height,
                     child: ListView(children: [
-                      Padding(padding: EdgeInsets.symmetric(vertical: 20),
-                      child: Text("No preparing orders at the moment", textAlign: TextAlign.center))
+                      Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Text("No preparing orders at the moment",
+                              textAlign: TextAlign.center))
                     ])),
         onRefresh: fetchPreparingOrders);
   }

@@ -94,7 +94,7 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
                                           isExpanded: item.isExpanded,
                                           body: OrderContent(
                                               order: item.order,
-                                              showExpandedOrder: false),
+                                              showExpandedOrder: false, isHistory: false),
                                         );
                                       }).toList(),
                                     ),
