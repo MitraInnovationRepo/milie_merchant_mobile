@@ -31,18 +31,20 @@ class _ProductCatalogPageState extends State<ProductCatalog> {
   final searchController = TextEditingController();
   final focusNode = FocusNode();
   Timer _debounce;
+  String dropDownSelectedValue;
 
   @override
   void initState() {
     super.initState();
     searchController.addListener(_onSearchChanged);
-    fetchProductTypes();
+    fetchProducts(-1);
+    dropDownSelectedValue = "All";
   }
 
-  fetchProductTypes() async {
+  fetchProducts(int status) async {
     enableProgress = true;
     List<Product> _productList = await _productService
-        .findShopProductsByProductTypeId(this.widget.productType.id);
+        .findShopProductsByProductTypeId(this.widget.productType.id, status);
     setState(() {
       this._productList = _productList;
       this._filteredProductList = _productList;
@@ -121,7 +123,8 @@ class _ProductCatalogPageState extends State<ProductCatalog> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: CachedNetworkImage(
-                            imageUrl: "${Constant.filePath}${_filteredProductList[index].imageUrl}",
+                            imageUrl:
+                                "${Constant.filePath}${_filteredProductList[index].imageUrl}",
                             fit: BoxFit.fill,
                             height: 80.0,
                             width: 100.0,
@@ -139,7 +142,9 @@ class _ProductCatalogPageState extends State<ProductCatalog> {
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold)),
                                 Text(
-                                    (_filteredProductList[index].productType.name),
+                                    (_filteredProductList[index]
+                                        .productType
+                                        .name),
                                     style: TextStyle(fontSize: 16))
                               ],
                             )),
@@ -195,7 +200,7 @@ class _ProductCatalogPageState extends State<ProductCatalog> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Container(
-          width: MediaQuery.of(context).size.width - 50,
+          width: MediaQuery.of(context).size.width * 0.7,
           child: TextField(
               enabled: true,
               textAlign: TextAlign.left,
@@ -211,7 +216,32 @@ class _ProductCatalogPageState extends State<ProductCatalog> {
                 labelStyle: TextStyle(color: Colors.black87),
                 focusedBorder: InputBorder.none,
               )),
-        )
+        ),
+        Container(
+            width: MediaQuery.of(context).size.width * 0.2,
+            child: DropdownButtonHideUnderline(
+                child: DropdownButton(
+                    elevation: 3,
+                    value: dropDownSelectedValue,
+                    items: <String>['All', 'Active', 'Inactive']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropDownSelectedValue = value;
+                        if (value == "Active") {
+                          fetchProducts(1);
+                        } else if (value == "Inactive") {
+                          fetchProducts(0);
+                        } else {
+                          fetchProducts(-1);
+                        }
+                      });
+                    })))
       ],
     );
   }
