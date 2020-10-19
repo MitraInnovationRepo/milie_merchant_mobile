@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foodie_merchant/src/data/notifier/tab_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:foodie_merchant/src/data/model/user_profile.dart';
 import 'package:foodie_merchant/src/screens/login.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => UserProfile.empty()),
+          ChangeNotifierProvider(create: (context) => TabNotifier.empty()),
         ],
         child: OverlaySupport(
             child: MaterialApp(

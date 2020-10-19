@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:foodie_merchant/src/data/notifier/tab_notifier.dart';
 import 'package:foodie_merchant/src/screens/order/pending_order.dart';
 import 'package:foodie_merchant/src/screens/order/pickup_ready_order.dart';
 import 'package:foodie_merchant/src/screens/order/preparing_order.dart';
 import 'package:foodie_merchant/src/screens/order/upcoming_order.dart';
+import 'package:provider/provider.dart';
 import 'package:tabbar/tabbar.dart';
 
 class OrderRequests extends StatefulWidget {
@@ -17,6 +19,12 @@ class _OrderRequestsPageState extends State<OrderRequests> {
   @override
   void initState() {
     super.initState();
+    Provider.of<TabNotifier>(context, listen: false).addListener(_tabChange);
+  }
+
+  _tabChange(){
+    TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
+    this.controller.jumpToPage(tabNotifier.currentOrderTab);
   }
 
   @override
