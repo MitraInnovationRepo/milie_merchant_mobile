@@ -12,7 +12,6 @@ class Constant {
   //Prod
   static String clientSecret = "5c5450dc-6f10-4e47-a52a-3c9dcc4e776f";
   static String backendEndpoint = "https://api.foodie-apps.com/api";
-  static String pageEndpoint = "https://api.foodie-apps.com";
   static String keycloakEndpoint = "https://auth.foodie-apps.com";
   static String contentEndpoint = "https://content.foodie-apps.com";
 
