@@ -21,6 +21,13 @@ class Constant {
   static String deliveryAPIUserName = "mithra";
   static String deliveryAPIPassword = "mithra@875w65";
 
+  //Prod
+  // static String clientSecret = "6a535787-2507-42cc-80eb-2c2eccca6af3";
+  // static String backendEndpoint = "https://api.milieapp.com/api";
+  // static String keycloakEndpoint = "https://api.milieapp.com:8443";
+
+  static String merchantRole = "merchant";
+  static String customerRole = "customer";
   static String tncCustomer = "http://app.milieapp.com/UserAgreement.pdf";
   static String tncMerchant = "http://app.milieapp.com/MerchantAgreement.pdf";
 
