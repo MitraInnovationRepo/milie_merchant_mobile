@@ -64,7 +64,7 @@ class _OrderHistoryPageState extends State<OrderHistory> {
         ),
         body: SingleChildScrollView(
             child: Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height * 0.88,
                 child: RefreshIndicator(
                     onRefresh: fetchPendingOrders,
                     child: enableProgress
