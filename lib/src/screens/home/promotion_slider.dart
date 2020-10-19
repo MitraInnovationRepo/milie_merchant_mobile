@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:foodie_merchant/src/util/constant.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
 class PromotionSlider extends StatelessWidget {
   final List<String> imgList = [
-    'https://i.imgur.com/SBPqQvF.png',
-    'https://i.imgur.com/RGb19eN.jpg',
-    'https://i.imgur.com/vFq13J8.jpg',
-    'https://i.imgur.com/BZOLRhW.jpg'
+    '${Constant.contentEndpoint}/uploads/slider1_27b108e560.jpg',
+    '${Constant.contentEndpoint}/uploads/slider2_fcd849647a.jpg',
+    '${Constant.contentEndpoint}/uploads/slider3_9d2e12176a.jpg',
   ];
 
   @override

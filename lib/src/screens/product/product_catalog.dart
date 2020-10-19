@@ -138,11 +138,9 @@ class _ProductCatalogPageState extends State<ProductCatalog> {
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold)),
-                                if (_filteredProductList[index].description !=
-                                    null)
-                                  Text(
-                                      (_filteredProductList[index].description),
-                                      style: TextStyle(fontSize: 16)),
+                                Text(
+                                    (_filteredProductList[index].productType.name),
+                                    style: TextStyle(fontSize: 16))
                               ],
                             )),
                       ],

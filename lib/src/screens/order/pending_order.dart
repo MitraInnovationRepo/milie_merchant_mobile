@@ -97,7 +97,8 @@ class _PendingOrderPageState extends State<PendingOrder> {
                                             OrderAction("ACCEPT", acceptOrder),
                                         secondaryAction:
                                             OrderAction("REJECT", rejectOrder),
-                                        showOrderDetails: showOrderDetails),
+                                        showOrderDetails: showOrderDetails,
+                                        isHistory: false),
                               );
                             }).toList(),
                           ))
@@ -117,7 +118,8 @@ class _PendingOrderPageState extends State<PendingOrder> {
     setState(() {
       orderProcessing = true;
     });
-    OrderRejectResponse orderRejectResponse = await _orderService.approveOrder(order.id);
+    OrderRejectResponse orderRejectResponse =
+        await _orderService.approveOrder(order.id);
     setState(() {
       orderProcessing = false;
     });
@@ -126,12 +128,9 @@ class _PendingOrderPageState extends State<PendingOrder> {
         Text("Order Approved"),
         background: Theme.of(context).backgroundColor,
       );
-    }
-    else{
-      showSimpleNotification(
-        Text(orderRejectResponse.message),
-        background: Colors.amber
-      );
+    } else {
+      showSimpleNotification(Text(orderRejectResponse.message),
+          background: Colors.amber);
     }
     fetchPendingOrders();
   }
@@ -161,18 +160,16 @@ class _PendingOrderPageState extends State<PendingOrder> {
     Widget continueButton = FlatButton(
       child: Text("Continue"),
       onPressed: () async {
-        OrderRejectResponse orderRejectResponse = await _orderService.rejectOrder(order.id);
+        OrderRejectResponse orderRejectResponse =
+            await _orderService.rejectOrder(order.id);
         if (orderRejectResponse.status != 100) {
           showSimpleNotification(
             Text("Order Rejected"),
             background: Theme.of(context).backgroundColor,
           );
-        }
-        else{
-          showSimpleNotification(
-              Text(orderRejectResponse.message),
-              background: Colors.amber
-          );
+        } else {
+          showSimpleNotification(Text(orderRejectResponse.message),
+              background: Colors.amber);
         }
         Navigator.of(context, rootNavigator: true).pop('dialog');
         fetchPendingOrders();

@@ -64,9 +64,9 @@ class _OrderHistoryPageState extends State<OrderHistory> {
         ),
         body: SingleChildScrollView(
             child: Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height * 0.88,
                 child: RefreshIndicator(
-                  onRefresh: fetchPendingOrders,
+                    onRefresh: fetchPendingOrders,
                     child: enableProgress
                         ? OrderListSkeletonView()
                         : _orderItemList.length > 0
@@ -100,7 +100,8 @@ class _OrderHistoryPageState extends State<OrderHistory> {
                                             isExpanded: item.isExpanded,
                                             body: OrderContent(
                                                 order: item.order,
-                                                showExpandedOrder: false),
+                                                showExpandedOrder: false,
+                                                isHistory: true),
                                           );
                                         }).toList(),
                                       ),

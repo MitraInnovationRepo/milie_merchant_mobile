@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie_merchant/src/data/model/user.dart';
+import 'package:foodie_merchant/src/data/notifier/tab_notifier.dart';
 import 'package:foodie_merchant/src/screens/home/home.dart';
 import 'package:foodie_merchant/src/screens/order/order_history.dart';
 import 'package:foodie_merchant/src/screens/order/order_requests.dart';
@@ -13,6 +14,7 @@ import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:foodie_merchant/src/services/user/user_service.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
 class HomeNavigator extends StatefulWidget {
   HomeNavigator({Key key, this.title}) : super(key: key);
@@ -66,6 +68,9 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   @override
   void initState() {
     super.initState();
+    _controller = PersistentTabController(initialIndex: 0);
+    TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
+    tabNotifier.setTabController(_controller);
     if (Platform.isIOS) {
       iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
         // save the token  OR subscribe to a topic here

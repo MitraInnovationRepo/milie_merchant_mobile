@@ -6,8 +6,9 @@ import 'package:foodie_merchant/src/services/service_locator.dart';
 
 class DriverInfoCard extends StatefulWidget {
   final String cabNo;
+  final bool showMobile;
 
-  DriverInfoCard({Key key, this.cabNo}) : super(key: key);
+  DriverInfoCard({Key key, this.cabNo, this.showMobile}) : super(key: key);
 
   @override
   _DriverInfoCardPageState createState() => _DriverInfoCardPageState();
@@ -36,7 +37,13 @@ class _DriverInfoCardPageState extends State<DriverInfoCard> {
       this._driverInformation != null ?
       Column(
         children: [
+          this.widget.showMobile ?
           Text("${_driverInformation.FullName} - ${_driverInformation.Mobile}",
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style:
+              TextStyle(color: Colors.black87, fontSize: 18)) :
+          Text("${_driverInformation.FullName}",
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               style:

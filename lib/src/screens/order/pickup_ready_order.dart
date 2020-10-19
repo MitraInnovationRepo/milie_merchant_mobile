@@ -105,7 +105,8 @@ class _PickupReadyOrderPageState extends State<PickupReadyOrder> {
                                                   ? "ORDER COMPLETE"
                                                   : "PICKED UP BY RIDER",
                                               completeOrder),
-                                          showOrderDetails: showOrderDetails),
+                                          showOrderDetails: showOrderDetails,
+                                          isHistory: false),
                                 );
                               }).toList(),
                             ))
