@@ -54,8 +54,8 @@ class ProductService {
         });
   }
 
-  Future<List<Product>> findShopProductsByProductTypeId(int productTypeId) async{
-    final http.Response response  = await _oAuth2Service.getClient().get('$backendEndpoint/product/shop/mine/product-type/$productTypeId', headers: <String, String>{
+  Future<List<Product>> findShopProductsByProductTypeId(int productTypeId, int status) async{
+    final http.Response response  = await _oAuth2Service.getClient().get('$backendEndpoint/product/shop/mine/product-type/$productTypeId?status=$status', headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
     List<Product> list = [];
