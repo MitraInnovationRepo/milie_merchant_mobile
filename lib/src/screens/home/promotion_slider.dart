@@ -6,9 +6,9 @@ import 'package:skeleton_text/skeleton_text.dart';
 
 class PromotionSlider extends StatelessWidget {
   final List<String> imgList = [
-    '${Constant.contentEndpoint}/uploads/slider1_27b108e560.jpg',
-    '${Constant.contentEndpoint}/uploads/slider2_fcd849647a.jpg',
-    '${Constant.contentEndpoint}/uploads/slider3_9d2e12176a.jpg',
+    '${Constant.contentEndpoint}/uploads/slider1_94401ec905.jpg',
+    '${Constant.contentEndpoint}/uploads/slider2_7ba2b02b3d.jpg',
+    '${Constant.contentEndpoint}/uploads/slider3_ba362e7f11.jpg',
   ];
 
   @override
