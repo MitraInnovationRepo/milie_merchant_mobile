@@ -14,6 +14,9 @@ OrderDetailView _$OrderDetailViewFromJson(Map<String, dynamic> json) {
     json['product'] == null
         ? null
         : Product.fromJson(json['product'] as Map<String, dynamic>),
+    (json['addonTotal'] as num)?.toDouble(),
+    (json['additionalTotal'] as num)?.toDouble(),
+    (json['subTotal'] as num)?.toDouble(),
     (json['addonList'] as List)
         ?.map((e) =>
             e == null ? null : OrderAddon.fromJson(e as Map<String, dynamic>))
@@ -24,9 +27,7 @@ OrderDetailView _$OrderDetailViewFromJson(Map<String, dynamic> json) {
             : OrderAdditional.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     json['description'] as String,
-  )
-    ..addonTotal = (json['addonTotal'] as num)?.toDouble()
-    ..additionalTotal = (json['additionalTotal'] as num)?.toDouble();
+  );
 }
 
 Map<String, dynamic> _$OrderDetailViewToJson(OrderDetailView instance) =>
@@ -37,6 +38,7 @@ Map<String, dynamic> _$OrderDetailViewToJson(OrderDetailView instance) =>
       'product': instance.product,
       'addonTotal': instance.addonTotal,
       'additionalTotal': instance.additionalTotal,
+      'subTotal': instance.subTotal,
       'description': instance.description,
       'addonList': instance.addonList,
       'additionalList': instance.additionalList,
