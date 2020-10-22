@@ -13,11 +13,12 @@ class OrderDetailView {
   Product product;
   double addonTotal;
   double additionalTotal;
+  double subTotal;
   String description;
   List<OrderAddon> addonList;
   List<OrderAdditional> additionalList;
 
-  OrderDetailView(this.id, this.quantity, this.total, this.product, this.addonList, this.additionalList, this.description);
+  OrderDetailView(this.id, this.quantity, this.total, this.product, this.addonTotal, this.additionalTotal, this.subTotal, this.addonList, this.additionalList, this.description);
 
   OrderDetailView.empty();
 

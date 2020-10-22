@@ -129,4 +129,18 @@ class OrderService {
     );
     return response.statusCode;
   }
+
+  Future<OrderView> fetchOrder(int id) async {
+    final http.Response response = await _oAuth2Service.getClient().get(
+        '$backendEndpoint/orders/$id',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    OrderView order;
+    if (response.statusCode == 200) {
+      var data = json.decode(utf8.decode(response.bodyBytes));
+      order = OrderView.fromJson(data);
+    }
+    return order;
+  }
 }
