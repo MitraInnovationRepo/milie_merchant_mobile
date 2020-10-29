@@ -225,32 +225,6 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Delivery"),
-                        Text(order.currency +
-                            " " +
-                            order.deliveryTotal.toStringAsFixed(2)),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Total"),
-                        Text(order.currency +
-                            " " +
-                            order.subTotal.toStringAsFixed(2)),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
