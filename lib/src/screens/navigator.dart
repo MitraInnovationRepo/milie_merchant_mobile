@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audioplayers/audio_cache.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foodie_merchant/src/data/model/order.dart';
 import 'package:foodie_merchant/src/data/model/order_reject_response.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';
 import 'package:foodie_merchant/src/data/model/user.dart';
@@ -96,6 +96,10 @@ class _HomeNavigatorState extends State<HomeNavigator> {
         String messageBody = _getMessage(message);
         String orderId = _getOrderId(message);
         OverlaySupportEntry supportEntry;
+        AudioCache audioCache = AudioCache();
+        var bytes =
+            await (await audioCache.load('notification.mp3')).readAsBytes();
+        audioCache.playBytes(bytes);
         supportEntry = showSimpleNotification(
           InkWell(
             onTap: () {
@@ -191,7 +195,8 @@ class _HomeNavigatorState extends State<HomeNavigator> {
           children: [
             Card(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -200,9 +205,11 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                       children: [
                         Text(order.user.phoneNumber),
                         SizedBox(width: 10),
-                        IconButton(icon: Icon(Icons.phone), onPressed: () {
-                          launch("tel://${order.user.phoneNumber}");
-                        }),
+                        IconButton(
+                            icon: Icon(Icons.phone),
+                            onPressed: () {
+                              launch("tel://${order.user.phoneNumber}");
+                            }),
                       ],
                     ),
                   ],
@@ -403,10 +410,12 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                             background: Theme.of(context).backgroundColor,
                           );
                         } else {
-                          showSimpleNotification(Text(orderRejectResponse.message),
+                          showSimpleNotification(
+                              Text(orderRejectResponse.message),
                               background: Colors.amber);
                         }
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        Navigator.of(context, rootNavigator: true)
+                            .pop('dialog');
                       },
                       child: new Text("Reject"),
                     ),
@@ -424,10 +433,12 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                             background: Theme.of(context).backgroundColor,
                           );
                         } else {
-                          showSimpleNotification(Text(orderRejectResponse.message),
+                          showSimpleNotification(
+                              Text(orderRejectResponse.message),
                               background: Colors.amber);
                         }
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        Navigator.of(context, rootNavigator: true)
+                            .pop('dialog');
                       },
                       child: new Text("Accept"),
                     ),

@@ -16,7 +16,7 @@ class Constant {
   static String contentEndpoint = "https://content.foodie-apps.com";
 
 
-  static String deliveryEndpoint = "http://link.lakmobile.com/vconnect/ext/api";
+  static String deliveryEndpoint = "http://youcab-apps.com/vconnect/ext/api";
   static String deliveryAPIUserName = "mithra";
   static String deliveryAPIPassword = "mithra@875w65";
 
