@@ -446,7 +446,7 @@ class _LoginPageState extends State<Login> {
     UserProfile userProfile = Provider.of<UserProfile>(context, listen: false);
     _userService.setUpUserProfile(userProfile, parsedJwt);
     return userProfile.roles.length > 0 &&
-        userProfile.roles.contains("merchant");
+        userProfile.roles.contains(Constant.merchantRole);
   }
 
   Future<User> _fetchUserDetails() async {
