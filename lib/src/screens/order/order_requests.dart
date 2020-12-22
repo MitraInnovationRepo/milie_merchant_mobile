@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:tabbar/tabbar.dart';
 
 class OrderRequests extends StatefulWidget {
-
+  
   @override
   _OrderRequestsPageState createState() => _OrderRequestsPageState();
 }
@@ -52,8 +52,8 @@ class _OrderRequestsPageState extends State<OrderRequests> {
       body: TabbarContent(
         controller: controller,
         children: <Widget>[
-          PendingOrder(),
-          PreparingOrder(),
+          PendingOrder(this.controller),
+          PreparingOrder(this.controller),
           PickupReadyOrder(),
           UpcomingOrder()
         ],

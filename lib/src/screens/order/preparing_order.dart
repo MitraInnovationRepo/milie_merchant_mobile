@@ -13,6 +13,8 @@ import 'package:overlay_support/overlay_support.dart';
 import 'order_item.dart';
 
 class PreparingOrder extends StatefulWidget {
+  PreparingOrder(this.controller);
+  final PageController controller;
   @override
   _PreparingOrderPageState createState() => _PreparingOrderPageState();
 }
@@ -23,10 +25,12 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
   bool enableProgress = false;
   OrderService _orderService = locator<OrderService>();
   bool orderProcessing = false;
+  PageController controller;
 
   @override
   void initState() {
     super.initState();
+    this.controller = widget.controller;
     fetchPreparingOrders();
   }
 
@@ -125,6 +129,7 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
         Text("Order is updated to Food Ready"),
         background: Theme.of(context).backgroundColor,
       );
+      this.controller.jumpToPage(2);
       fetchPreparingOrders();
     }
   }

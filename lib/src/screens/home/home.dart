@@ -87,68 +87,76 @@ class _HomePageState extends State<Home> {
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: (_shop == null
                 ? Container()
-                : Container(child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ToggleSwitch(
-                  minWidth: 90.0,
-                  fontSize: 16.0,
-                  initialLabelIndex:
-                  _shop.status == ShopStatus.active.index ? 0 : 1,
-                  activeBgColor: _shop.status == ShopStatus.active.index
-                      ? Colors.green
-                      : Colors.red,
-                  activeFgColor: Colors.white,
-                  inactiveBgColor: Colors.grey[400],
-                  inactiveFgColor: Colors.grey[900],
-                  labels: ['Active', 'Inactive'],
-                  onToggle: (index) {
-                    updateShopStatus(index);
-                  },
-                ),
-                Text(_shop.name + " - " + _shop.displayCity,
-                    style: TextStyle(fontSize: 22)),
-                _shop.status == 1
-                    ? Text("Online",
-                    style:
-                    TextStyle(color: Colors.green, fontSize: 18))
-                    : Text("Offline",
-                    style:
-                    TextStyle(color: Colors.red, fontSize: 18)),
-                Row(children: [
-                  RaisedButton(
-                    onPressed: () {
-                      _getMerchantNotHandledOrders();
-                    },
-                    child: Icon(Icons.refresh),
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.green)),
-                  ),
-                  SizedBox(width: 20),
-                  RaisedButton(
-                    onPressed: () {
-                      UserProfile userProfile = Provider.of<UserProfile>(
-                          context,
-                          listen: false);
-                      userProfile.clearAll();
-                      _userService.logoutUser();
-                      Navigator.of(context, rootNavigator: true)
-                          .pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => Login()),
-                              (Route<dynamic> route) => false);
-                    },
-                    child: Text("Logout"),
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.green)),
-                  )
-                ])
-              ],
-            ))),
+                : Container(
+                    child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ToggleSwitch(
+                        minWidth: 90.0,
+                        fontSize: 16.0,
+                        initialLabelIndex:
+                            _shop.status == ShopStatus.active.index ? 0 : 1,
+                        activeBgColor: _shop.status == ShopStatus.active.index
+                            ? Colors.green
+                            : Colors.red,
+                        activeFgColor: Colors.white,
+                        inactiveBgColor: Colors.grey[400],
+                        inactiveFgColor: Colors.grey[900],
+                        labels: ['Active', 'Inactive'],
+                        onToggle: (index) {
+                          updateShopStatus(index);
+                        },
+                      ),
+                      SizedBox(width: 15),
+                      Flexible(
+                          child: Text(_shop.name + " - " + _shop.displayCity,
+                              style: TextStyle(fontSize: 22),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis)),
+                      SizedBox(width: 15),
+                      _shop.status == 1
+                          ? Text("Online",
+                              style:
+                                  TextStyle(color: Colors.green, fontSize: 18))
+                          : Text("Offline",
+                              style:
+                                  TextStyle(color: Colors.red, fontSize: 18)),
+                      SizedBox(width: 15),
+                      Row(children: [
+                        RaisedButton(
+                          onPressed: () {
+                            _getMerchantNotHandledOrders();
+                          },
+                          child: Icon(Icons.refresh),
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.green)),
+                        ),
+                        SizedBox(width: 20),
+                        RaisedButton(
+                          onPressed: () {
+                            UserProfile userProfile = Provider.of<UserProfile>(
+                                context,
+                                listen: false);
+                            userProfile.clearAll();
+                            _userService.logoutUser();
+                            Navigator.of(context, rootNavigator: true)
+                                .pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => Login()),
+                                    (Route<dynamic> route) => false);
+                          },
+                          child: Text("Logout"),
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.green)),
+                        )
+                      ])
+                    ],
+                  ))),
           ),
         ),
         SliverToBoxAdapter(
@@ -185,7 +193,8 @@ class _HomePageState extends State<Home> {
                               color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 1,
                               blurRadius: 2,
-                              offset: Offset(0, 2), // changes position of shadow
+                              offset:
+                                  Offset(0, 2), // changes position of shadow
                             ),
                           ],
                           borderRadius: new BorderRadius.all(
@@ -215,15 +224,15 @@ class _HomePageState extends State<Home> {
                                       fontSize: 24, color: Colors.grey[800]),
                                 ),
                                 Text(
-                                  _merchantAnalyticsMap
-                                      .orderMap[OrderStatus.pending.index] ==
-                                      null
+                                  _merchantAnalyticsMap.orderMap[
+                                              OrderStatus.pending.index] ==
+                                          null
                                       ? "0"
                                       : _merchantAnalyticsMap
-                                      .orderMap[OrderStatus.pending.index]
-                                      .toString(),
-                                  style:
-                                  TextStyle(fontSize: 32, color: Colors.black87),
+                                          .orderMap[OrderStatus.pending.index]
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: 32, color: Colors.black87),
                                 ),
                               ],
                             ),
@@ -246,7 +255,8 @@ class _HomePageState extends State<Home> {
                               color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 1,
                               blurRadius: 2,
-                              offset: Offset(0, 2), // changes position of shadow
+                              offset:
+                                  Offset(0, 2), // changes position of shadow
                             ),
                           ],
                           borderRadius: new BorderRadius.all(
@@ -277,14 +287,14 @@ class _HomePageState extends State<Home> {
                                 ),
                                 Text(
                                   _merchantAnalyticsMap.orderMap[
-                                  OrderStatus.preparing.index] ==
-                                      null
+                                              OrderStatus.preparing.index] ==
+                                          null
                                       ? "0"
                                       : _merchantAnalyticsMap
-                                      .orderMap[OrderStatus.preparing.index]
-                                      .toString(),
-                                  style:
-                                  TextStyle(fontSize: 32, color: Colors.black87),
+                                          .orderMap[OrderStatus.preparing.index]
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: 32, color: Colors.black87),
                                 ),
                               ],
                             ),
@@ -307,7 +317,8 @@ class _HomePageState extends State<Home> {
                               color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 1,
                               blurRadius: 2,
-                              offset: Offset(0, 2), // changes position of shadow
+                              offset:
+                                  Offset(0, 2), // changes position of shadow
                             ),
                           ],
                           borderRadius: new BorderRadius.all(
@@ -337,15 +348,15 @@ class _HomePageState extends State<Home> {
                                       fontSize: 24, color: Colors.grey[800]),
                                 ),
                                 Text(
-                                  _merchantAnalyticsMap.orderMap[
-                                  OrderStatus.readyToPickUp.index] ==
-                                      null
+                                  _merchantAnalyticsMap.orderMap[OrderStatus
+                                              .readyToPickUp.index] ==
+                                          null
                                       ? "0"
-                                      : _merchantAnalyticsMap
-                                      .orderMap[OrderStatus.readyToPickUp.index]
-                                      .toString(),
-                                  style:
-                                  TextStyle(fontSize: 32, color: Colors.black87),
+                                      : _merchantAnalyticsMap.orderMap[
+                                              OrderStatus.readyToPickUp.index]
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontSize: 32, color: Colors.black87),
                                 ),
                               ],
                             ),
@@ -358,12 +369,11 @@ class _HomePageState extends State<Home> {
               ),
             ),
           )
-
       ]),
     );
   }
 
-  moveToOrders(int tab){
+  moveToOrders(int tab) {
     TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
     tabNotifier.setOrderTab(tab);
     tabNotifier.tabController.jumpToTab(1);
