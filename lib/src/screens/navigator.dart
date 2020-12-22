@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -23,6 +24,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:screen/screen.dart';
 
 class HomeNavigator extends StatefulWidget {
   HomeNavigator({Key key, this.title}) : super(key: key);
@@ -77,6 +79,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   @override
   void initState() {
     super.initState();
+    Screen.keepOn(true);
     _controller = PersistentTabController(initialIndex: 0);
     TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
     tabNotifier.setTabController(_controller);
@@ -96,10 +99,17 @@ class _HomeNavigatorState extends State<HomeNavigator> {
         String messageBody = _getMessage(message);
         String orderId = _getOrderId(message);
         OverlaySupportEntry supportEntry;
-        AudioCache audioCache = AudioCache();
-        var bytes =
-            await (await audioCache.load('notification.mp3')).readAsBytes();
-        audioCache.playBytes(bytes);
+    // if (Platform.isIOS) {
+       final assetsAudioPlayer = AssetsAudioPlayer();
+       assetsAudioPlayer.open(
+        Audio("assets/notification.mp3"),
+    );
+    // } else {
+        // AudioCache audioCache = AudioCache();
+        // var bytes =
+        //     await (await audioCache.load('notification.mp3')).readAsBytes();
+        // audioCache.playBytes(bytes);
+    // }
         supportEntry = showSimpleNotification(
           InkWell(
             onTap: () {
@@ -121,7 +131,20 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       },
       onLaunch: (Map<String, dynamic> message) async {},
       onResume: (Map<String, dynamic> message) async {},
+      onBackgroundMessage:  Platform.isIOS ? null : onBackgroundMessageHandler,
     );
+  }
+
+static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) async {        
+  if (message['data'] != null) {
+    final assetsAudioPlayer = AssetsAudioPlayer();
+    assetsAudioPlayer.open(
+        Audio("assets/notification.mp3"),
+    );
+  } 
+
+  return Future<void>.value();
+  // return null;
   }
 
   _getMessage(Map<String, dynamic> message) {

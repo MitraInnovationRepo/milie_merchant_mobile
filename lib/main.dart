@@ -8,6 +8,7 @@ import 'package:foodie_merchant/src/screens/login.dart';
 import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:screen/screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Screen.keepOn(true);
     final textTheme = Theme.of(context).textTheme;
     return MultiProvider(
         providers: [

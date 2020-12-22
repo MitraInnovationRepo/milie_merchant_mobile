@@ -24,8 +24,13 @@ class Constant {
 
   static String orderPrefix = "YCF0";
 
+  //Dev
   static String androidAppVersion = "1.0.0";
   static String iosAppVersion = "1.0.0";
+
+  //Prod
+  // static String androidAppVersion = "1.1.0";
+  // static String iosAppVersion = "1.0.1";
 
   static String filePath = backendEndpoint + "/file/download/";
 }

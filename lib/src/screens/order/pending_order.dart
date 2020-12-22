@@ -6,6 +6,7 @@ import 'package:foodie_merchant/src/screens/order/order_content.dart';
 import 'package:foodie_merchant/src/screens/order/order_details_dialog.dart';
 import 'package:foodie_merchant/src/screens/order/order_header.dart';
 import 'package:foodie_merchant/src/screens/order/order_list_skeleton_view.dart';
+import 'package:foodie_merchant/src/screens/order/order_requests.dart';
 import 'package:foodie_merchant/src/services/order/order_service.dart';
 import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:foodie_merchant/src/util/constant.dart';
@@ -14,6 +15,8 @@ import 'package:overlay_support/overlay_support.dart';
 import 'order_item.dart';
 
 class PendingOrder extends StatefulWidget {
+  PendingOrder(this.controller);
+  final PageController controller;
   @override
   _PendingOrderPageState createState() => _PendingOrderPageState();
 }
@@ -24,10 +27,12 @@ class _PendingOrderPageState extends State<PendingOrder> {
   bool enableProgress = false;
   OrderService _orderService = locator<OrderService>();
   bool orderProcessing = false;
+  PageController controller;
 
   @override
   void initState() {
     super.initState();
+    this.controller = widget.controller;
     fetchPendingOrders();
   }
 
@@ -55,6 +60,9 @@ class _PendingOrderPageState extends State<PendingOrder> {
           element);
       _pendingOrderItems.add(orderItem);
     });
+    
+    // Navigator.push(context,
+    //     MaterialPageRoute(builder: (context) => OrderRequests(1))); 
   }
 
   @override
@@ -128,6 +136,7 @@ class _PendingOrderPageState extends State<PendingOrder> {
         Text("Order Approved"),
         background: Theme.of(context).backgroundColor,
       );
+      this.controller.jumpToPage(1);
     } else {
       showSimpleNotification(Text(orderRejectResponse.message),
           background: Colors.amber);
