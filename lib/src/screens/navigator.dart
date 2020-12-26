@@ -96,55 +96,30 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     });
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
-        String messageBody = _getMessage(message);
         String orderId = _getOrderId(message);
-        OverlaySupportEntry supportEntry;
-    // if (Platform.isIOS) {
-       final assetsAudioPlayer = AssetsAudioPlayer();
-       assetsAudioPlayer.open(
-        Audio("assets/notification.mp3"),
-    );
-    // } else {
-        // AudioCache audioCache = AudioCache();
-        // var bytes =
-        //     await (await audioCache.load('notification.mp3')).readAsBytes();
-        // audioCache.playBytes(bytes);
-    // }
-        supportEntry = showSimpleNotification(
-          InkWell(
-            onTap: () {
-              showOrder(context, int.parse(orderId));
-              supportEntry.dismiss();
-            },
-            child: Text(
-              messageBody,
-              style: TextStyle(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          elevation: 10,
-          slideDismiss: true,
-          autoDismiss: false,
-          leading: Icon(Icons.fastfood, color: Colors.white),
-          background: Theme.of(context).accentColor,
+        final assetsAudioPlayer = AssetsAudioPlayer();
+        assetsAudioPlayer.open(
+          Audio("assets/notification.mp3"),
         );
+        showOrder(context, int.parse(orderId));
       },
       onLaunch: (Map<String, dynamic> message) async {},
       onResume: (Map<String, dynamic> message) async {},
-      onBackgroundMessage:  Platform.isIOS ? null : onBackgroundMessageHandler,
+      onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessageHandler,
     );
   }
 
-static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) async {        
-  if (message['data'] != null) {
-    final assetsAudioPlayer = AssetsAudioPlayer();
-    assetsAudioPlayer.open(
+  static Future<dynamic> onBackgroundMessageHandler(
+      Map<String, dynamic> message) async {
+    if (message['data'] != null) {
+      final assetsAudioPlayer = AssetsAudioPlayer();
+      assetsAudioPlayer.open(
         Audio("assets/notification.mp3"),
-    );
-  } 
+      );
+    }
 
-  return Future<void>.value();
-  // return null;
+    return Future<void>.value();
+    // return null;
   }
 
   _getMessage(Map<String, dynamic> message) {
@@ -224,6 +199,9 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(order.user.name),
+                    Text("Order #" + Constant.orderPrefix + order.id.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20)),
                     Row(
                       children: [
                         Text(order.user.phoneNumber),
@@ -248,10 +226,15 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Item Total"),
-                        Text(order.currency +
-                            " " +
-                            order.itemSubTotal.toStringAsFixed(2)),
+                        Text("Item Total",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text(
+                            order.currency +
+                                " " +
+                                order.itemSubTotal.toStringAsFixed(2),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
@@ -300,7 +283,7 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                                       constraints: BoxConstraints(
                                         maxHeight:
                                             MediaQuery.of(context).size.height *
-                                                0.07,
+                                                0.1,
                                         maxWidth:
                                             MediaQuery.of(context).size.width *
                                                 0.4,
@@ -311,19 +294,24 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          // Expanded(child:
                                           Text(
                                               order.orderDetailList[index]
                                                   .product.title,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis),
-                                          // ),
                                           Text(
                                               'LKR ' +
                                                   order.orderDetailList[index]
                                                       .product.unitPrice
                                                       .toStringAsFixed(2),
-                                              style: TextStyle(fontSize: 12))
+                                              style: TextStyle(fontSize: 12)),
+                                          if(order.orderDetailList[index]
+                                              .description != null)
+                                          Text(
+                                              order.orderDetailList[index]
+                                                  .description,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis),
                                         ],
                                       ),
                                     ),
@@ -419,7 +407,7 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     child: RaisedButton(
@@ -442,7 +430,8 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                       },
                       child: new Text("Reject"),
                     ),
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                   ),
                   Container(
                     child: RaisedButton(
@@ -465,7 +454,8 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                       },
                       child: new Text("Accept"),
                     ),
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                   ),
                 ],
               ),
@@ -473,6 +463,8 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
           ],
         ));
     showDialog(
-        context: context, builder: (BuildContext context) => simpleDialog);
+        context: context,
+        builder: (BuildContext context) => simpleDialog,
+        barrierDismissible: false);
   }
 }
