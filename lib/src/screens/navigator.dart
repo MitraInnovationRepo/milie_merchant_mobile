@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:audioplayers/audio_cache.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:foodie_merchant/src/data/model/order_reject_response.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';
 import 'package:foodie_merchant/src/data/model/user.dart';
+import 'package:foodie_merchant/src/data/notifier/pending_order_notifier.dart';
 import 'package:foodie_merchant/src/data/notifier/tab_notifier.dart';
 import 'package:foodie_merchant/src/screens/home/home.dart';
 import 'package:foodie_merchant/src/screens/order/order_history.dart';
@@ -181,7 +181,14 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
   showOrder(BuildContext context, int orderId) async {
     OrderView order = await this._orderService.fetchOrder(orderId);
+    addToNotifier(order);
     showOrderPopup(context, order);
+  }
+
+  addToNotifier(OrderView orderView){
+    PendingOrderNotifier pendingOrderNotifier =
+    Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.addPendingOrder(orderView);
   }
 
   void showOrderPopup(BuildContext context, OrderView order) {
@@ -213,6 +220,12 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                             }),
                       ],
                     ),
+                    IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          addToNotifier(order);
+                          Navigator.of(context, rootNavigator: true).pop();
+                        }),
                   ],
                 ),
               ),

@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:foodie_merchant/src/data/enums/order_status.dart';
 import 'package:foodie_merchant/src/data/enums/shop_status.dart';
 import 'package:foodie_merchant/src/data/model/analytics/merchant_analytics_map.dart';
+import 'package:foodie_merchant/src/data/model/order_view.dart';
 import 'package:foodie_merchant/src/data/model/shop.dart';
 import 'package:foodie_merchant/src/data/model/user_profile.dart';
+import 'package:foodie_merchant/src/data/notifier/pending_order_notifier.dart';
 import 'package:foodie_merchant/src/data/notifier/tab_notifier.dart';
 import 'package:foodie_merchant/src/screens/home/promotion_slider.dart';
 import 'package:foodie_merchant/src/screens/login.dart';
 import 'package:foodie_merchant/src/screens/shop/shop_service.dart';
 import 'package:foodie_merchant/src/services/analytics/analytics_service.dart';
+import 'package:foodie_merchant/src/services/order/order_service.dart';
 import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:foodie_merchant/src/services/user/user_service.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +32,7 @@ class _HomePageState extends State<Home> {
   MerchantAnalyticsMap _merchantAnalyticsMap;
   Timer timer;
   bool enableProgress = false;
+  OrderService _orderService = locator<OrderService>();
 
   @override
   void initState() {
@@ -38,6 +42,7 @@ class _HomePageState extends State<Home> {
     timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
       this._getMerchantNotHandledOrders();
     });
+    fetchPendingOrders();
   }
 
   @override
@@ -67,6 +72,27 @@ class _HomePageState extends State<Home> {
         this.enableProgress = false;
       });
     }
+  }
+
+  Future<void> fetchPendingOrders() async {
+    setState(() {
+      enableProgress = true;
+    });
+
+    List<OrderView> _pendingOrderList = await _orderService.findPendingOrders();
+    if (mounted) {
+      setState(() {
+        setupPendingOrderItemList(_pendingOrderList);
+        enableProgress = false;
+      });
+    }
+    return Future<void>(() {});
+  }
+
+  setupPendingOrderItemList(List<OrderView> _pendingOrderList) {
+    PendingOrderNotifier pendingOrderNotifier =
+    Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.setPendingOrderItems(_pendingOrderList);
   }
 
   @override
