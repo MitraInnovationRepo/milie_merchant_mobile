@@ -82,6 +82,7 @@ flutter:
      - assets/home-icon3.png
      - assets/cover.jpg
      - assets/notification.mp3
+     - assets/food-icon.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie_merchant/src/data/model/product_type.dart';
@@ -10,7 +9,6 @@ import 'package:foodie_merchant/src/util/constant.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
 class ProductTypeCatalog extends StatefulWidget {
-
   @override
   _ProductTypeCatalogPageState createState() => _ProductTypeCatalogPageState();
 }
@@ -20,77 +18,104 @@ class _ProductTypeCatalogPageState extends State<ProductTypeCatalog> {
   ProductTypeService _productTypeService = locator<ProductTypeService>();
   bool enableProgress = false;
 
-
   @override
   void initState() {
     super.initState();
     this.fetchProductTypes();
   }
 
-  fetchProductTypes() async {
+  Future<void> fetchProductTypes() async {
     enableProgress = true;
-    List<ProductType> _productTypeList = await _productTypeService.findAllShopProducts();
-    if(mounted) {
+    List<ProductType> _productTypeList =
+        await _productTypeService.findAllShopProducts();
+    if (mounted) {
       setState(() {
         this._productTypeList = _productTypeList;
         enableProgress = false;
       });
     }
+    return Future<void>(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.dark,
-          toolbarHeight: 0.0,
-        ),
-        body: CustomScrollView(slivers: <Widget>[
-          enableProgress
-              ? ProductTypeSkeletonListView()
-              : SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 2,
-                mainAxisSpacing: 5.0,
-                crossAxisSpacing: 5.0),
-            delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          ScaleRoute(
-                              page:
-                              ProductCatalog(productType: _productTypeList[index])));
-                    },
-                    child: Container(
-                        child: Stack(children: [
-                          ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.4),
-                                  BlendMode.darken),
-                              child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: ClipRRect(
-                                    child: CachedNetworkImage(
-                                        imageUrl: "${Constant.filePath}${_productTypeList[index].image}",
-                                        fit: BoxFit.fitWidth,
-                                        height: MediaQuery.of(context).size.height * 0.4,
-                                        width: MediaQuery.of(context).size.width * 0.5),
-                                  ))),
-                          Center(
-                              child: Text(_productTypeList[index].name,
-                                  style: TextStyle(color: Colors.white, fontSize: 30)))
-                        ])));
-              },
-              childCount: _productTypeList.length,
+    return RefreshIndicator(
+        onRefresh: fetchProductTypes,
+        child: Scaffold(
+            appBar: AppBar(
+              brightness: Brightness.dark,
+              toolbarHeight: 0.0,
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.only(bottom: 80.0),
-          )
-        ]));
+            body: CustomScrollView(slivers: <Widget>[
+              enableProgress
+                  ? ProductTypeSkeletonListView()
+                  : SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 2,
+                          mainAxisSpacing: 5.0,
+                          crossAxisSpacing: 5.0),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    ScaleRoute(
+                                        page: ProductCatalog(
+                                            productType:
+                                                _productTypeList[index])));
+                              },
+                              child: Container(
+                                  child: Stack(children: [
+                                ColorFiltered(
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.black.withOpacity(0.4),
+                                        BlendMode.darken),
+                                    child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: ClipRRect(
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                "${Constant.filePath}${_productTypeList[index].image}",
+                                            fit: BoxFit.fitWidth,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.4,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            errorWidget: (context, url, error) {
+                                              return Image.asset(
+                                                "assets/food-icon.jpg",
+                                                fit: BoxFit.fitWidth,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.4,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.5,
+                                              );
+                                            },
+                                          ),
+                                        ))),
+                                Center(
+                                    child: Text(_productTypeList[index].name,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 30)))
+                              ])));
+                        },
+                        childCount: _productTypeList.length,
+                      ),
+                    ),
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: 80.0),
+              )
+            ])));
   }
 }
 
@@ -104,7 +129,7 @@ class ProductTypeSkeletonListView extends StatelessWidget {
           mainAxisSpacing: 5.0,
           crossAxisSpacing: 5.0),
       delegate: SliverChildBuilderDelegate(
-            (context, index) {
+        (context, index) {
           return SkeletonAnimation(
             child: Container(
               height: MediaQuery.of(context).size.height * 0.4,

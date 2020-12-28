@@ -402,7 +402,7 @@ class _HomePageState extends State<Home> {
   moveToOrders(int tab) {
     TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
     tabNotifier.setOrderTab(tab);
-    tabNotifier.tabController.jumpToTab(1);
+    tabNotifier.tabController.jumpToTab(tab);
   }
 
   updateShopStatus(int index) async {
