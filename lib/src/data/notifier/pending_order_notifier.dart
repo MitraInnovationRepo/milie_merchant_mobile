@@ -23,6 +23,14 @@ class PendingOrderNotifier extends ChangeNotifier{
     }
   }
 
+  removePendingOrder(OrderView orderView){
+    Iterable<OrderItem> filteredOrderItemList = this.pendingOrderItems.where((element) => element.order.id == orderView.id);
+    if(filteredOrderItemList.isNotEmpty){
+      OrderItem item = filteredOrderItemList.first;
+      this.pendingOrderItems.remove(item);
+    }
+  }
+
   setPendingOrderItems(List<OrderView> _pendingOrderList){
     this.pendingOrderItems = [];
     _pendingOrderList.forEach((element) {

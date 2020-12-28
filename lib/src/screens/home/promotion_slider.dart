@@ -6,9 +6,9 @@ import 'package:skeleton_text/skeleton_text.dart';
 
 class PromotionSlider extends StatelessWidget {
   final List<String> imgList = [
-    '${Constant.contentEndpoint}/uploads/slider1_94401ec905.jpg',
-    '${Constant.contentEndpoint}/uploads/slider2_7ba2b02b3d.jpg',
-    '${Constant.contentEndpoint}/uploads/slider3_ba362e7f11.jpg',
+    '${Constant.contentEndpoint}/uploads/merchant_slider1_c9d149cee0.jpg',
+    '${Constant.contentEndpoint}/uploads/merchant_slider2_8b50f986b6.jpg',
+    '${Constant.contentEndpoint}/uploads/merchant_slider3_332308dca8.jpg',
   ];
 
   @override
@@ -20,18 +20,8 @@ class PromotionSlider extends StatelessWidget {
       items: imgList
           .map((item) => Container(
                 child: Center(
-                    child: CachedNetworkImage(
-                        progressIndicatorBuilder: (context, url, progress) {
-                          return SkeletonAnimation(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                              ),
-                            ),
-                          );
-                        },
-                        imageUrl: item,
+                    child: Image.network(
+                        item,
                         fit: BoxFit.cover,
                         height: MediaQuery.of(context).size.height * 0.5,
                         width: MediaQuery.of(context).size.width )),

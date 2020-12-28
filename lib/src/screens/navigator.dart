@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodie_merchant/src/data/enums/order_status.dart';
 import 'package:foodie_merchant/src/data/model/order_reject_response.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';
 import 'package:foodie_merchant/src/data/model/user.dart';
@@ -97,15 +98,11 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         String orderId = _getOrderId(message);
-        final assetsAudioPlayer = AssetsAudioPlayer();
-        assetsAudioPlayer.open(
-          Audio("assets/notification.mp3"),
-        );
         showOrder(context, int.parse(orderId));
       },
       onLaunch: (Map<String, dynamic> message) async {},
       onResume: (Map<String, dynamic> message) async {},
-      onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessageHandler,
+      // onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessageHandler,
     );
   }
 
@@ -120,12 +117,6 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
     return Future<void>.value();
     // return null;
-  }
-
-  _getMessage(Map<String, dynamic> message) {
-    return Platform.isIOS
-        ? message['aps']['alert']['body']
-        : message['notification']['body'];
   }
 
   _getOrderId(Map<String, dynamic> message) {
@@ -181,14 +172,34 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
   showOrder(BuildContext context, int orderId) async {
     OrderView order = await this._orderService.fetchOrder(orderId);
-    addToNotifier(order);
-    showOrderPopup(context, order);
+    print("************** status" + order.orderStatus.toString());
+    if(order.orderStatus == OrderStatus.customerRejected.index){
+      remoteFromNotifier(order);
+      showSimpleNotification(
+        Text("Order " + Constant.orderPrefix  + order.id.toString() + "has been rejected by the customer"),
+        background: Colors.red,
+      );
+    }
+    else {
+      final assetsAudioPlayer = AssetsAudioPlayer();
+      assetsAudioPlayer.open(
+        Audio("assets/notification.mp3"),
+      );
+      addToNotifier(order);
+      showOrderPopup(context, order);
+    }
   }
 
   addToNotifier(OrderView orderView){
     PendingOrderNotifier pendingOrderNotifier =
     Provider.of<PendingOrderNotifier>(context, listen: false);
     pendingOrderNotifier.addPendingOrder(orderView);
+  }
+
+  remoteFromNotifier(OrderView orderView){
+    PendingOrderNotifier pendingOrderNotifier =
+    Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.removePendingOrder(orderView);
   }
 
   void showOrderPopup(BuildContext context, OrderView order) {
