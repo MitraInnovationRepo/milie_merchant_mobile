@@ -171,7 +171,6 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
   showOrder(BuildContext context, int orderId) async {
     OrderView order = await this._orderService.fetchOrder(orderId);
-    print("************** status" + order.orderStatus.toString());
     if(order.orderStatus == OrderStatus.customerRejected.index){
       remoteFromNotifier(order);
       showSimpleNotification(
@@ -181,10 +180,15 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     }
     else {
       final assetsAudioPlayer = AssetsAudioPlayer();
+      assetsAudioPlayer.realtimePlayingInfos.listen((event) {
+        if(event.volume < 1){
+         assetsAudioPlayer.setVolume(event.volume + 0.01);
+        }
+      });
       assetsAudioPlayer.open(
         Audio("assets/notification.mp3"),
+        volume: 0.3
       );
-      addToNotifier(order);
       showOrderPopup(context, order);
     }
   }

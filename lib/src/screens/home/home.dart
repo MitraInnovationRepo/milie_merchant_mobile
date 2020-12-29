@@ -7,6 +7,7 @@ import 'package:foodie_merchant/src/data/model/analytics/merchant_analytics_map.
 import 'package:foodie_merchant/src/data/model/order_view.dart';
 import 'package:foodie_merchant/src/data/model/shop.dart';
 import 'package:foodie_merchant/src/data/model/user_profile.dart';
+import 'package:foodie_merchant/src/data/notifier/orders_to_handler_notifier.dart';
 import 'package:foodie_merchant/src/data/notifier/pending_order_notifier.dart';
 import 'package:foodie_merchant/src/data/notifier/tab_notifier.dart';
 import 'package:foodie_merchant/src/screens/home/promotion_slider.dart';
@@ -39,7 +40,7 @@ class _HomePageState extends State<Home> {
     super.initState();
     _fetchShopDetails();
     _getMerchantNotHandledOrders();
-    timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
+    timer = Timer.periodic(Duration(seconds: 20), (Timer t) {
       this._getMerchantNotHandledOrders();
     });
     fetchPendingOrders();
@@ -66,6 +67,11 @@ class _HomePageState extends State<Home> {
     });
     MerchantAnalyticsMap _merchantAnalyticsMap =
         await this._analyticsService.findMerchantOrdersToComplete();
+
+    OrdersToHandleNotifier ordersToHandleNotifier =
+        Provider.of<OrdersToHandleNotifier>(context, listen: false);
+    ordersToHandleNotifier.setAllCounts(_merchantAnalyticsMap);
+
     if (mounted) {
       setState(() {
         this._merchantAnalyticsMap = _merchantAnalyticsMap;
@@ -91,7 +97,7 @@ class _HomePageState extends State<Home> {
 
   setupPendingOrderItemList(List<OrderView> _pendingOrderList) {
     PendingOrderNotifier pendingOrderNotifier =
-    Provider.of<PendingOrderNotifier>(context, listen: false);
+        Provider.of<PendingOrderNotifier>(context, listen: false);
     pendingOrderNotifier.setPendingOrderItems(_pendingOrderList);
   }
 
@@ -402,7 +408,7 @@ class _HomePageState extends State<Home> {
   moveToOrders(int tab) {
     TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
     tabNotifier.setOrderTab(tab);
-    tabNotifier.tabController.jumpToTab(tab);
+    tabNotifier.tabController.jumpToTab(1);
   }
 
   updateShopStatus(int index) async {

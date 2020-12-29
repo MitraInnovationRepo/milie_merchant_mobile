@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foodie_merchant/src/data/notifier/orders_to_handler_notifier.dart';
 import 'package:foodie_merchant/src/data/notifier/pending_order_notifier.dart';
 import 'package:foodie_merchant/src/data/notifier/tab_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => UserProfile.empty()),
           ChangeNotifierProvider(create: (context) => TabNotifier.empty()),
           ChangeNotifierProvider(create: (context) => PendingOrderNotifier.empty()),
+          ChangeNotifierProvider(create: (context) => OrdersToHandleNotifier.empty()),
         ],
         child: OverlaySupport(
             child: MaterialApp(

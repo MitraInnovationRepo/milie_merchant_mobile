@@ -63,62 +63,66 @@ class _PendingOrderPageState extends State<PendingOrder> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-        child:
-        Consumer<PendingOrderNotifier>(builder: (context, pendingOrderNotifier, child) {
-          return         enableProgress
+        child: Consumer<PendingOrderNotifier>(
+            builder: (context, pendingOrderNotifier, child) {
+          return enableProgress
               ? OrderListSkeletonView()
               : Provider.of<PendingOrderNotifier>(context)
-              .pendingOrderItems
-              .length >
-              0
-              ? Container(
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: ListView(children: [
-                Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: ExpansionPanelList(
-                      expansionCallback: (int index, bool isExpanded) {
-                        setState(() {
-                          pendingOrderNotifier.pendingOrderItems[index].isExpanded =
-                          !pendingOrderNotifier.pendingOrderItems[index].isExpanded;
-                        });
-                      },
-                      children: pendingOrderNotifier.pendingOrderItems.map((OrderItem item) {
-                        return ExpansionPanel(
-                          canTapOnHeader: true,
-                          headerBuilder:
-                              (BuildContext context, bool isExpanded) {
-                            return ListTile(
-                                title: OrderHeader(
-                                    order: item.order,
-                                    showOrderDetails: showOrderDetails));
-                          },
-                          isExpanded: item.isExpanded,
-                          body: orderProcessing
-                              ? Center(
-                            child: LinearProgressIndicator(),
-                          )
-                              : OrderContent(
-                              showExpandedOrder: true,
-                              order: item.order,
-                              primaryAction:
-                              OrderAction("ACCEPT", acceptOrder),
-                              secondaryAction:
-                              OrderAction("REJECT", rejectOrder),
-                              showOrderDetails: showOrderDetails,
-                              isHistory: false),
-                        );
-                      }).toList(),
-                    ))
-              ]))
-              : Container(
-              height: MediaQuery.of(context).size.height,
-              child: ListView(children: [
-                Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Text("No pending orders at the moment",
-                        textAlign: TextAlign.center))
-              ]));
+                          .pendingOrderItems
+                          .length >
+                      0
+                  ? Container(
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      child: ListView(children: [
+                        Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: ExpansionPanelList(
+                              expansionCallback: (int index, bool isExpanded) {
+                                setState(() {
+                                  pendingOrderNotifier
+                                          .pendingOrderItems[index].isExpanded =
+                                      !pendingOrderNotifier
+                                          .pendingOrderItems[index].isExpanded;
+                                });
+                              },
+                              children: pendingOrderNotifier.pendingOrderItems
+                                  .map((OrderItem item) {
+                                return ExpansionPanel(
+                                  canTapOnHeader: true,
+                                  headerBuilder:
+                                      (BuildContext context, bool isExpanded) {
+                                    return ListTile(
+                                        title: OrderHeader(
+                                            order: item.order,
+                                            showOrderDetails:
+                                                showOrderDetails));
+                                  },
+                                  isExpanded: item.isExpanded,
+                                  body: orderProcessing
+                                      ? Center(
+                                          child: LinearProgressIndicator(),
+                                        )
+                                      : OrderContent(
+                                          showExpandedOrder: true,
+                                          order: item.order,
+                                          primaryAction: OrderAction(
+                                              "ACCEPT", acceptOrder),
+                                          secondaryAction: OrderAction(
+                                              "REJECT", rejectOrder),
+                                          showOrderDetails: showOrderDetails,
+                                          isHistory: false),
+                                );
+                              }).toList(),
+                            ))
+                      ]))
+                  : Container(
+                      height: MediaQuery.of(context).size.height,
+                      child: ListView(children: [
+                        Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: Text("No pending orders at the moment",
+                                textAlign: TextAlign.center))
+                      ]));
         }),
         onRefresh: fetchPendingOrders);
   }
