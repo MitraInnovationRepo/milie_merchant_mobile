@@ -26,6 +26,7 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:screen/screen.dart';
+import 'package:volume/volume.dart';
 
 class HomeNavigator extends StatefulWidget {
   HomeNavigator({Key key, this.title}) : super(key: key);
@@ -43,6 +44,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   OrderService _orderService = locator<OrderService>();
 
   PersistentTabController _controller;
+  AudioManager audioManager;
 
   List<Widget> _buildScreens() {
     return [Home(), OrderRequests(), OrderHistory(), ProductTypeCatalog()];
@@ -104,24 +106,23 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       onResume: (Map<String, dynamic> message) async {},
       // onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessageHandler,
     );
+    audioManager = AudioManager.STREAM_SYSTEM;
+    initAudioStreamType();
+    setMaxVolume();
   }
 
-  static Future<dynamic> onBackgroundMessageHandler(
-      Map<String, dynamic> message) async {
-    if (message['data'] != null) {
-      final assetsAudioPlayer = AssetsAudioPlayer();
-      assetsAudioPlayer.open(
-        Audio("assets/notification.mp3"),
-      );
-    }
-    return Future<void>.value();
-    // return null;
+  Future<void> initAudioStreamType() async {
+    await Volume.controlVolume(AudioManager.STREAM_SYSTEM);
+  }
+  
+  Future<void> setMaxVolume() async {
+    int maxVol = await Volume.getMaxVol;
+    await Volume.setVol(maxVol, showVolumeUI: ShowVolumeUI.HIDE);
   }
 
   _getOrderId(Map<String, dynamic> message) {
     String strId =
         Platform.isIOS ? message['order_id'] : message['data']['order_id'];
-
     return strId;
   }
 
@@ -180,16 +181,11 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     }
     else {
       final assetsAudioPlayer = AssetsAudioPlayer();
-      assetsAudioPlayer.realtimePlayingInfos.listen((event) {
-        if(event.volume < 1){
-         assetsAudioPlayer.setVolume(event.volume + 0.01);
-        }
-      });
       assetsAudioPlayer.open(
         Audio("assets/notification.mp3"),
-        volume: 0.3
+        loopMode: LoopMode.single
       );
-      showOrderPopup(context, order);
+      showOrderPopup(context, order, assetsAudioPlayer);
     }
   }
 
@@ -205,7 +201,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     pendingOrderNotifier.removePendingOrder(orderView);
   }
 
-  void showOrderPopup(BuildContext context, OrderView order) {
+  void showOrderPopup(BuildContext context, OrderView order, AssetsAudioPlayer audioPlayer) {
     Dialog simpleDialog = Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -237,6 +233,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                     IconButton(
                         icon: Icon(Icons.close),
                         onPressed: () {
+                          audioPlayer.stop();
                           addToNotifier(order);
                           Navigator.of(context, rootNavigator: true).pop();
                         }),
@@ -440,6 +437,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                     child: RaisedButton(
                       color: Colors.amber,
                       onPressed: () async {
+                        audioPlayer.stop();
                         OrderRejectResponse orderRejectResponse =
                             await _orderService.rejectOrder(order.id);
                         if (orderRejectResponse.status != 100) {
@@ -464,6 +462,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                     child: RaisedButton(
                       color: Color.fromRGBO(0, 153, 0, 1),
                       onPressed: () async {
+                        audioPlayer.stop();
                         OrderRejectResponse orderRejectResponse =
                             await _orderService.approveOrder(order.id);
                         if (orderRejectResponse.status != 100) {
