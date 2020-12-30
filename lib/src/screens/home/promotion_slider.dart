@@ -22,7 +22,7 @@ class PromotionSlider extends StatelessWidget {
                 child: Center(
                     child: Image.network(
                         item,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                         height: MediaQuery.of(context).size.height * 0.5,
                         width: MediaQuery.of(context).size.width )),
               ))

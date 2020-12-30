@@ -106,13 +106,13 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       onResume: (Map<String, dynamic> message) async {},
       // onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessageHandler,
     );
-    audioManager = AudioManager.STREAM_SYSTEM;
+    audioManager = AudioManager.STREAM_MUSIC;
     initAudioStreamType();
     setMaxVolume();
   }
 
   Future<void> initAudioStreamType() async {
-    await Volume.controlVolume(AudioManager.STREAM_SYSTEM);
+    await Volume.controlVolume(AudioManager.STREAM_MUSIC);
   }
   
   Future<void> setMaxVolume() async {
@@ -182,8 +182,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     else {
       final assetsAudioPlayer = AssetsAudioPlayer();
       assetsAudioPlayer.open(
-        Audio("assets/notification.mp3"),
-        loopMode: LoopMode.single
+        Audio("assets/notification.mp3")
       );
       showOrderPopup(context, order, assetsAudioPlayer);
     }
