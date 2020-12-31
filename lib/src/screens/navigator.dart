@@ -178,14 +178,18 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       showSimpleNotification(
           InkWell(
               onTap: () {
-                TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
+                TabNotifier tabNotifier =
+                    Provider.of<TabNotifier>(context, listen: false);
                 tabNotifier.tabController.jumpToTab(2);
               },
               child: Text("Order " +
                   Constant.orderPrefix +
                   order.id.toString() +
-                  " has been rejected by the customer at " + DateFormat("yyyy-MM-dd HH:mm").format(order.lastModifiedDate))),
-          background: Colors.red);
+                  " has been rejected by the customer at " +
+                  DateFormat("yyyy-MM-dd HH:mm")
+                      .format(order.lastModifiedDate))),
+          background: Colors.red,
+          duration: Duration(seconds: 30));
     } else if (order.orderStatus == OrderStatus.onTheWay.index) {
       removeReadyToPickFromNotifier(order);
     } else {
