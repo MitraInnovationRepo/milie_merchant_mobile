@@ -21,6 +21,7 @@ import 'package:foodie_merchant/src/services/order/order_service.dart';
 import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:foodie_merchant/src/services/user/user_service.dart';
 import 'package:foodie_merchant/src/util/constant.dart';
+import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -114,7 +115,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   Future<void> initAudioStreamType() async {
     await Volume.controlVolume(AudioManager.STREAM_MUSIC);
   }
-  
+
   Future<void> setMaxVolume() async {
     int maxVol = await Volume.getMaxVol;
     await Volume.setVol(maxVol, showVolumeUI: ShowVolumeUI.HIDE);
@@ -172,44 +173,48 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
   showOrder(BuildContext context, int orderId) async {
     OrderView order = await this._orderService.fetchOrder(orderId);
-    if(order.orderStatus == OrderStatus.customerRejected.index){
+    if (order.orderStatus == OrderStatus.customerRejected.index) {
       remotePendingFromNotifier(order);
       showSimpleNotification(
-        Text("Order " + Constant.orderPrefix  + order.id.toString() + "has been rejected by the customer"),
-        background: Colors.red,
-      );
-    }
-    else if(order.orderStatus == OrderStatus.onTheWay.index){
+          InkWell(
+              onTap: () {
+                TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
+                tabNotifier.tabController.jumpToTab(2);
+              },
+              child: Text("Order " +
+                  Constant.orderPrefix +
+                  order.id.toString() +
+                  " has been rejected by the customer at " + DateFormat("yyyy-MM-dd HH:mm").format(order.lastModifiedDate))),
+          background: Colors.red);
+    } else if (order.orderStatus == OrderStatus.onTheWay.index) {
       removeReadyToPickFromNotifier(order);
-    }
-    else {
+    } else {
       final assetsAudioPlayer = AssetsAudioPlayer();
-      assetsAudioPlayer.open(
-        Audio("assets/notification.mp3")
-      );
+      assetsAudioPlayer.open(Audio("assets/notification.mp3"));
       showOrderPopup(context, order, assetsAudioPlayer);
     }
   }
 
-  addToNotifier(OrderView orderView){
+  addToNotifier(OrderView orderView) {
     PendingOrderNotifier pendingOrderNotifier =
-    Provider.of<PendingOrderNotifier>(context, listen: false);
+        Provider.of<PendingOrderNotifier>(context, listen: false);
     pendingOrderNotifier.addPendingOrder(orderView);
   }
 
-  remotePendingFromNotifier(OrderView orderView){
+  remotePendingFromNotifier(OrderView orderView) {
     PendingOrderNotifier pendingOrderNotifier =
-    Provider.of<PendingOrderNotifier>(context, listen: false);
+        Provider.of<PendingOrderNotifier>(context, listen: false);
     pendingOrderNotifier.removePendingOrder(orderView);
   }
 
-  removeReadyToPickFromNotifier(OrderView orderView){
+  removeReadyToPickFromNotifier(OrderView orderView) {
     PendingOrderNotifier pendingOrderNotifier =
-    Provider.of<PendingOrderNotifier>(context, listen: false);
+        Provider.of<PendingOrderNotifier>(context, listen: false);
     pendingOrderNotifier.removeReadyToPickUpOrder(orderView);
   }
 
-  void showOrderPopup(BuildContext context, OrderView order, AssetsAudioPlayer audioPlayer) {
+  void showOrderPopup(
+      BuildContext context, OrderView order, AssetsAudioPlayer audioPlayer) {
     Dialog simpleDialog = Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -337,13 +342,15 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                                                       .product.unitPrice
                                                       .toStringAsFixed(2),
                                               style: TextStyle(fontSize: 12)),
-                                          if(order.orderDetailList[index]
-                                              .description != null)
-                                          Text(
-                                              order.orderDetailList[index]
-                                                  .description,
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis),
+                                          if (order.orderDetailList[index]
+                                                  .description !=
+                                              null)
+                                            Text(
+                                                order.orderDetailList[index]
+                                                    .description,
+                                                maxLines: 2,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
                                         ],
                                       ),
                                     ),
@@ -443,7 +450,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                 children: [
                   Container(
                     child: RaisedButton(
-                      color: Colors.amber,
+                      color: Colors.red,
                       onPressed: () async {
                         audioPlayer.stop();
                         OrderRejectResponse orderRejectResponse =
@@ -456,7 +463,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                         } else {
                           showSimpleNotification(
                               Text(orderRejectResponse.message),
-                              background: Colors.amber);
+                              background: Colors.red);
                         }
                         Navigator.of(context, rootNavigator: true)
                             .pop('dialog');
