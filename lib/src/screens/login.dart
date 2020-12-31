@@ -150,22 +150,6 @@ class _LoginPageState extends State<Login> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20),
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: Offset(2, 4),
-                    blurRadius: 5,
-                    spreadRadius: 2)
-              ],
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Theme.of(context).primaryColor,
-                    Theme.of(context).accentColor
-                  ])),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -173,16 +157,16 @@ class _LoginPageState extends State<Login> {
               SizedBox(
                 height: 80,
               ),
-              Text("Update",
+              Text("New Version Available",
                   style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 35,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).errorColor)),
               Divider(),
               Text(
                 "New update available! Please download the latest from the store",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 20),
               ),
             ],
           ),
