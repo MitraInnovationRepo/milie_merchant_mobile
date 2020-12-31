@@ -173,11 +173,14 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   showOrder(BuildContext context, int orderId) async {
     OrderView order = await this._orderService.fetchOrder(orderId);
     if(order.orderStatus == OrderStatus.customerRejected.index){
-      remoteFromNotifier(order);
+      remotePendingFromNotifier(order);
       showSimpleNotification(
         Text("Order " + Constant.orderPrefix  + order.id.toString() + "has been rejected by the customer"),
         background: Colors.red,
       );
+    }
+    else if(order.orderStatus == OrderStatus.onTheWay.index){
+      removeReadyToPickFromNotifier(order);
     }
     else {
       final assetsAudioPlayer = AssetsAudioPlayer();
@@ -194,10 +197,16 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     pendingOrderNotifier.addPendingOrder(orderView);
   }
 
-  remoteFromNotifier(OrderView orderView){
+  remotePendingFromNotifier(OrderView orderView){
     PendingOrderNotifier pendingOrderNotifier =
     Provider.of<PendingOrderNotifier>(context, listen: false);
     pendingOrderNotifier.removePendingOrder(orderView);
+  }
+
+  removeReadyToPickFromNotifier(OrderView orderView){
+    PendingOrderNotifier pendingOrderNotifier =
+    Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.removeReadyToPickUpOrder(orderView);
   }
 
   void showOrderPopup(BuildContext context, OrderView order, AssetsAudioPlayer audioPlayer) {

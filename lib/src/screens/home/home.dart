@@ -44,6 +44,7 @@ class _HomePageState extends State<Home> {
       this._getMerchantNotHandledOrders();
     });
     fetchPendingOrders();
+    fetchReadyToPickupOrders();
   }
 
   @override
@@ -95,10 +96,33 @@ class _HomePageState extends State<Home> {
     return Future<void>(() {});
   }
 
+  Future<void> fetchReadyToPickupOrders() async {
+    setState(() {
+      enableProgress = true;
+    });
+
+    List<OrderView> _readyToPickupOrderList =
+    await _orderService.findMerchantOrder(OrderStatus.readyToPickUp.index);
+    if (mounted) {
+      setState(() {
+        setupReadyToPickUpOrderItemList(_readyToPickupOrderList);
+        enableProgress = false;
+      });
+    }
+    return Future<void>(() {});
+  }
+
+
   setupPendingOrderItemList(List<OrderView> _pendingOrderList) {
     PendingOrderNotifier pendingOrderNotifier =
         Provider.of<PendingOrderNotifier>(context, listen: false);
     pendingOrderNotifier.setPendingOrderItems(_pendingOrderList);
+  }
+
+  setupReadyToPickUpOrderItemList(List<OrderView> _readyToPickUpOrderList) {
+    PendingOrderNotifier pendingOrderNotifier =
+    Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.setReadyToPickUpItems(_readyToPickUpOrderList);
   }
 
   @override
