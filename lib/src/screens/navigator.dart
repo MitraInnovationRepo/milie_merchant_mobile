@@ -189,7 +189,8 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                   DateFormat("yyyy-MM-dd HH:mm")
                       .format(order.lastModifiedDate))),
           background: Colors.red,
-          duration: Duration(seconds: 30));
+          duration: Duration(seconds: 30),
+          slideDismiss: true);
     } else if (order.orderStatus == OrderStatus.onTheWay.index) {
       removeReadyToPickFromNotifier(order);
     } else {
