@@ -31,6 +31,7 @@ class OrderView {
   String cabNo;
 
   DateTime createdDate;
+  DateTime lastModifiedDate;
   String promoCode;
 
   List<OrderDetailView> orderDetailList;
@@ -59,7 +60,8 @@ class OrderView {
       this.orderAcceptedTime,
       this.foodPreparedTime,
       this.promoCode,
-      this.cabNo);
+      this.cabNo,
+      this.lastModifiedDate);
 
   OrderView.empty();
 

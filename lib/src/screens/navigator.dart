@@ -2,15 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:audioplayers/audio_cache.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodie_merchant/src/data/enums/order_status.dart';
 import 'package:foodie_merchant/src/data/model/order_reject_response.dart';
 import 'package:foodie_merchant/src/data/model/order_view.dart';
 import 'package:foodie_merchant/src/data/model/user.dart';
+import 'package:foodie_merchant/src/data/notifier/pending_order_notifier.dart';
 import 'package:foodie_merchant/src/data/notifier/tab_notifier.dart';
 import 'package:foodie_merchant/src/screens/home/home.dart';
 import 'package:foodie_merchant/src/screens/order/order_history.dart';
@@ -20,11 +21,13 @@ import 'package:foodie_merchant/src/services/order/order_service.dart';
 import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:foodie_merchant/src/services/user/user_service.dart';
 import 'package:foodie_merchant/src/util/constant.dart';
+import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:screen/screen.dart';
+import 'package:volume/volume.dart';
 
 class HomeNavigator extends StatefulWidget {
   HomeNavigator({Key key, this.title}) : super(key: key);
@@ -42,6 +45,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   OrderService _orderService = locator<OrderService>();
 
   PersistentTabController _controller;
+  AudioManager audioManager;
 
   List<Widget> _buildScreens() {
     return [Home(), OrderRequests(), OrderHistory(), ProductTypeCatalog()];
@@ -96,67 +100,30 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     });
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
-        String messageBody = _getMessage(message);
         String orderId = _getOrderId(message);
-        OverlaySupportEntry supportEntry;
-    // if (Platform.isIOS) {
-       final assetsAudioPlayer = AssetsAudioPlayer();
-       assetsAudioPlayer.open(
-        Audio("assets/notification.mp3"),
-    );
-    // } else {
-        // AudioCache audioCache = AudioCache();
-        // var bytes =
-        //     await (await audioCache.load('notification.mp3')).readAsBytes();
-        // audioCache.playBytes(bytes);
-    // }
-        supportEntry = showSimpleNotification(
-          InkWell(
-            onTap: () {
-              showOrder(context, int.parse(orderId));
-              supportEntry.dismiss();
-            },
-            child: Text(
-              messageBody,
-              style: TextStyle(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          elevation: 10,
-          slideDismiss: true,
-          autoDismiss: false,
-          leading: Icon(Icons.fastfood, color: Colors.white),
-          background: Theme.of(context).accentColor,
-        );
+        showOrder(context, int.parse(orderId));
       },
       onLaunch: (Map<String, dynamic> message) async {},
       onResume: (Map<String, dynamic> message) async {},
-      onBackgroundMessage:  Platform.isIOS ? null : onBackgroundMessageHandler,
+      // onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessageHandler,
     );
+    audioManager = AudioManager.STREAM_MUSIC;
+    initAudioStreamType();
+    setMaxVolume();
   }
 
-static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) async {        
-  if (message['data'] != null) {
-    final assetsAudioPlayer = AssetsAudioPlayer();
-    assetsAudioPlayer.open(
-        Audio("assets/notification.mp3"),
-    );
-  } 
-
-  return Future<void>.value();
-  // return null;
+  Future<void> initAudioStreamType() async {
+    await Volume.controlVolume(AudioManager.STREAM_MUSIC);
   }
 
-  _getMessage(Map<String, dynamic> message) {
-    return Platform.isIOS
-        ? message['aps']['alert']['body']
-        : message['notification']['body'];
+  Future<void> setMaxVolume() async {
+    int maxVol = await Volume.getMaxVol;
+    await Volume.setVol(maxVol, showVolumeUI: ShowVolumeUI.HIDE);
   }
 
   _getOrderId(Map<String, dynamic> message) {
     String strId =
         Platform.isIOS ? message['order_id'] : message['data']['order_id'];
-
     return strId;
   }
 
@@ -206,10 +173,53 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
 
   showOrder(BuildContext context, int orderId) async {
     OrderView order = await this._orderService.fetchOrder(orderId);
-    showOrderPopup(context, order);
+    if (order.orderStatus == OrderStatus.customerRejected.index) {
+      remotePendingFromNotifier(order);
+      showSimpleNotification(
+          InkWell(
+              onTap: () {
+                TabNotifier tabNotifier =
+                    Provider.of<TabNotifier>(context, listen: false);
+                tabNotifier.tabController.jumpToTab(2);
+              },
+              child: Text("Order " +
+                  Constant.orderPrefix +
+                  order.id.toString() +
+                  " has been rejected by the customer at " +
+                  DateFormat("yyyy-MM-dd HH:mm")
+                      .format(order.lastModifiedDate))),
+          background: Colors.red,
+          duration: Duration(seconds: 30),
+          slideDismiss: true);
+    } else if (order.orderStatus == OrderStatus.onTheWay.index) {
+      removeReadyToPickFromNotifier(order);
+    } else {
+      final assetsAudioPlayer = AssetsAudioPlayer();
+      assetsAudioPlayer.open(Audio("assets/notification.mp3"));
+      showOrderPopup(context, order, assetsAudioPlayer);
+    }
   }
 
-  void showOrderPopup(BuildContext context, OrderView order) {
+  addToNotifier(OrderView orderView) {
+    PendingOrderNotifier pendingOrderNotifier =
+        Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.addPendingOrder(orderView);
+  }
+
+  remotePendingFromNotifier(OrderView orderView) {
+    PendingOrderNotifier pendingOrderNotifier =
+        Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.removePendingOrder(orderView);
+  }
+
+  removeReadyToPickFromNotifier(OrderView orderView) {
+    PendingOrderNotifier pendingOrderNotifier =
+        Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.removeReadyToPickUpOrder(orderView);
+  }
+
+  void showOrderPopup(
+      BuildContext context, OrderView order, AssetsAudioPlayer audioPlayer) {
     Dialog simpleDialog = Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -224,6 +234,9 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(order.user.name),
+                    Text("Order #" + Constant.orderPrefix + order.id.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20)),
                     Row(
                       children: [
                         Text(order.user.phoneNumber),
@@ -235,6 +248,13 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                             }),
                       ],
                     ),
+                    IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          audioPlayer.stop();
+                          addToNotifier(order);
+                          Navigator.of(context, rootNavigator: true).pop();
+                        }),
                   ],
                 ),
               ),
@@ -248,10 +268,15 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Item Total"),
-                        Text(order.currency +
-                            " " +
-                            order.itemSubTotal.toStringAsFixed(2)),
+                        Text("Item Total",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text(
+                            order.currency +
+                                " " +
+                                order.itemSubTotal.toStringAsFixed(2),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
@@ -300,7 +325,7 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                                       constraints: BoxConstraints(
                                         maxHeight:
                                             MediaQuery.of(context).size.height *
-                                                0.07,
+                                                0.1,
                                         maxWidth:
                                             MediaQuery.of(context).size.width *
                                                 0.4,
@@ -311,19 +336,26 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          // Expanded(child:
                                           Text(
                                               order.orderDetailList[index]
                                                   .product.title,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis),
-                                          // ),
                                           Text(
                                               'LKR ' +
                                                   order.orderDetailList[index]
                                                       .product.unitPrice
                                                       .toStringAsFixed(2),
-                                              style: TextStyle(fontSize: 12))
+                                              style: TextStyle(fontSize: 12)),
+                                          if (order.orderDetailList[index]
+                                                  .description !=
+                                              null)
+                                            Text(
+                                                order.orderDetailList[index]
+                                                    .description,
+                                                maxLines: 2,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
                                         ],
                                       ),
                                     ),
@@ -419,12 +451,13 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     child: RaisedButton(
-                      color: Colors.amber,
+                      color: Colors.red,
                       onPressed: () async {
+                        audioPlayer.stop();
                         OrderRejectResponse orderRejectResponse =
                             await _orderService.rejectOrder(order.id);
                         if (orderRejectResponse.status != 100) {
@@ -435,19 +468,21 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                         } else {
                           showSimpleNotification(
                               Text(orderRejectResponse.message),
-                              background: Colors.amber);
+                              background: Colors.red);
                         }
                         Navigator.of(context, rootNavigator: true)
                             .pop('dialog');
                       },
                       child: new Text("Reject"),
                     ),
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                   ),
                   Container(
                     child: RaisedButton(
                       color: Color.fromRGBO(0, 153, 0, 1),
                       onPressed: () async {
+                        audioPlayer.stop();
                         OrderRejectResponse orderRejectResponse =
                             await _orderService.approveOrder(order.id);
                         if (orderRejectResponse.status != 100) {
@@ -465,7 +500,8 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
                       },
                       child: new Text("Accept"),
                     ),
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                   ),
                 ],
               ),
@@ -473,6 +509,8 @@ static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) 
           ],
         ));
     showDialog(
-        context: context, builder: (BuildContext context) => simpleDialog);
+        context: context,
+        builder: (BuildContext context) => simpleDialog,
+        barrierDismissible: false);
   }
 }

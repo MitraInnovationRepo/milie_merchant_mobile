@@ -129,9 +129,7 @@ class _OrderHistoryPageState extends State<OrderHistory> {
           Row(
             children: [
               Image.asset(
-                order.orderStatus != OrderStatus.completed.index
-                    ? "assets/lorry.png"
-                    : "assets/complete.png",
+                getImageAssetFromStatus(order.orderStatus),
                 fit: BoxFit.fill,
                 width: 50,
               ),
@@ -275,5 +273,17 @@ class _OrderHistoryPageState extends State<OrderHistory> {
               height: height,
               order: order,
             ));
+  }
+
+  String getImageAssetFromStatus(int status) {
+    if (status == OrderStatus.customerRejected.index) {
+      return "assets/cancel.png";
+    } else if (status == OrderStatus.merchantRejected.index) {
+      return "assets/cancel.png";
+    } else if (status == OrderStatus.onTheWay.index) {
+      return "assets/lorry.png";
+    } else {
+      return "assets/complete.png";
+    }
   }
 }

@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:foodie_merchant/src/data/enums/order_status.dart';
 import 'package:foodie_merchant/src/data/enums/shop_status.dart';
 import 'package:foodie_merchant/src/data/model/analytics/merchant_analytics_map.dart';
+import 'package:foodie_merchant/src/data/model/order_view.dart';
 import 'package:foodie_merchant/src/data/model/shop.dart';
 import 'package:foodie_merchant/src/data/model/user_profile.dart';
+import 'package:foodie_merchant/src/data/notifier/orders_to_handler_notifier.dart';
+import 'package:foodie_merchant/src/data/notifier/pending_order_notifier.dart';
 import 'package:foodie_merchant/src/data/notifier/tab_notifier.dart';
 import 'package:foodie_merchant/src/screens/home/promotion_slider.dart';
 import 'package:foodie_merchant/src/screens/login.dart';
 import 'package:foodie_merchant/src/screens/shop/shop_service.dart';
 import 'package:foodie_merchant/src/services/analytics/analytics_service.dart';
+import 'package:foodie_merchant/src/services/order/order_service.dart';
 import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:foodie_merchant/src/services/user/user_service.dart';
 import 'package:provider/provider.dart';
@@ -29,15 +33,18 @@ class _HomePageState extends State<Home> {
   MerchantAnalyticsMap _merchantAnalyticsMap;
   Timer timer;
   bool enableProgress = false;
+  OrderService _orderService = locator<OrderService>();
 
   @override
   void initState() {
     super.initState();
     _fetchShopDetails();
     _getMerchantNotHandledOrders();
-    timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
+    timer = Timer.periodic(Duration(seconds: 20), (Timer t) {
       this._getMerchantNotHandledOrders();
     });
+    fetchPendingOrders();
+    fetchReadyToPickupOrders();
   }
 
   @override
@@ -61,12 +68,61 @@ class _HomePageState extends State<Home> {
     });
     MerchantAnalyticsMap _merchantAnalyticsMap =
         await this._analyticsService.findMerchantOrdersToComplete();
+
+    OrdersToHandleNotifier ordersToHandleNotifier =
+        Provider.of<OrdersToHandleNotifier>(context, listen: false);
+    ordersToHandleNotifier.setAllCounts(_merchantAnalyticsMap);
+
     if (mounted) {
       setState(() {
         this._merchantAnalyticsMap = _merchantAnalyticsMap;
         this.enableProgress = false;
       });
     }
+  }
+
+  Future<void> fetchPendingOrders() async {
+    setState(() {
+      enableProgress = true;
+    });
+
+    List<OrderView> _pendingOrderList = await _orderService.findPendingOrders();
+    if (mounted) {
+      setState(() {
+        setupPendingOrderItemList(_pendingOrderList);
+        enableProgress = false;
+      });
+    }
+    return Future<void>(() {});
+  }
+
+  Future<void> fetchReadyToPickupOrders() async {
+    setState(() {
+      enableProgress = true;
+    });
+
+    List<OrderView> _readyToPickupOrderList =
+    await _orderService.findMerchantOrder(OrderStatus.readyToPickUp.index);
+    if (mounted) {
+      setState(() {
+        setupReadyToPickUpOrderItemList(_readyToPickupOrderList);
+        enableProgress = false;
+      });
+    }
+    return Future<void>(() {});
+  }
+
+
+  setupPendingOrderItemList(List<OrderView> _pendingOrderList) {
+    PendingOrderNotifier pendingOrderNotifier =
+        Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.setPendingOrderItems(_pendingOrderList);
+  }
+
+  setupReadyToPickUpOrderItemList(List<OrderView> _readyToPickUpOrderList) {
+    PendingOrderNotifier pendingOrderNotifier =
+    Provider.of<PendingOrderNotifier>(context, listen: false);
+    pendingOrderNotifier.setReadyToPickUpItems(_readyToPickUpOrderList);
   }
 
   @override
