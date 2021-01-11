@@ -58,14 +58,6 @@ class OrderHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Image.asset(
-                  order.scheduleDelivery ? "assets/bell.png" : "assets/complete.png",
-                  fit: BoxFit.fill,
-                  width: 40,
-                )
-              ),
               Image.asset(
                 order.deliveryOption == DeliveryOptions.deliver.index
                     ? "assets/lorry.png"
@@ -133,6 +125,22 @@ class OrderHeader extends StatelessWidget {
                     )
                   ],
                 ),
+              ),
+              if (order.scheduleDelivery)
+                Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Image.asset(
+                      "assets/bell.png",
+                      fit: BoxFit.fill,
+                      width: 40,
+                    )),
+              if (order.scheduleDelivery)
+              Text(
+                DateFormat("yyyy-MM-dd hh:mm a")
+                    .format(order.scheduledTime),
+                style: TextStyle(fontSize: 20.0),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
