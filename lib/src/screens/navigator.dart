@@ -185,7 +185,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
               child: Text("Order " +
                   Constant.orderPrefix +
                   order.id.toString() +
-                  " has been rejected by the customer at " +
+                  " is cancelled by the customer at " +
                   DateFormat("yyyy-MM-dd HH:mm")
                       .format(order.lastModifiedDate))),
           background: Colors.red,

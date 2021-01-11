@@ -94,7 +94,7 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
                                           isExpanded: item.isExpanded,
                                           body: OrderContent(
                                               order: item.order,
-                                              showExpandedOrder: false, isHistory: false),
+                                              showExpandedOrder: true, isHistory: false),
                                         );
                                       }).toList(),
                                     ),
@@ -215,6 +215,9 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
+                SizedBox(
+                  height: 5.0,
+                ),
                 Text(
                   "For: " + order.user.name,
                   style: TextStyle(fontSize: 18.0),
@@ -223,6 +226,14 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
                 ),
                 SizedBox(
                   height: 5.0,
+                ),
+                Text(
+                  "Scheduled at: " +
+                      DateFormat("yyyy-MM-dd hh:mm a")
+                          .format(order.scheduledTime),
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
