@@ -108,6 +108,7 @@ class OrderContent extends StatelessWidget {
                           ),
                           Row(
                             children: [
+                              if(!isHistory)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
