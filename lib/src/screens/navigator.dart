@@ -105,7 +105,6 @@ class _HomeNavigatorState extends State<HomeNavigator> {
       },
       onLaunch: (Map<String, dynamic> message) async {},
       onResume: (Map<String, dynamic> message) async {},
-      // onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessageHandler,
     );
     audioManager = AudioManager.STREAM_MUSIC;
     initAudioStreamType();
@@ -252,7 +251,9 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                         icon: Icon(Icons.close),
                         onPressed: () {
                           audioPlayer.stop();
-                          addToNotifier(order);
+                          // if(!order.scheduleDelivery) {
+                            addToNotifier(order);
+                          // }
                           Navigator.of(context, rootNavigator: true).pop();
                         }),
                   ],

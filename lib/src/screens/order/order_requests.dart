@@ -51,7 +51,8 @@ class _OrderRequestsPageState extends State<OrderRequests> {
                   Tab(icon: orderCountHeader("PENDING", ordersToHandleNotifier.pendingCount ?? 0)),
                   Tab(icon: orderCountHeader("PREPARING", ordersToHandleNotifier.preparingCount ?? 0)),
                   Tab(icon: orderCountHeader("READY", ordersToHandleNotifier.readyCount ?? 0)),
-                  Tab(text: "UPCOMING")
+                  Tab(icon: orderCountHeader("UPCOMING", ordersToHandleNotifier.upcomingCount ?? 0)),
+                  // Tab(text: "UPCOMING")
                 ],
               );
             })),

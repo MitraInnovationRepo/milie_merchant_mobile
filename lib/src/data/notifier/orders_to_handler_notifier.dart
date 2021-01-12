@@ -8,6 +8,7 @@ class OrdersToHandleNotifier extends ChangeNotifier {
   int pendingCount = 0;
   int preparingCount = 0;
   int readyCount = 0;
+  int upcomingCount = 0;
 
   setPending(int count) {
     this.pendingCount = count;
@@ -28,6 +29,7 @@ class OrdersToHandleNotifier extends ChangeNotifier {
     pendingCount = merchantAnalyticsMap.orderMap[OrderStatus.pending.index];
     preparingCount = merchantAnalyticsMap.orderMap[OrderStatus.preparing.index];
     readyCount = merchantAnalyticsMap.orderMap[OrderStatus.readyToPickUp.index];
+    upcomingCount = merchantAnalyticsMap.orderMap[OrderStatus.upcoming.index];
     notifyListeners();
   }
 }
