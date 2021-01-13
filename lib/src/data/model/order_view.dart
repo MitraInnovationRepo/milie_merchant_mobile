@@ -29,6 +29,8 @@ class OrderView {
   DateTime orderAcceptedTime;
   DateTime foodPreparedTime;
   String cabNo;
+  double discount;
+  double discountedSubTotal;
 
   DateTime createdDate;
   DateTime lastModifiedDate;
@@ -61,7 +63,9 @@ class OrderView {
       this.foodPreparedTime,
       this.promoCode,
       this.cabNo,
-      this.lastModifiedDate);
+      this.lastModifiedDate,
+      this.discount,
+      this.discountedSubTotal);
 
   OrderView.empty();
 
