@@ -391,6 +391,24 @@ class CostDetails extends StatelessWidget {
               ],
             ),
           ),
+          order.deliveryOption == DeliveryOptions.deliver.index ? Container() :
+          RichText(
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              text: 'Discount : ',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.black54,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                    text: (order.discount)
+                        .toStringAsFixed(2),
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
           RichText(
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -402,7 +420,7 @@ class CostDetails extends StatelessWidget {
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: order.itemSubTotal.toStringAsFixed(2),
+                    text: order.deliveryOption == DeliveryOptions.deliver.index  ? order.itemSubTotal.toStringAsFixed(2) : order.discountedSubTotal.toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
