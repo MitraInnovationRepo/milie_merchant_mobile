@@ -19,6 +19,7 @@ import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:foodie_merchant/src/services/user/user_service.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -102,7 +103,7 @@ class _HomePageState extends State<Home> {
     });
 
     List<OrderView> _readyToPickupOrderList =
-    await _orderService.findMerchantOrder(OrderStatus.readyToPickUp.index);
+        await _orderService.findMerchantOrder(OrderStatus.readyToPickUp.index);
     if (mounted) {
       setState(() {
         setupReadyToPickUpOrderItemList(_readyToPickupOrderList);
@@ -112,7 +113,6 @@ class _HomePageState extends State<Home> {
     return Future<void>(() {});
   }
 
-
   setupPendingOrderItemList(List<OrderView> _pendingOrderList) {
     PendingOrderNotifier pendingOrderNotifier =
         Provider.of<PendingOrderNotifier>(context, listen: false);
@@ -121,7 +121,7 @@ class _HomePageState extends State<Home> {
 
   setupReadyToPickUpOrderItemList(List<OrderView> _readyToPickUpOrderList) {
     PendingOrderNotifier pendingOrderNotifier =
-    Provider.of<PendingOrderNotifier>(context, listen: false);
+        Provider.of<PendingOrderNotifier>(context, listen: false);
     pendingOrderNotifier.setReadyToPickUpItems(_readyToPickUpOrderList);
   }
 
@@ -136,9 +136,9 @@ class _HomePageState extends State<Home> {
         SliverAppBar(
           pinned: true,
           backgroundColor: Colors.white,
-          toolbarHeight: MediaQuery.of(context).size.height * 0.05,
+          toolbarHeight: MediaQuery.of(context).size.height * 0.08,
           expandedHeight: MediaQuery.of(context).size.height * 0.05,
-          collapsedHeight: MediaQuery.of(context).size.height * 0.1,
+          collapsedHeight: MediaQuery.of(context).size.height * 0.12,
           flexibleSpace: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: (_shop == null
@@ -165,11 +165,12 @@ class _HomePageState extends State<Home> {
                       ),
                       SizedBox(width: 15),
                       Flexible(
-                          child: Text(_shop.name + " - " + _shop.displayCity,
-                              style: TextStyle(fontSize: 22),
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis)),
+                          child: AutoSizeText(_shop.name + " - " + _shop.displayCity,
+                            style: TextStyle(fontSize: 22),
+                            minFontSize: 16,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis)),
                       SizedBox(width: 15),
                       _shop.status == 1
                           ? Text("Online",
