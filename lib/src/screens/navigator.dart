@@ -28,6 +28,10 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:screen/screen.dart';
 import 'package:volume/volume.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:system_settings/system_settings.dart';
 
 class HomeNavigator extends StatefulWidget {
   HomeNavigator({Key key, this.title}) : super(key: key);
@@ -46,6 +50,9 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
   PersistentTabController _controller;
   AudioManager audioManager;
+
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   List<Widget> _buildScreens() {
     return [Home(), OrderRequests(), OrderHistory(), ProductTypeCatalog()];
@@ -84,6 +91,9 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   void initState() {
     super.initState();
     Screen.keepOn(true);
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _controller = PersistentTabController(initialIndex: 0);
     TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
     tabNotifier.setTabController(_controller);
@@ -110,6 +120,81 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     audioManager = AudioManager.STREAM_MUSIC;
     initAudioStreamType();
     setMaxVolume();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+        break;
+      case ConnectivityResult.none:
+        showNetworkConnectivityAlert(context);
+        break;
+      default:
+        showNetworkConnectivityAlert(context);
+        break;
+    }
+  }
+
+  showNetworkConnectivityAlert(BuildContext context) {
+    Widget cancelButton = FlatButton(
+      child: Text("Ok"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Settings"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        SystemSettings.wireless();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.settings),
+          ),
+          Text("Enable Mobile Data"),
+        ],
+      ),
+      content: Text("Mobile data is Turned off- Turn on mobile "
+          "data or use Wi-Fi to access data"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   Future<void> initAudioStreamType() async {
