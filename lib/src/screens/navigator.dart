@@ -32,6 +32,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:system_settings/system_settings.dart';
+import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
 
 class HomeNavigator extends StatefulWidget {
   HomeNavigator({Key key, this.title}) : super(key: key);
@@ -42,7 +43,8 @@ class HomeNavigator extends StatefulWidget {
   _HomeNavigatorState createState() => _HomeNavigatorState();
 }
 
-class _HomeNavigatorState extends State<HomeNavigator> {
+class _HomeNavigatorState extends State<HomeNavigator>
+    with WidgetsBindingObserver {
   final FirebaseMessaging _fcm = FirebaseMessaging();
   StreamSubscription iosSubscription;
   UserService _userService = locator<UserService>();
@@ -53,6 +55,9 @@ class _HomeNavigatorState extends State<HomeNavigator> {
 
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  StreamSubscription<HardwareButtons.VolumeButtonEvent>
+      _volumeButtonSubscription;
 
   List<Widget> _buildScreens() {
     return [Home(), OrderRequests(), OrderHistory(), ProductTypeCatalog()];
@@ -91,10 +96,15 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   void initState() {
     super.initState();
     Screen.keepOn(true);
+    WidgetsBinding.instance.addObserver(this);
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _controller = PersistentTabController(initialIndex: 0);
+    _volumeButtonSubscription =
+        HardwareButtons.volumeButtonEvents.listen((event) {
+      handelVolume();
+    });
     TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
     tabNotifier.setTabController(_controller);
     if (Platform.isIOS) {
@@ -123,8 +133,18 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      handelVolume();
+      handleInterNetConnectivity();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _connectivitySubscription.cancel();
+    _volumeButtonSubscription?.cancel();
     super.dispose();
   }
 
@@ -204,6 +224,21 @@ class _HomeNavigatorState extends State<HomeNavigator> {
   Future<void> setMaxVolume() async {
     int maxVol = await Volume.getMaxVol;
     await Volume.setVol(maxVol, showVolumeUI: ShowVolumeUI.HIDE);
+  }
+
+  Future<void> handelVolume() async {
+    int currentVol = await Volume.getVol;
+    int maxVol = await Volume.getMaxVol;
+    if (currentVol < maxVol) {
+      await Volume.setVol(maxVol, showVolumeUI: ShowVolumeUI.HIDE);
+    }
+  }
+
+  void handleInterNetConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      showNetworkConnectivityAlert(context);
+    }
   }
 
   _getOrderId(Map<String, dynamic> message) {
