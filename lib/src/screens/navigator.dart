@@ -32,7 +32,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:system_settings/system_settings.dart';
-import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
 
 class HomeNavigator extends StatefulWidget {
   HomeNavigator({Key key, this.title}) : super(key: key);
@@ -55,9 +54,6 @@ class _HomeNavigatorState extends State<HomeNavigator>
 
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
-  StreamSubscription<HardwareButtons.VolumeButtonEvent>
-      _volumeButtonSubscription;
 
   List<Widget> _buildScreens() {
     return [Home(), OrderRequests(), OrderHistory(), ProductTypeCatalog()];
@@ -101,10 +97,6 @@ class _HomeNavigatorState extends State<HomeNavigator>
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _controller = PersistentTabController(initialIndex: 0);
-    _volumeButtonSubscription =
-        HardwareButtons.volumeButtonEvents.listen((event) {
-      handelVolume();
-    });
     TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
     tabNotifier.setTabController(_controller);
     if (Platform.isIOS) {
@@ -144,7 +136,6 @@ class _HomeNavigatorState extends State<HomeNavigator>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _connectivitySubscription.cancel();
-    _volumeButtonSubscription?.cancel();
     super.dispose();
   }
 
