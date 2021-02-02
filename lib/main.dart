@@ -14,7 +14,8 @@ import 'package:screen/screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   setupServiceLocator();
   runApp(MyApp());
 }
@@ -29,25 +30,27 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => UserProfile.empty()),
           ChangeNotifierProvider(create: (context) => TabNotifier.empty()),
-          ChangeNotifierProvider(create: (context) => PendingOrderNotifier.empty()),
-          ChangeNotifierProvider(create: (context) => OrdersToHandleNotifier.empty()),
+          ChangeNotifierProvider(
+              create: (context) => PendingOrderNotifier.empty()),
+          ChangeNotifierProvider(
+              create: (context) => OrdersToHandleNotifier.empty()),
         ],
         child: OverlaySupport(
             child: MaterialApp(
-              title: 'Mitra',
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData(
-                primaryColor: Colors.teal,
-                accentColor: CupertinoColors.darkBackgroundGray,
-                errorColor: Colors.red,
-                backgroundColor: Colors.green,
-                //use this as success color
-                primarySwatch: Colors.blue,
-                textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
-                  bodyText2: GoogleFonts.montserrat(textStyle: textTheme.bodyText2),
-                ),
-              ),
-              home: Login(),
-            )));
+          title: 'Mitra',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: Colors.teal,
+            accentColor: CupertinoColors.darkBackgroundGray,
+            errorColor: Colors.red,
+            backgroundColor: Colors.green,
+            //use this as success color
+            primarySwatch: Colors.blue,
+            textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
+              bodyText2: GoogleFonts.montserrat(textStyle: textTheme.bodyText2),
+            ),
+          ),
+          home: Login(),
+        )));
   }
 }
