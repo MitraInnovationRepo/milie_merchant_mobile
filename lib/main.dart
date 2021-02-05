@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         ],
         child: OverlaySupport(
             child: MaterialApp(
-          title: 'Mitra',
+          title: 'Foodie',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primaryColor: Colors.teal,
