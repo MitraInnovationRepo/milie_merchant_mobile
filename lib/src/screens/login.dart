@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:async';
+import 'dart:io';
+
 import 'package:device_info/device_info.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -21,6 +24,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_redirect/store_redirect.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/foundation.dart';
+import 'package:system_settings/system_settings.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -45,13 +51,87 @@ class _LoginPageState extends State<Login> {
   bool isLoginButtonEnabled = false;
   bool enableProgress = false;
 
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   @override
   void initState() {
     super.initState();
+    handleInterNetConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _verifyLogin();
     _checkMode();
     phoneNumberFocusNode = FocusNode();
     passwordFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+        break;
+      case ConnectivityResult.none:
+        showNetworkConnectivityAlert(context);
+        break;
+      default:
+        showNetworkConnectivityAlert(context);
+        break;
+    }
+  }
+
+  showNetworkConnectivityAlert(BuildContext context) {
+    Widget cancelButton = FlatButton(
+      child: Text("Ok"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Settings"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        SystemSettings.wireless();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.settings),
+          ),
+          Text("Enable Mobile Data"),
+        ],
+      ),
+      content: Text("Mobile data is Turned off- Turn on mobile "
+          "data or use Wi-Fi to access data"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void handleInterNetConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      showNetworkConnectivityAlert(context);
+    }
   }
 
   @override
@@ -194,8 +274,7 @@ class _LoginPageState extends State<Login> {
                               height: MediaQuery.of(context).size.height * 0.4,
                               width: MediaQuery.of(context).size.width,
                               child: ClipPath(
-                                child: Image.asset(
-                                    "assets/cover.jpg",
+                                child: Image.asset("assets/cover.jpg",
                                     fit: BoxFit.fitWidth),
                                 clipper: BottomClipper(),
                               ),
@@ -218,9 +297,7 @@ class _LoginPageState extends State<Login> {
             height: 10,
           ),
           TextFormField(
-            inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp(r"^0*"))
-            ],
+            inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"^0*"))],
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (term) {
@@ -324,8 +401,8 @@ class _LoginPageState extends State<Login> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: this.isLoginButtonEnabled ? Colors.black : Colors.grey[500]
-          ),
+              color:
+                  this.isLoginButtonEnabled ? Colors.black : Colors.grey[500]),
           child: Text(
             'Login',
             style: TextStyle(fontSize: 20, color: Colors.white),
@@ -471,9 +548,10 @@ class _LoginPageState extends State<Login> {
     }
   }
 
-  isEmpty(){
+  isEmpty() {
     setState(() {
-      this.isLoginButtonEnabled = phoneNumberController.text.isNotEmpty && passwordController.text.isNotEmpty;
+      this.isLoginButtonEnabled = phoneNumberController.text.isNotEmpty &&
+          passwordController.text.isNotEmpty;
     });
   }
 }
