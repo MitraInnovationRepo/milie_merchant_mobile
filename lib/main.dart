@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +14,10 @@ import 'package:foodie_merchant/src/services/service_locator.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:screen/screen.dart';
+
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/foundation.dart';
+import 'package:system_settings/system_settings.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +57,132 @@ class MyApp extends StatelessWidget {
               bodyText2: GoogleFonts.montserrat(textStyle: textTheme.bodyText2),
             ),
           ),
-          home: Login(),
+          home: SplashPage(),
+        )));
+  }
+}
+
+class SplashPage extends StatefulWidget {
+  @override
+  SplashPageState createState() => SplashPageState();
+}
+
+class SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  void navigationToNextPage() {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => Login()),
+        //User already has a role. Let him go in
+        (Route<dynamic> route) => false);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+  }
+
+  startSplashScreenTimer() async {
+    var _duration = new Duration(seconds: 8);
+    return new Timer(_duration, handleInterNetConnectivity);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    startSplashScreenTimer();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  void handleInterNetConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      showNetworkConnectivityAlert(context);
+    } else {
+      navigationToNextPage();
+    }
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+        break;
+      case ConnectivityResult.none:
+        showNetworkConnectivityAlert(context);
+        break;
+      default:
+        showNetworkConnectivityAlert(context);
+        break;
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      handleInterNetConnectivity();
+    }
+  }
+
+  showNetworkConnectivityAlert(BuildContext context) {
+    Widget cancelButton = FlatButton(
+      child: Text("Ok"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Settings"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        SystemSettings.wireless();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.settings),
+          ),
+          Text("Enable Mobile Data"),
+        ],
+      ),
+      content: Text("Mobile data is Turned off- Turn on mobile "
+          "data or use Wi-Fi to access data"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: Container(
+            child: Stack(
+          children: <Widget>[
+            Center(
+              child: Image.asset("assets/merchant.gif",
+                  gaplessPlayback: true, fit: BoxFit.fitWidth),
+            )
+          ],
         )));
   }
 }
