@@ -50,6 +50,7 @@ class _LoginPageState extends State<Login> {
 
   bool isLoginButtonEnabled = false;
   bool enableProgress = false;
+  bool _shouldByPassVersionUpdate = false;
 
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -140,8 +141,10 @@ class _LoginPageState extends State<Login> {
       return _loading();
     } else if (this.appMetadata.maintenanceMode == 1) {
       return _maintenanceBanner();
+    } else if (this.appMetadata.strictUpdate == 1) {
+      return _updateBanner(true);
     } else if (this.appMetadata.updateAvailable == 1) {
-      return _updateBanner();
+      return _updateBanner(false);
     } else if (isLoggedIn && !shouldLogout) {
       return HomeNavigator();
     } else {
@@ -151,10 +154,17 @@ class _LoginPageState extends State<Login> {
 
   _checkMode() async {
     AppMetadata appMetadata = await this.fetchCurrentVersion();
+    // appMetadata.updateAvailable = 0;
+    // appMetadata.strictUpdate = 1;
+    if (_shouldByPassVersionUpdate) {
+      appMetadata.updateAvailable = 0;
+    }
     setState(() {
       this.appMetadata = appMetadata;
-      if (appMetadata.updateAvailable == 1) {
-        StoreRedirect.redirect();
+      if (appMetadata.strictUpdate == 1) {
+        Timer(Duration(seconds: 2), () {
+          _redirectToRelevantStore();
+        });
       }
     });
   }
@@ -169,6 +179,11 @@ class _LoginPageState extends State<Login> {
         userProfile.userAddressMap.putIfAbsent(element.name, () => element);
       });
     }
+  }
+
+  _redirectToRelevantStore() {
+    StoreRedirect.redirect(
+        androidAppId: Constant.androidAppID, iOSAppId: Constant.iosAppID);
   }
 
   Widget _loading() {
@@ -224,7 +239,7 @@ class _LoginPageState extends State<Login> {
     );
   }
 
-  Widget _updateBanner() {
+  Widget _updateBanner(bool isForceUpdate) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -248,6 +263,70 @@ class _LoginPageState extends State<Login> {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20),
               ),
+              isForceUpdate
+                  ? InkWell(
+                      onTap: () async {
+                        _checkMode();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width/2,
+                        margin: EdgeInsets.symmetric(vertical: 20),
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Colors.black),
+                        child: Text(
+                          'Retry',
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                      ))
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                          InkWell(
+                              onTap: () async {
+                                _redirectToRelevantStore();
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width/2,
+                                margin: EdgeInsets.symmetric(vertical: 20),
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                    color: Colors.black),
+                                child: Text(
+                                  'Update',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white),
+                                ),
+                              )),
+                          InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  this._shouldByPassVersionUpdate = true;
+                                  _checkMode();
+                                });
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width/2,
+                                margin: EdgeInsets.symmetric(vertical: 20),
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                    color: Colors.black),
+                                child: Text(
+                                  'Not Now',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white),
+                                ),
+                              ))
+                        ])
             ],
           ),
         ),

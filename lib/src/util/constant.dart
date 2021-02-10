@@ -25,12 +25,15 @@ class Constant {
   static String orderPrefix = "YCF0";
 
   //Dev
-  static String androidAppVersion = "1.1.0";
-  static String iosAppVersion = "1.0.0";
+  static String androidAppVersion = "1.2.3";
+  static String iosAppVersion = "1.2.3";
 
   //Prod
   // static String androidAppVersion = "1.2.1";
   // static String iosAppVersion = "1.2.0";
 
   static String filePath = backendEndpoint + "/file/download/";
+
+  static String androidAppID = "com.youcab.foodie_merchant";
+  static String iosAppID = "1536776141";
 }

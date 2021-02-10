@@ -10,7 +10,7 @@ class AppService{
   Future<http.Response> getCurrentActiveVersion() async {
     String appVersion = Platform.isAndroid ? Constant.androidAppVersion : Constant.iosAppVersion;
     String platform = Platform.isAndroid ? "android" : "ios";
-    return http.get('$backendEndpoint/metadata/$appVersion/$platform?appName=merchant', headers: <String, String>{
+    return http.get('$backendEndpoint/metadata/update/$appVersion/$platform?appName=merchant', headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Application-Name': 'foodie-merchant'
     });
