@@ -184,6 +184,7 @@ class _HomePageState extends State<Home> {
                       Row(children: [
                         RaisedButton(
                           onPressed: () {
+                            _fetchShopDetails();
                             _getMerchantNotHandledOrders();
                           },
                           child: Icon(Icons.refresh),
