@@ -362,14 +362,14 @@ class CostDetails extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             text: TextSpan(
-              text: 'Item Total: ',
+              text: 'Sub Total: ',
               style: TextStyle(
                 fontSize: 18.0,
                 color: Colors.black54,
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: order.itemTotal.toStringAsFixed(2),
+                    text: 'LKR ' + order.itemTotal.toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
@@ -385,7 +385,7 @@ class CostDetails extends StatelessWidget {
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: (order.addonTotal + order.additionalTotal)
+                    text: 'LKR ' + (order.addonTotal + order.additionalTotal)
                         .toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
@@ -403,7 +403,7 @@ class CostDetails extends StatelessWidget {
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: (order.discount)
+                    text: 'LKR ' + (order.discount)
                         .toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
@@ -413,14 +413,14 @@ class CostDetails extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             text: TextSpan(
-              text: 'Sub Total: ',
+              text: 'Total: ',
               style: TextStyle(
                 fontSize: 18.0,
                 color: Colors.black54,
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: order.deliveryOption == DeliveryOptions.deliver.index  ? order.itemSubTotal.toStringAsFixed(2) : order.discountedSubTotal.toStringAsFixed(2),
+                    text: order.deliveryOption == DeliveryOptions.deliver.index  ? 'LKR ' +  order.itemSubTotal.toStringAsFixed(2) : 'LKR ' + order.discountedSubTotal.toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
