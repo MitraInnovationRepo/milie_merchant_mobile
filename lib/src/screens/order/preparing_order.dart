@@ -129,8 +129,8 @@ class _PreparingOrderPageState extends State<PreparingOrder> {
         Text("Order is updated to Food Ready"),
         background: Theme.of(context).backgroundColor,
       );
+      await fetchPreparingOrders();
       this.controller.jumpToPage(2);
-      fetchPreparingOrders();
     }
   }
 

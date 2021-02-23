@@ -141,12 +141,13 @@ class _PendingOrderPageState extends State<PendingOrder> {
         Text("Order Approved"),
         background: Theme.of(context).backgroundColor,
       );
+      await fetchPendingOrders();
       this.controller.jumpToPage(1);
     } else {
       showSimpleNotification(Text(orderRejectResponse.message),
           background: Colors.amber);
+      fetchPendingOrders();
     }
-    fetchPendingOrders();
   }
 
   rejectOrder(OrderView order) async {
