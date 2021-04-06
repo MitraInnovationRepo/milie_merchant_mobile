@@ -305,8 +305,8 @@ class _LoginPageState extends State<Login> {
             height: 10,
           ),
           TextFormField(
-            inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"^0*"))],
-            keyboardType: TextInputType.number,
+            // inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"^0*"))],
+            keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (term) {
               phoneNumberFocusNode.unfocus();
@@ -329,9 +329,9 @@ class _LoginPageState extends State<Login> {
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
                     )),
-                hintText: "Phone Number",
+                hintText: "Merchant Code",
                 prefixIcon:
-                    Icon(Icons.phone, color: Theme.of(context).accentColor),
+                    Icon(Icons.supervisor_account, color: Theme.of(context).accentColor),
                 labelStyle: TextStyle(color: Colors.black),
                 focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12, width: 1),
