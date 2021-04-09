@@ -370,6 +370,23 @@ class _HomeNavigatorState extends State<HomeNavigator>
                 ),
               ),
             ),
+            order.promotionType == 2 && order.promotionDisplayName != null && order.discount > 0 ? Card(
+              child: Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text("Promotion type: " + order.promotionDisplayName,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          color: Colors.green[900]
+                        )),
+                  ],
+                ),
+              ),
+            ) : Container(),
             Card(
               child: Column(
                 children: [
@@ -385,7 +402,7 @@ class _HomeNavigatorState extends State<HomeNavigator>
                         Text(
                             order.currency +
                                 " " +
-                                order.itemSubTotal.toStringAsFixed(2),
+                                (order.discountedSubTotal - order.deliveryTotal).toStringAsFixed(2),
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
