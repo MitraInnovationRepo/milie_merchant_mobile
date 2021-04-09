@@ -344,6 +344,23 @@ class CostDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          order.promotionType == 2 && order.promotionDisplayName != null && order.discount > 0.00 ? RichText(
+            text: TextSpan(
+              text: 'Promotion type: ',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.green[900]
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                    text: order.promotionDisplayName,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[900]
+                    )),
+              ],
+            ),
+          ) : Container(),
           RichText(
             text: TextSpan(
               text: 'Total Items: ',
@@ -374,6 +391,25 @@ class CostDetails extends StatelessWidget {
               ],
             ),
           ),
+          order.promotionType == 2 && order.discount != null && order.discount > 0 ? RichText(
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              text: 'Promotion: ',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.green[900],
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                    text: 'LKR -' + order.discount.toStringAsFixed(2),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[900],
+                    )),
+              ],
+            ),
+          ) : Container(),
           RichText(
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -420,7 +456,7 @@ class CostDetails extends StatelessWidget {
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: order.deliveryOption == DeliveryOptions.deliver.index  ? 'LKR ' +  order.itemSubTotal.toStringAsFixed(2) : 'LKR ' + order.discountedSubTotal.toStringAsFixed(2),
+                    text: order.promotionType == 2 ? 'LKR ' + (order.discountedSubTotal - order.deliveryTotal).toStringAsFixed(2) : 'LKR ' + order.itemSubTotal.toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),

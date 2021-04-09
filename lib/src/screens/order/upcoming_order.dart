@@ -256,7 +256,7 @@ class _UpcomingOrderPageState extends State<UpcomingOrder> {
                 ),
                 children: <TextSpan>[
                   TextSpan(text: ' '),
-                  TextSpan(text: order.itemSubTotal.toStringAsFixed(2)),
+                  TextSpan(text: order.promotionType == 2 ? (order.discountedSubTotal - order.deliveryTotal).toStringAsFixed(2) : order.itemSubTotal.toStringAsFixed(2)),
                   TextSpan(text: " ("),
                   TextSpan(
                     text: (PaymentOption.values

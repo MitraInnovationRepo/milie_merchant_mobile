@@ -36,6 +36,9 @@ class OrderView {
   DateTime lastModifiedDate;
   String promoCode;
 
+  int promotionType;
+  String promotionDisplayName;
+
   List<OrderDetailView> orderDetailList;
 
   OrderView(this.id,
@@ -65,7 +68,9 @@ class OrderView {
       this.cabNo,
       this.lastModifiedDate,
       this.discount,
-      this.discountedSubTotal);
+      this.discountedSubTotal,
+      this.promotionType,
+      this.promotionDisplayName);
 
   OrderView.empty();
 
