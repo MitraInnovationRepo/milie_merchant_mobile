@@ -53,7 +53,9 @@ OrderView _$OrderViewFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['lastModifiedDate'] as String),
     (json['discount'] as num)?.toDouble(),
-    (json['discountedSubTotal'] as num)?.toDouble()
+    (json['discountedSubTotal'] as num)?.toDouble(),
+    json['promotionType'] as int,
+    json['promotionDisplayName'] as String,
   );
 }
 
@@ -80,10 +82,12 @@ Map<String, dynamic> _$OrderViewToJson(OrderView instance) => <String, dynamic>{
       'orderAcceptedTime': instance.orderAcceptedTime?.toIso8601String(),
       'foodPreparedTime': instance.foodPreparedTime?.toIso8601String(),
       'cabNo': instance.cabNo,
+      'discount': instance.discount,
+      'discountedSubTotal': instance.discountedSubTotal,
       'createdDate': instance.createdDate?.toIso8601String(),
       'lastModifiedDate': instance.lastModifiedDate?.toIso8601String(),
       'promoCode': instance.promoCode,
+      'promotionType': instance.promotionType,
+      'promotionDisplayName': instance.promotionDisplayName,
       'orderDetailList': instance.orderDetailList,
-      'discount': instance.discount,
-      'discountedSubTotal': instance.discountedSubTotal,
     };
