@@ -64,7 +64,8 @@ class OrderContent extends StatelessWidget {
                       SizedBox(
                         width: 10.0,
                       ),
-                      DriverInfoCard(cabNo: order.cabNo, showMobile: !this.isHistory),
+                      DriverInfoCard(
+                          cabNo: order.cabNo, showMobile: !this.isHistory),
                     ],
                   ),
                 ),
@@ -108,52 +109,55 @@ class OrderContent extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              if(!isHistory)
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                      padding: EdgeInsets.all(6),
-                                      child: Text(order.user.name,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                  Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.2,
-                                      padding: EdgeInsets.all(6),
-                                      child: Text(order.address,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              color: Colors.black54,
-                                              fontSize: 16))),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.phone,
-                                          size: 20,
-                                          color: Colors.black54,
-                                        ),
-                                        onPressed: () {
-                                          launch("tel://${order.user.phoneNumber}");
-                                        },
-                                      ),
-                                      SizedBox(
-                                        width: 5.0,
-                                      ),
-                                      InkWell(
-                                        child: new Text(order.user.phoneNumber,
+                              if (!isHistory)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                        padding: EdgeInsets.all(6),
+                                        child: Text(order.user.name,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold))),
+                                    Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.2,
+                                        padding: EdgeInsets.all(6),
+                                        child: Text(order.address,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
                                             style: TextStyle(
                                                 color: Colors.black54,
-                                                fontSize: 16)),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                                fontSize: 16))),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.phone,
+                                            size: 20,
+                                            color: Colors.black54,
+                                          ),
+                                          onPressed: () {
+                                            launch(
+                                                "tel://${order.user.phoneNumber}");
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 5.0,
+                                        ),
+                                        InkWell(
+                                          child: new Text(
+                                              order.user.phoneNumber,
+                                              style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize: 16)),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               SizedBox(
                                 width: 20.0,
                               ),
@@ -344,23 +348,23 @@ class CostDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          order.promotionType == 2 && order.promotionDisplayName != null && order.discount > 0.00 ? RichText(
-            text: TextSpan(
-              text: 'Promotion type: ',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.green[900]
-              ),
-              children: <TextSpan>[
-                TextSpan(
-                    text: order.promotionDisplayName,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green[900]
-                    )),
-              ],
-            ),
-          ) : Container(),
+          order.promotionType == 2 &&
+                  order.promotionDisplayName != null &&
+                  order.discount > 0.00
+              ? RichText(
+                  text: TextSpan(
+                    text: 'Promotion type: ',
+                    style: TextStyle(fontSize: 18.0, color: Colors.green[900]),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: order.promotionDisplayName,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green[900])),
+                    ],
+                  ),
+                )
+              : Container(),
           RichText(
             text: TextSpan(
               text: 'Total Items: ',
@@ -391,25 +395,29 @@ class CostDetails extends StatelessWidget {
               ],
             ),
           ),
-          order.promotionType == 2 && order.discount != null && order.discount > 0 ? RichText(
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              text: 'Promotion: ',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.green[900],
-              ),
-              children: <TextSpan>[
-                TextSpan(
-                    text: 'LKR -' + order.discount.toStringAsFixed(2),
+          order.promotionType == 2 &&
+                  order.discount != null &&
+                  order.discount > 0
+              ? RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    text: 'Promotion: ',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green[900],
-                    )),
-              ],
-            ),
-          ) : Container(),
+                      fontSize: 18.0,
+                      color: Colors.green[900],
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: 'LKR -' + order.discount.toStringAsFixed(2),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green[900],
+                          )),
+                    ],
+                  ),
+                )
+              : Container(),
           RichText(
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -421,30 +429,31 @@ class CostDetails extends StatelessWidget {
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: 'LKR ' + (order.addonTotal + order.additionalTotal)
-                        .toStringAsFixed(2),
+                    text: 'LKR ' +
+                        (order.addonTotal + order.additionalTotal)
+                            .toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
           ),
-          order.deliveryOption == DeliveryOptions.deliver.index ? Container() :
-          RichText(
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              text: 'Discount : ',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.black54,
-              ),
-              children: <TextSpan>[
-                TextSpan(
-                    text: 'LKR ' + (order.discount)
-                        .toStringAsFixed(2),
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ),
+          order.deliveryOption == DeliveryOptions.deliver.index
+              ? Container()
+              : RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    text: 'Discount : ',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.black54,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: 'LKR ' + (order.discount).toStringAsFixed(2),
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
           RichText(
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -456,7 +465,11 @@ class CostDetails extends StatelessWidget {
               ),
               children: <TextSpan>[
                 TextSpan(
-                    text: order.promotionType == 2 ? 'LKR ' + (order.discountedSubTotal - order.deliveryTotal).toStringAsFixed(2) : 'LKR ' + order.itemSubTotal.toStringAsFixed(2),
+                    text: order.promotionType == 2
+                        ? 'LKR ' +
+                            (order.discountedSubTotal - order.deliveryTotal)
+                                .toStringAsFixed(2)
+                        : 'LKR ' + order.discountedSubTotal.toStringAsFixed(2),
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
