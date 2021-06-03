@@ -242,7 +242,11 @@ class _OrderHistoryPageState extends State<OrderHistory> {
                 ),
                 children: <TextSpan>[
                   TextSpan(text: ' '),
-                  TextSpan(text: order.promotionType == 2 ? (order.discountedSubTotal - order.deliveryTotal).toStringAsFixed(2) : order.itemSubTotal.toStringAsFixed(2)),
+                  TextSpan(
+                      text: order.promotionType == 2
+                          ? (order.discountedSubTotal - order.deliveryTotal)
+                              .toStringAsFixed(2)
+                          : order.itemSubTotal.toStringAsFixed(2)),
                   TextSpan(text: " ("),
                   TextSpan(
                     text: (PaymentOption.values
@@ -277,8 +281,10 @@ class _OrderHistoryPageState extends State<OrderHistory> {
 
   String getImageAssetFromStatus(int status) {
     if (status == OrderStatus.customerRejected.index) {
-      return "assets/cancel.png";
+      return "assets/user-icon.png";
     } else if (status == OrderStatus.merchantRejected.index) {
+      return "assets/shop-icon.png";
+    } else if (status == OrderStatus.systemRejected.index) {
       return "assets/cancel.png";
     } else if (status == OrderStatus.onTheWay.index) {
       return "assets/lorry.png";
