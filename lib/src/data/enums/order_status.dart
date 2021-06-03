@@ -7,5 +7,6 @@ enum OrderStatus{
   pickup,
   onTheWay,
   delivered,
-  completed
+  completed,
+  systemRejected
 }

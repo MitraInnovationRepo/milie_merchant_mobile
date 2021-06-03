@@ -25,8 +25,8 @@ class Constant {
   static String orderPrefix = "YCF0";
 
   //Dev
-  static String androidAppVersion = "1.2.6";
-  static String iosAppVersion = "1.2.6";
+  static String androidAppVersion = "1.2.7";
+  static String iosAppVersion = "1.2.7";
 
   //Prod
   // static String androidAppVersion = "1.2.5";
