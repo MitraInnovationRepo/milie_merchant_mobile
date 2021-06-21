@@ -304,6 +304,17 @@ class _HomeNavigatorState extends State<HomeNavigator>
           slideDismiss: true);
     } else if (order.orderStatus == OrderStatus.onTheWay.index) {
       removeReadyToPickFromNotifier(order);
+    }else if(order.orderStatus == OrderStatus.systemRejected.index){
+      showSimpleNotification(
+          InkWell(
+              onTap: () {},
+              child: Text("Pending order expired")),
+          background: Colors.red,
+          duration: Duration(seconds: 5),
+          slideDismiss: true);
+      TabNotifier tabNotifier =
+      Provider.of<TabNotifier>(context, listen: false);
+      tabNotifier.tabController.jumpToTab(2);
     } else {
       final assetsAudioPlayer = AssetsAudioPlayer();
       assetsAudioPlayer.open(Audio("assets/notification.mp3"));
