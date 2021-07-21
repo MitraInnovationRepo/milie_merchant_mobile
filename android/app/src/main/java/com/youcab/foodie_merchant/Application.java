@@ -1,4 +1,4 @@
-package com.youcab.foodie_merchant;
+package com.mitrai.miliemerchantapp;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterApplication;

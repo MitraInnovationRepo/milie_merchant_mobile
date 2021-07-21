@@ -12,7 +12,7 @@ class AppService{
     String platform = Platform.isAndroid ? "android" : "ios";
     return http.get('$backendEndpoint/metadata/update/$appVersion/$platform', headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-      'Application-Name': 'foodie-merchant'
+      'Application-Name': 'milie-merchant'
     });
   }
 }

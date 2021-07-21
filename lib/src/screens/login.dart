@@ -56,7 +56,7 @@ class _LoginPageState extends State<Login> {
   void initState() {
     super.initState();
     _verifyLogin();
-    // _checkMode();
+    _checkMode();
     phoneNumberFocusNode = FocusNode();
     passwordFocusNode = FocusNode();
   }
@@ -68,16 +68,15 @@ class _LoginPageState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    // if (appMetadata == null) {
-    //   return _loading();
-    // } else if (this.appMetadata.maintenanceMode == 1) {
-    //   return _maintenanceBanner();
-    // } else if (this.appMetadata.strictUpdate == 1) {
-    //   return _updateBanner(true);
-    // } else if (this.appMetadata.updateAvailable == 1) {
-    //   return _updateBanner(false);
-    // } else
-    if (isLoggedIn && !shouldLogout) {
+    if (appMetadata == null) {
+      return _loading();
+    } else if (this.appMetadata.maintenanceMode == 1) {
+      return _maintenanceBanner();
+    } else if (this.appMetadata.strictUpdate == 1) {
+      return _updateBanner(true);
+    } else if (this.appMetadata.updateAvailable == 1) {
+      return _updateBanner(false);
+    } else if (isLoggedIn && !shouldLogout) {
       return HomeNavigator();
     } else {
       return _login();
