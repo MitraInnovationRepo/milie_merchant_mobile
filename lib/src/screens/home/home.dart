@@ -191,7 +191,7 @@ class _HomePageState extends State<Home> {
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.green)),
+                              side: BorderSide(color: Theme.of(context).primaryColor)),
                         ),
                         SizedBox(width: 20),
                         RaisedButton(
@@ -211,7 +211,7 @@ class _HomePageState extends State<Home> {
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.green)),
+                              side: BorderSide(color: Theme.of(context).primaryColor)),
                         )
                       ])
                     ],

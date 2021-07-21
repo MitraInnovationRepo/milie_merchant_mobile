@@ -10,8 +10,8 @@ import 'oauth2_service.dart';
 
 class OAuth2KeycloakService extends OAuth2Service {
   final authorizationEndpoint = Uri.parse(Constant.keycloakEndpoint +
-      "/auth/realms/foodie/protocol/openid-connect/token");
-  final clientId = "foodie-mobile";
+      "/auth/realms/milie/protocol/openid-connect/token");
+  final clientId = "milie-mobile";
   final clientSecret = Constant.clientSecret;
   oauth2.Client client;
 

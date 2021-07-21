@@ -100,7 +100,8 @@ class OrderContent extends StatelessWidget {
                                   onTap: () => secondaryAction.action(order),
                                   child: SquareButton(
                                       title: secondaryAction.title,
-                                      backgroundColor: Colors.orangeAccent),
+                                      backgroundColor:
+                                          Theme.of(context).accentColor),
                                 ),
                             ],
                           ),

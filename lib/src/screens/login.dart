@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:foodie_merchant/src/screens/widget/custom_title.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ import 'package:foodie_merchant/src/services/util/app_service.dart';
 import 'package:foodie_merchant/src/util/constant.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:foodie_merchant/src/screens/widget/bezier_container.dart';
 
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -49,12 +52,11 @@ class _LoginPageState extends State<Login> {
   bool enableProgress = false;
   bool _shouldByPassVersionUpdate = false;
 
-
   @override
   void initState() {
     super.initState();
     _verifyLogin();
-    _checkMode();
+    // _checkMode();
     phoneNumberFocusNode = FocusNode();
     passwordFocusNode = FocusNode();
   }
@@ -66,15 +68,16 @@ class _LoginPageState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    if (appMetadata == null) {
-      return _loading();
-    } else if (this.appMetadata.maintenanceMode == 1) {
-      return _maintenanceBanner();
-    } else if (this.appMetadata.strictUpdate == 1) {
-      return _updateBanner(true);
-    } else if (this.appMetadata.updateAvailable == 1) {
-      return _updateBanner(false);
-    } else if (isLoggedIn && !shouldLogout) {
+    // if (appMetadata == null) {
+    //   return _loading();
+    // } else if (this.appMetadata.maintenanceMode == 1) {
+    //   return _maintenanceBanner();
+    // } else if (this.appMetadata.strictUpdate == 1) {
+    //   return _updateBanner(true);
+    // } else if (this.appMetadata.updateAvailable == 1) {
+    //   return _updateBanner(false);
+    // } else
+    if (isLoggedIn && !shouldLogout) {
       return HomeNavigator();
     } else {
       return _login();
@@ -118,7 +121,8 @@ class _LoginPageState extends State<Login> {
   Widget _loading() {
     return Scaffold(
         body: SpinKitDualRing(
-            size: MediaQuery.of(context).size.width * 0.2, color: Colors.teal));
+            size: MediaQuery.of(context).size.width * 0.2,
+            color: Theme.of(context).accentColor));
   }
 
   Widget _maintenanceBanner() {
@@ -198,7 +202,7 @@ class _LoginPageState extends State<Login> {
                         _checkMode();
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width/2,
+                        width: MediaQuery.of(context).size.width / 2,
                         margin: EdgeInsets.symmetric(vertical: 20),
                         padding: EdgeInsets.symmetric(vertical: 10),
                         alignment: Alignment.center,
@@ -219,7 +223,7 @@ class _LoginPageState extends State<Login> {
                                 _redirectToRelevantStore();
                               },
                               child: Container(
-                                width: MediaQuery.of(context).size.width/2,
+                                width: MediaQuery.of(context).size.width / 2,
                                 margin: EdgeInsets.symmetric(vertical: 20),
                                 padding: EdgeInsets.symmetric(vertical: 10),
                                 alignment: Alignment.center,
@@ -241,7 +245,7 @@ class _LoginPageState extends State<Login> {
                                 });
                               },
                               child: Container(
-                                width: MediaQuery.of(context).size.width/2,
+                                width: MediaQuery.of(context).size.width / 2,
                                 margin: EdgeInsets.symmetric(vertical: 20),
                                 padding: EdgeInsets.symmetric(vertical: 10),
                                 alignment: Alignment.center,
@@ -274,25 +278,38 @@ class _LoginPageState extends State<Login> {
                         child: Center(
                             child: SpinKitDualRing(
                                 size: MediaQuery.of(context).size.width * 0.2,
-                                color: Colors.teal)))
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.4,
-                              width: MediaQuery.of(context).size.width,
-                              child: ClipPath(
-                                child: Image.asset("assets/cover.jpg",
-                                    fit: BoxFit.fitWidth),
-                                clipper: BottomClipper(),
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  children: [_formWidget(), _submitButton()],
-                                ))
-                          ]))));
+                                color: Theme.of(context).accentColor)))
+                    : Stack(children: <Widget>[
+                        Positioned(
+                            top: -MediaQuery.of(context).size.height * .5,
+                            right: -MediaQuery.of(context).size.width * .5,
+                            child: BezierContainer(
+                                angle: -pi / 3.5,
+                                gradientColor: Theme.of(context).accentColor)),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Container(
+                              //   height:
+                              //       MediaQuery.of(context).size.height * 0.4,
+                              //   width: MediaQuery.of(context).size.width,
+                              //   child: ClipPath(
+                              //     child: Image.asset("assets/cover.jpg",
+                              //         fit: BoxFit.fitWidth),
+                              //     clipper: BottomClipper(),
+                              //   ),
+                              // ),
+                              SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .25),
+                              CustomTitle(text: "Login"),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Column(
+                                    children: [_formWidget(), _submitButton()],
+                                  ))
+                            ])
+                      ]))));
   }
 
   Widget _phoneNumberField() {
@@ -325,19 +342,22 @@ class _LoginPageState extends State<Login> {
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(0),
                 border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 0.5),
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    )),
+                  borderSide: BorderSide(color: Colors.black12, width: 0.5),
+                  // borderRadius: const BorderRadius.all(
+                  //   const Radius.circular(20.0),
+                  // )
+                ),
                 hintText: "Merchant Code",
-                prefixIcon:
-                    Icon(Icons.supervisor_account, color: Theme.of(context).accentColor),
+                prefixIcon: Icon(Icons.supervisor_account,
+                    color: Theme.of(context).accentColor),
                 labelStyle: TextStyle(color: Colors.black),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 1),
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ))),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).accentColor, width: 1),
+                  // borderRadius: const BorderRadius.all(
+                  //   const Radius.circular(20.0),
+                  // )
+                )),
           )
         ],
       ),
@@ -375,20 +395,23 @@ class _LoginPageState extends State<Login> {
             },
             decoration: InputDecoration(
                 border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 0.5),
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    )),
+                  borderSide: BorderSide(color: Colors.black12, width: 0.5),
+                  // borderRadius: const BorderRadius.all(
+                  //   const Radius.circular(20.0),
+                  // )
+                ),
                 contentPadding: EdgeInsets.all(0),
                 hintText: "Password",
                 labelStyle: TextStyle(color: Colors.black),
                 prefixIcon:
                     Icon(Icons.lock, color: Theme.of(context).accentColor),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 1),
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ))),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).accentColor, width: 1),
+                  // borderRadius: const BorderRadius.all(
+                  //   const Radius.circular(20.0),
+                  // )
+                )),
           )
         ],
       ),
@@ -408,9 +431,26 @@ class _LoginPageState extends State<Login> {
           padding: EdgeInsets.symmetric(vertical: 10),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color:
-                  this.isLoginButtonEnabled ? Colors.black : Colors.grey[500]),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.grey.shade200,
+                    offset: Offset(2, 4),
+                    blurRadius: 5,
+                    spreadRadius: 2)
+              ],
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: this.isLoginButtonEnabled
+                      ? [
+                          Theme.of(context).primaryColor,
+                          Theme.of(context).accentColor
+                        ]
+                      : [Colors.grey[500], Colors.grey[500]])
+              // color:
+              //     this.isLoginButtonEnabled ? Colors.black : Colors.grey[500]
+              ),
           child: Text(
             'Login',
             style: TextStyle(fontSize: 20, color: Colors.white),

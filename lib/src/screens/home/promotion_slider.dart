@@ -6,9 +6,9 @@ import 'package:skeleton_text/skeleton_text.dart';
 
 class PromotionSlider extends StatelessWidget {
   final List<String> imgList = [
-    '${Constant.contentEndpoint}/uploads/merchant_slider1_c9d149cee0.jpg',
-    '${Constant.contentEndpoint}/uploads/merchant_slider2_8b50f986b6.jpg',
-    '${Constant.contentEndpoint}/uploads/merchant_slider3_332308dca8.jpg',
+    '${Constant.contentEndpoint}/uploads/Screenshot_2021_07_13_at_13_58_25_54b2a11304.png',
+    // '${Constant.contentEndpoint}/uploads/merchant_slider2_8b50f986b6.jpg',
+    // '${Constant.contentEndpoint}/uploads/merchant_slider3_332308dca8.jpg',
   ];
 
   @override

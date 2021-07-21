@@ -11,7 +11,7 @@
     <application
         android:name=".Application"
         android:usesCleartextTraffic="true"
-        android:label="Foodie Merchant"
+        android:label="MiliE Merchant"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

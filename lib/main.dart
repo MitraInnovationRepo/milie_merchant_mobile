@@ -44,11 +44,11 @@ class MyApp extends StatelessWidget {
         ],
         child: OverlaySupport(
             child: MaterialApp(
-          title: 'Foodie',
+          title: 'MiliE',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            primaryColor: Colors.teal,
-            accentColor: CupertinoColors.darkBackgroundGray,
+            primaryColor: Color(0xfffbb448),
+            accentColor: Color(0xffe46b10),
             errorColor: Colors.red,
             backgroundColor: Colors.green,
             //use this as success color
@@ -179,8 +179,10 @@ class SplashPageState extends State<SplashPage> with WidgetsBindingObserver {
             child: Stack(
           children: <Widget>[
             Center(
-              child: Image.asset("assets/merchant.gif",
-                  gaplessPlayback: true, fit: BoxFit.fitWidth),
+              child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.2),
+                    child: Image.asset("assets/logo.jpg",
+                   fit: BoxFit.contain)),
             )
           ],
         )));
