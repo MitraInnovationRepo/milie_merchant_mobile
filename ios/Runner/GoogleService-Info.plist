@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.youcab.foodie-merchant</string>
+	<string>com.mitrai.miliemerchant</string>
 	<key>PROJECT_ID</key>
 	<string>youcabfoodie-f8482</string>
 	<key>STORAGE_BUCKET</key>
