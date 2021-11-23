@@ -12,7 +12,7 @@ class ShopService {
 
   Future<http.Response> saveShop(Shop shop) async {
     return _oAuth2Service.getClient().post(
-          '$backendEndpoint/shops',
+          Uri.parse('$backendEndpoint/shops'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -22,7 +22,7 @@ class ShopService {
 
   Future<http.Response> updateShop(Shop shop) async {
     return _oAuth2Service.getClient().put(
-          '$backendEndpoint/shops',
+          Uri.parse('$backendEndpoint/shops'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -32,7 +32,7 @@ class ShopService {
 
   Future<http.Response> updateShopStatus(int status) async {
     return _oAuth2Service.getClient().put(
-      '$backendEndpoint/shops/status/$status',
+      Uri.parse('$backendEndpoint/shops/status/$status'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -40,11 +40,11 @@ class ShopService {
   }
 
   Future<Shop> fetchShopByUser() async {
-    final http.Response response = await _oAuth2Service
-        .getClient()
-        .get("$backendEndpoint/shops/mine", headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
+    final http.Response response = await _oAuth2Service.getClient().get(
+        Uri.parse("$backendEndpoint/shops/mine"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
 
     Shop shop;
     if (response.statusCode == 200) {

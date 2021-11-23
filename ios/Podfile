@@ -31,17 +31,15 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-    # Plugin Pods
+  # Plugin Pods
   pod 'Firebase/Core'
-    # add the Firebase pod for Google Analytics
+  # add the Firebase pod for Google Analytics
   pod 'Firebase/Analytics'
-    # add Firebase pod for Crashlytics
+  # add Firebase pod for Crashlytics
   pod 'Firebase/Crashlytics'
-    # add Firebase pod for Performance
+  # add Firebase pod for Performance
   pod 'Firebase/Performance'
-  # add pods for any other desired Firebase products
-  # https://firebase.google.com/docs/ios/setup#available-pods
-  
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 

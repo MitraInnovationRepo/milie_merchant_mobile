@@ -1,4 +1,3 @@
-
 import 'package:http/http.dart' as http;
 import 'package:foodie_merchant/src/services/security/oauth2_service.dart';
 import 'package:foodie_merchant/src/services/service_locator.dart';
@@ -10,7 +9,7 @@ class UserEmailService {
 
   Future<http.Response> resendEmail() async {
     return _oAuth2Service.getClient().post(
-      '$backendEndpoint/email-verification/resend',
+      Uri.parse('$backendEndpoint/email-verification/resend'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

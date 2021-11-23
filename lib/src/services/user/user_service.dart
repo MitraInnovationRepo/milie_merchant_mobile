@@ -16,7 +16,7 @@ class UserService {
 
   Future<http.Response> initializeUser(User user) async {
     return http.post(
-      '$backendEndpoint/users',
+      Uri.parse('$backendEndpoint/users'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -26,7 +26,7 @@ class UserService {
 
   Future<http.Response> verifyUser(UserVerification userVerification) async {
     return http.post(
-      '$backendEndpoint/users/verify',
+      Uri.parse('$backendEndpoint/users/verify'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -37,25 +37,24 @@ class UserService {
   Future<http.Response> findCurrentUser() async {
     return _oAuth2Service
         .getClient()
-        .get('$backendEndpoint/users', headers: <String, String>{
+        .get(Uri.parse('$backendEndpoint/users'), headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
   }
 
   Future<http.Response> updateDeviceInfo(User user) async {
-    return _oAuth2Service
-        .getClient().post(
-      '$backendEndpoint/users/update/device',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(user.toJson()),
-    );
+    return _oAuth2Service.getClient().post(
+          Uri.parse('$backendEndpoint/users/update/device'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(user.toJson()),
+        );
   }
 
   Future<http.Response> resetPassword(UserResetPassword resetPassword) async {
     return http.post(
-      '$backendEndpoint/users/changePassword',
+      Uri.parse('$backendEndpoint/users/changePassword'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -63,42 +62,39 @@ class UserService {
     );
   }
 
-  void logoutUser(){
+  void logoutUser() {
     final storage = new FlutterSecureStorage();
     storage.deleteAll();
     _clearLocalStorage();
   }
 
   Future<http.Response> updateUser(User user) {
-    return _oAuth2Service
-        .getClient().put(
-      '$backendEndpoint/users',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(user.toJson()),
-    );
+    return _oAuth2Service.getClient().put(
+          Uri.parse('$backendEndpoint/users'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(user.toJson()),
+        );
   }
 
   Future<http.Response> checkUserExist(String phoneNumber) {
-    return http.get(
-      '$backendEndpoint/users/userExists/$phoneNumber',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      }
-    );
+    return http.get(Uri.parse('$backendEndpoint/users/userExists/$phoneNumber'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
   }
 
-  Future<http.Response> updateUserAsCustomer(){
+  Future<http.Response> updateUserAsCustomer() {
     return http.post(
-      '$backendEndpoint/users/role/customer',
+      Uri.parse('$backendEndpoint/users/role/customer'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
   }
 
-  setUpUserProfile(UserProfile userProfile, var parsedJwt){
+  setUpUserProfile(UserProfile userProfile, var parsedJwt) {
     userProfile.name = parsedJwt['given_name'];
     userProfile.countryCode = parsedJwt['country_code'];
     userProfile.phoneNumber = parsedJwt['preferred_username'];
@@ -108,22 +104,21 @@ class UserService {
     userProfile.email = parsedJwt['email'];
     userProfile.currency = parsedJwt['currency'];
     var realmAccess = parsedJwt['realm_access'];
-    if(realmAccess != null) {
+    if (realmAccess != null) {
       var dynamicRoleList = parsedJwt['realm_access']['roles'];
       List<String> roleList = [];
       for (int i = 0; i < dynamicRoleList.length; i++) {
         roleList.add(dynamicRoleList[i].toString());
       }
       userProfile.roles = roleList;
-    }
-    else{
+    } else {
       userProfile.roles = [];
     }
     userProfile.notifyCreation();
   }
-  _clearLocalStorage() async{
+
+  _clearLocalStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(Constant.clientCredentialKey);
   }
-
 }

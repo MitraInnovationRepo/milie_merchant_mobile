@@ -39,7 +39,7 @@ class _LoginPageState extends State<Login> {
 
   OAuth2Service _oAuth2Service = locator<OAuth2Service>();
   UserService _userService = locator<UserService>();
-  final FirebaseMessaging _fcm = FirebaseMessaging();
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   AppService _appService = locator<AppService>();
   AppMetadata appMetadata;
   bool isLoggedIn = false;
@@ -445,11 +445,11 @@ class _LoginPageState extends State<Login> {
         User user = await _fetchUserDetails();
         UserProfile userProfile =
             Provider.of<UserProfile>(context, listen: false);
-        user.userAddressList.forEach((element) {
-          userProfile.userAddressMap.putIfAbsent(element.name, () => element);
-        });
 
-        if (user.role != null && userProfile.roles.contains("merchant")) {
+        if (user!= null && user.role != null && userProfile.roles.contains("merchant")) {
+          user.userAddressList.forEach((element) {
+            userProfile.userAddressMap.putIfAbsent(element.name, () => element);
+          });
           await this.checkUserDeviceData(
               user); //Check if device id, Firebase registration id has changed
           Navigator.of(context).pushAndRemoveUntil(

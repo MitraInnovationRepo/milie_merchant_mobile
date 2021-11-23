@@ -38,7 +38,8 @@ class OrderDetailsDialog extends StatelessWidget {
                               children: [
                                 Badge(
                                   badgeColor: Theme.of(context).primaryColor,
-                                  position: BadgePosition.topRight(right: 3),
+                                  position:
+                                      BadgePosition.topEnd(top: 0, end: 3),
                                   animationDuration:
                                       Duration(milliseconds: 300),
                                   animationType: BadgeAnimationType.slide,
@@ -55,7 +56,8 @@ class OrderDetailsDialog extends StatelessWidget {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: CachedNetworkImage(
-                                      imageUrl: "${Constant.filePath}${orderDetailList[index].product.imageUrl}",
+                                      imageUrl:
+                                          "${Constant.filePath}${orderDetailList[index].product.imageUrl}",
                                       height: 100.0,
                                       width: 100.0,
                                       fit: BoxFit.cover,

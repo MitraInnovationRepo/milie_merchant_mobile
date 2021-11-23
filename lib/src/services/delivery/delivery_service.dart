@@ -12,11 +12,10 @@ class DeliveryService {
 
   Future<DriverInformation> getDriverInformation(String cabNo) async {
     final http.Response response = await _oAuth2Service.getClient().get(
-        '$backendEndpoint/delivery/driver/$cabNo',
+        Uri.parse('$backendEndpoint/delivery/driver/$cabNo'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-        }
-    );
+        });
     DriverInformation driverInformation;
     if (response.statusCode == 200) {
       var data = json.decode(utf8.decode(response.bodyBytes));
@@ -25,7 +24,7 @@ class DeliveryService {
     return driverInformation;
   }
 
-  String getBasicAuth(){
+  String getBasicAuth() {
     String username = Constant.deliveryAPIUserName;
     String password = Constant.deliveryAPIPassword;
     return 'Basic ' + base64Encode(utf8.encode('$username:$password'));

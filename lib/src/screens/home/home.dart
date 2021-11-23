@@ -103,7 +103,7 @@ class _HomePageState extends State<Home> {
     });
 
     List<OrderView> _readyToPickupOrderList =
-    await _orderService.findMerchantOrder(OrderStatus.readyToPickUp.index);
+        await _orderService.findMerchantOrder(OrderStatus.readyToPickUp.index);
     if (mounted) {
       setState(() {
         setupReadyToPickUpOrderItemList(_readyToPickupOrderList);
@@ -113,7 +113,6 @@ class _HomePageState extends State<Home> {
     return Future<void>(() {});
   }
 
-
   setupPendingOrderItemList(List<OrderView> _pendingOrderList) {
     PendingOrderNotifier pendingOrderNotifier =
         Provider.of<PendingOrderNotifier>(context, listen: false);
@@ -122,7 +121,7 @@ class _HomePageState extends State<Home> {
 
   setupReadyToPickUpOrderItemList(List<OrderView> _readyToPickUpOrderList) {
     PendingOrderNotifier pendingOrderNotifier =
-    Provider.of<PendingOrderNotifier>(context, listen: false);
+        Provider.of<PendingOrderNotifier>(context, listen: false);
     pendingOrderNotifier.setReadyToPickUpItems(_readyToPickUpOrderList);
   }
 
@@ -149,13 +148,14 @@ class _HomePageState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ToggleSwitch(
+                        totalSwitches: 2,
                         minWidth: 90.0,
                         fontSize: 16.0,
                         initialLabelIndex:
                             _shop.status == ShopStatus.active.index ? 0 : 1,
                         activeBgColor: _shop.status == ShopStatus.active.index
-                            ? Colors.green
-                            : Colors.red,
+                            ? [Colors.green]
+                            : [Colors.red],
                         activeFgColor: Colors.white,
                         inactiveBgColor: Colors.grey[400],
                         inactiveFgColor: Colors.grey[900],
@@ -166,10 +166,11 @@ class _HomePageState extends State<Home> {
                       ),
                       SizedBox(width: 15),
                       Flexible(
-                           child: AutoSizeText(_shop.name + " - " + _shop.displayCity,
+                          child: AutoSizeText(
+                              _shop.name + " - " + _shop.displayCity,
                               style: TextStyle(fontSize: 22),
                               minFontSize: 16,
-                               textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis)),
                       SizedBox(width: 15),

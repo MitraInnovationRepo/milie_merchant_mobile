@@ -7,13 +7,13 @@ import 'package:foodie_merchant/src/util/constant.dart';
 
 import 'package:http/http.dart' as http;
 
-class AnalyticsService{
+class AnalyticsService {
   OAuth2Service _oAuth2Service = locator<OAuth2Service>();
   String backendEndpoint = Constant.backendEndpoint;
 
   Future<MerchantAnalyticsMap> findMerchantOrdersToComplete() async {
     final http.Response response = await _oAuth2Service.getClient().get(
-        '$backendEndpoint/analytics/merchant/pending/count',
+        Uri.parse('$backendEndpoint/analytics/merchant/pending/count'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
