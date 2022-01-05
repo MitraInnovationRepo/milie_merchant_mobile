@@ -18,18 +18,28 @@ class OrderRequests extends StatefulWidget {
   _OrderRequestsPageState createState() => _OrderRequestsPageState();
 }
 
-class _OrderRequestsPageState extends State<OrderRequests> {
+class _OrderRequestsPageState extends State<OrderRequests>
+    with SingleTickerProviderStateMixin {
   final controller = PageController();
+  TabController _tabController;
+  // static const List<Tab> tabs = <Tab>[
+  //   Tab(text: "PENDING"),
+  //   Tab(text: "PREPARING"),
+  //   Tab(text: "READY"),
+  //   Tab(text: "UPCOMING"),
+  // ];
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(vsync: this, length: 4);
     Provider.of<TabNotifier>(context, listen: false).addListener(_tabChange);
   }
 
   _tabChange() {
     TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
-    this.controller.jumpToPage(tabNotifier.currentOrderTab);
+    _tabController.animateTo(tabNotifier.currentOrderTab);
+    // this.controller.jumpToPage(tabNotifier.currentOrderTab);
   }
 
   @override
@@ -42,22 +52,61 @@ class _OrderRequestsPageState extends State<OrderRequests> {
             preferredSize: Size.fromHeight(1),
             child: Consumer<OrdersToHandleNotifier>(
                 builder: (context, ordersToHandleNotifier, child) {
-              return TabbarHeader(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
-                indicatorColor: Theme.of(context).indicatorColor,
-                controller: controller,
+              // return TabbarHeader(
+              //   backgroundColor: Theme.of(context).primaryColor,
+              //   foregroundColor: Colors.white,
+              //   indicatorColor: Theme.of(context).indicatorColor,
+              //   controller: controller,
+              //   tabs: [
+              //     Tab(
+              //         icon: orderCountHeader(
+              //             "PENDING", ordersToHandleNotifier.pendingCount ?? 0)),
+              //     Tab(
+              //         icon: orderCountHeader("PREPARING",
+              //             ordersToHandleNotifier.preparingCount ?? 0)),
+              //     Tab(
+              //         icon: orderCountHeader(
+              //             "READY", ordersToHandleNotifier.readyCount ?? 0)),
+              //     Tab(
+              //         icon: orderCountHeader("UPCOMING",
+              //             ordersToHandleNotifier.scheduledCount ?? 0)),
+              //   ],
+              // );
+              return TabBar(
+                unselectedLabelColor: Colors.white,
+                labelColor: Colors.white,
+                // backgroundColor: Colors.white,
+                // foregroundColor: Colors.black,
+                indicatorColor: Colors.teal,
+                controller: _tabController,
                 tabs: [
-                  Tab(icon: orderCountHeader("PENDING", ordersToHandleNotifier.pendingCount ?? 0)),
-                  Tab(icon: orderCountHeader("PREPARING", ordersToHandleNotifier.preparingCount ?? 0)),
-                  Tab(icon: orderCountHeader("READY", ordersToHandleNotifier.readyCount ?? 0)),
-                  Tab(icon: orderCountHeader("UPCOMING", ordersToHandleNotifier.scheduledCount ?? 0)),
+                  Tab(
+                      icon: orderCountHeader(
+                          "PENDING", ordersToHandleNotifier.pendingCount ?? 0)),
+                  Tab(
+                      icon: orderCountHeader("PREPARING",
+                          ordersToHandleNotifier.preparingCount ?? 0)),
+                  Tab(
+                      icon: orderCountHeader(
+                          "READY", ordersToHandleNotifier.readyCount ?? 0)),
+                  Tab(
+                      icon: orderCountHeader("UPCOMING",
+                          ordersToHandleNotifier.scheduledCount ?? 0)),
                 ],
               );
             })),
       ),
-      body: TabbarContent(
-        controller: controller,
+      // body: TabbarContent(
+      //   controller: controller,
+      //   children: <Widget>[
+      //     PendingOrder(this.controller),
+      //     PreparingOrder(this.controller),
+      //     PickupReadyOrder(),
+      //     UpcomingOrder()
+      //   ],
+      // )
+      body: TabBarView(
+        controller: _tabController,
         children: <Widget>[
           PendingOrder(this.controller),
           PreparingOrder(this.controller),
@@ -68,21 +117,17 @@ class _OrderRequestsPageState extends State<OrderRequests> {
     );
   }
 
-  Widget orderCountHeader(String text, int count){
+  Widget orderCountHeader(String text, int count) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: Text(
-            text
-          ),
+          child: Text(text),
         ),
         Badge(
-          position: BadgePosition.topRight(
-              top: 0, right: 3),
-          animationDuration:
-          Duration(milliseconds: 300),
+          position: BadgePosition.topEnd(top: 0, end: 3),
+          animationDuration: Duration(milliseconds: 300),
           animationType: BadgeAnimationType.slide,
           badgeContent: Text(
             count.toString(),

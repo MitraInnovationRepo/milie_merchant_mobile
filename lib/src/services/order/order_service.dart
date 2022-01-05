@@ -12,7 +12,7 @@ class OrderService {
 
   Future<List<OrderView>> findMerchantOrder(int status) async {
     final http.Response response = await _oAuth2Service.getClient().get(
-        '$backendEndpoint/orders/shop/$status',
+        Uri.parse('$backendEndpoint/orders/shop/$status'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -27,7 +27,7 @@ class OrderService {
 
   Future<List<OrderView>> findPendingOrders() async {
     final http.Response response = await _oAuth2Service.getClient().get(
-        '$backendEndpoint/orders/shop/pending',
+        Uri.parse('$backendEndpoint/orders/shop/pending'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -42,7 +42,7 @@ class OrderService {
 
   Future<List<OrderView>> findCompletedOrders() async {
     final http.Response response = await _oAuth2Service.getClient().get(
-        '$backendEndpoint/orders/shop/completed',
+        Uri.parse('$backendEndpoint/orders/shop/completed'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -57,7 +57,7 @@ class OrderService {
 
   Future<List<OrderView>> findUpcomingOrders() async {
     final http.Response response = await _oAuth2Service.getClient().get(
-        '$backendEndpoint/orders/shop/upcoming',
+        Uri.parse('$backendEndpoint/orders/shop/upcoming'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -72,7 +72,7 @@ class OrderService {
 
   Future<OrderRejectResponse> approveOrder(int orderId) async {
     final http.Response response = await _oAuth2Service.getClient().put(
-      '$backendEndpoint/orders/shop/approve/$orderId',
+      Uri.parse('$backendEndpoint/orders/shop/approve/$orderId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -87,7 +87,7 @@ class OrderService {
 
   Future<OrderRejectResponse> rejectOrder(int orderId) async {
     final http.Response response = await _oAuth2Service.getClient().put(
-      '$backendEndpoint/orders/shop/reject/$orderId',
+      Uri.parse('$backendEndpoint/orders/shop/reject/$orderId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -102,7 +102,7 @@ class OrderService {
 
   Future<int> updateOrderToFoodReady(int orderId) async {
     final http.Response response = await _oAuth2Service.getClient().put(
-      '$backendEndpoint/orders/shop/food-ready/$orderId',
+      Uri.parse('$backendEndpoint/orders/shop/food-ready/$orderId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -112,7 +112,7 @@ class OrderService {
 
   Future<int> updateOrderToRiderPicked(int orderId) async {
     final http.Response response = await _oAuth2Service.getClient().put(
-      '$backendEndpoint/orders/shop/rider-picked/$orderId',
+      Uri.parse('$backendEndpoint/orders/shop/rider-picked/$orderId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -122,7 +122,7 @@ class OrderService {
 
   Future<int> updateOrderToOrderDelivered(int orderId) async {
     final http.Response response = await _oAuth2Service.getClient().put(
-      '$backendEndpoint/orders/shop/customer-picked/$orderId',
+      Uri.parse('$backendEndpoint/orders/shop/customer-picked/$orderId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -132,7 +132,7 @@ class OrderService {
 
   Future<OrderView> fetchOrder(int id) async {
     final http.Response response = await _oAuth2Service.getClient().get(
-        '$backendEndpoint/orders/$id',
+        Uri.parse('$backendEndpoint/orders/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });

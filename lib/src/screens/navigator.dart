@@ -44,7 +44,7 @@ class HomeNavigator extends StatefulWidget {
 
 class _HomeNavigatorState extends State<HomeNavigator>
     with WidgetsBindingObserver {
-  final FirebaseMessaging _fcm = FirebaseMessaging();
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   StreamSubscription iosSubscription;
   UserService _userService = locator<UserService>();
   OrderService _orderService = locator<OrderService>();
@@ -64,26 +64,26 @@ class _HomeNavigatorState extends State<HomeNavigator>
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home),
         title: ("Home"),
-        activeColor: Theme.of(context).primaryColor,
-        inactiveColor: CupertinoColors.systemGrey,
+        activeColorPrimary: Theme.of(context).primaryColor,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.list),
         title: ("Order Requests"),
-        activeColor: Theme.of(context).primaryColor,
-        inactiveColor: CupertinoColors.systemGrey,
+        activeColorPrimary: Theme.of(context).primaryColor,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.history),
         title: ("Order History"),
-        activeColor: Theme.of(context).primaryColor,
-        inactiveColor: CupertinoColors.systemGrey,
+        activeColorPrimary: Theme.of(context).primaryColor,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.fastfood),
         title: ("Menu"),
-        activeColor: Theme.of(context).primaryColor,
-        inactiveColor: CupertinoColors.systemGrey,
+        activeColorPrimary: Theme.of(context).primaryColor,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       )
     ];
   }
@@ -99,26 +99,28 @@ class _HomeNavigatorState extends State<HomeNavigator>
     _controller = PersistentTabController(initialIndex: 0);
     TabNotifier tabNotifier = Provider.of<TabNotifier>(context, listen: false);
     tabNotifier.setTabController(_controller);
-    if (Platform.isIOS) {
-      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
-        // save the token  OR subscribe to a topic here
-      });
-      _fcm.requestNotificationPermissions(IosNotificationSettings());
-    }
-    _fcm.onTokenRefresh.listen((newToken) {
-      User deviceUpdateUser = new User.empty();
-      deviceUpdateUser.fireBaseRegistration = newToken;
-      this._userService.updateDeviceInfo(deviceUpdateUser);
-    });
-    _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        String orderId = _getOrderId(message);
-        showOrder(context, int.parse(orderId));
-      },
-      onLaunch: (Map<String, dynamic> message) async {},
-      onResume: (Map<String, dynamic> message) async {},
-      // onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessageHandler,
-    );
+    _handleNotifications();
+    // if (Platform.isIOS) {
+    //   iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
+    //     // save the token  OR subscribe to a topic here
+    //   });
+    //   _fcm.requestNotificationPermissions(IosNotificationSettings());
+    // }
+    // _fcm.onTokenRefresh.listen((newToken) {
+    //   User deviceUpdateUser = new User.empty();
+    //   deviceUpdateUser.fireBaseRegistration = newToken;
+    //   this._userService.updateDeviceInfo(deviceUpdateUser);
+    // });
+    // _fcm.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     String orderId = _getOrderId(message);
+    //     showOrder(context, int.parse(orderId));
+    //   },
+    //   onLaunch: (Map<String, dynamic> message) async {},
+    //   onResume: (Map<String, dynamic> message) async {},
+    //   // onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessageHandler,
+    // );
+
     audioManager = AudioManager.STREAM_MUSIC;
     initAudioStreamType();
     setMaxVolume();
@@ -137,6 +139,28 @@ class _HomeNavigatorState extends State<HomeNavigator>
     WidgetsBinding.instance.removeObserver(this);
     _connectivitySubscription.cancel();
     super.dispose();
+  }
+
+  _handleNotifications() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      String orderId = _getOrderId(message);
+      showOrder(context, int.parse(orderId));
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      String orderId = _getOrderId(message);
+      showOrder(context, int.parse(orderId));
+    });
+
+    _fcm.onTokenRefresh.listen((newToken) {
+      User deviceUpdateUser = new User.empty();
+      deviceUpdateUser.fireBaseRegistration = newToken;
+      this._userService.updateDeviceInfo(deviceUpdateUser);
+    });
+
+    _fcm.getToken().then((String token) {
+      assert(token != null);
+    });
   }
 
   Future<void> initConnectivity() async {
@@ -232,15 +256,21 @@ class _HomeNavigatorState extends State<HomeNavigator>
     }
   }
 
-  _getOrderId(Map<String, dynamic> message) {
-    String strId =
-        Platform.isIOS ? message['order_id'] : message['data']['order_id'];
+  // _getOrderId(Map<String, dynamic> message) {
+  //   String strId =
+  //       Platform.isIOS ? message['order_id'] : message['data']['order_id'];
+  //   return strId;
+  // }
+
+  _getOrderId(RemoteMessage message) {
+    String strId = message.data['order_id'];
     return strId;
   }
 
   @override
   Widget build(BuildContext context) {
     return PersistentTabView(
+      context,
       controller: _controller,
       screens: _buildScreens(),
       items: _navBarsItems(),
@@ -304,16 +334,14 @@ class _HomeNavigatorState extends State<HomeNavigator>
           slideDismiss: true);
     } else if (order.orderStatus == OrderStatus.onTheWay.index) {
       removeReadyToPickFromNotifier(order);
-    }else if(order.orderStatus == OrderStatus.systemRejected.index){
+    } else if (order.orderStatus == OrderStatus.systemRejected.index) {
       showSimpleNotification(
-          InkWell(
-              onTap: () {},
-              child: Text("Pending order expired")),
+          InkWell(onTap: () {}, child: Text("Pending order expired")),
           background: Colors.red,
           duration: Duration(seconds: 5),
           slideDismiss: true);
       TabNotifier tabNotifier =
-      Provider.of<TabNotifier>(context, listen: false);
+          Provider.of<TabNotifier>(context, listen: false);
       tabNotifier.tabController.jumpToTab(2);
     } else {
       final assetsAudioPlayer = AssetsAudioPlayer();
@@ -381,23 +409,26 @@ class _HomeNavigatorState extends State<HomeNavigator>
                 ),
               ),
             ),
-            order.promotionType == 2 && order.promotionDisplayName != null && order.discount > 0 ? Card(
-              child: Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text("Promotion type: " + order.promotionDisplayName,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          color: Colors.green[900]
-                        )),
-                  ],
-                ),
-              ),
-            ) : Container(),
+            order.promotionType == 2 &&
+                    order.promotionDisplayName != null &&
+                    order.discount > 0
+                ? Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text("Promotion type: " + order.promotionDisplayName,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.green[900])),
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(),
             Card(
               child: Column(
                 children: [
@@ -413,7 +444,8 @@ class _HomeNavigatorState extends State<HomeNavigator>
                         Text(
                             order.currency +
                                 " " +
-                                (order.discountedSubTotal - order.deliveryTotal).toStringAsFixed(2),
+                                (order.discountedSubTotal - order.deliveryTotal)
+                                    .toStringAsFixed(2),
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
@@ -437,8 +469,8 @@ class _HomeNavigatorState extends State<HomeNavigator>
                                 Wrap(
                                   children: [
                                     Badge(
-                                      position: BadgePosition.topRight(
-                                          top: 0, right: 3),
+                                      position:
+                                          BadgePosition.topEnd(top: 0, end: 3),
                                       animationDuration:
                                           Duration(milliseconds: 300),
                                       animationType: BadgeAnimationType.slide,

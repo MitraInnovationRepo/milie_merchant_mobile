@@ -12,7 +12,7 @@ class ProductService {
 
   Future<http.Response> saveProduct(Product product) async {
     return _oAuth2Service.getClient().post(
-          '$backendEndpoint/product',
+          Uri.parse('$backendEndpoint/product'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -22,7 +22,7 @@ class ProductService {
 
   Future<http.Response> updateProduct(Product product) async {
     return _oAuth2Service.getClient().put(
-          '$backendEndpoint/product',
+          Uri.parse('$backendEndpoint/product'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -32,11 +32,11 @@ class ProductService {
 
   Future<http.Response> deleteProduct(int productId) async {
     return _oAuth2Service.getClient().delete(
-          '$backendEndpoint/product/$productId',
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-        );
+      Uri.parse('$backendEndpoint/product/$productId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
   }
 
   Future<http.Response> findProductByShop(int shopId,
@@ -45,19 +45,24 @@ class ProductService {
       int pageSize = 10,
       String sortBy = "id",
       String sortDirection = "ASC"]) async {
-    sortBy = sortBy?? "id";
-    sortDirection = sortDirection?? "ASC";
+    sortBy = sortBy ?? "id";
+    sortDirection = sortDirection ?? "ASC";
     return _oAuth2Service.getClient().get(
-        '$backendEndpoint/product/shop/$shopId?keyword=$key&pageNo=$pageNo&pageSize=$pageSize&sortBy=$sortBy&sortDirection=$sortDirection',
+        Uri.parse(
+            '$backendEndpoint/product/shop/$shopId?keyword=$key&pageNo=$pageNo&pageSize=$pageSize&sortBy=$sortBy&sortDirection=$sortDirection'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
   }
 
-  Future<List<Product>> findShopProductsByProductTypeId(int productTypeId, int status) async{
-    final http.Response response  = await _oAuth2Service.getClient().get('$backendEndpoint/product/shop/mine/product-type/$productTypeId?status=$status', headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
+  Future<List<Product>> findShopProductsByProductTypeId(
+      int productTypeId, int status) async {
+    final http.Response response = await _oAuth2Service.getClient().get(
+        Uri.parse(
+            '$backendEndpoint/product/shop/mine/product-type/$productTypeId?status=$status'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
     List<Product> list = [];
     if (response.statusCode == 200) {
       var data = json.decode(utf8.decode(response.bodyBytes));
@@ -69,7 +74,7 @@ class ProductService {
 
   Future<http.Response> updateProductStatus(int id, int status) async {
     return _oAuth2Service.getClient().put(
-      '$backendEndpoint/product/$id/status/$status',
+      Uri.parse('$backendEndpoint/product/$id/status/$status'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

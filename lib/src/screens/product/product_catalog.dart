@@ -165,10 +165,11 @@ class _ProductCatalogPageState extends State<ProductCatalog> {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: ToggleSwitch(
                         minWidth: 100.0,
+                        totalSwitches: 2,
                         activeBgColor: _productList[index].status ==
                                 ShopStatus.active.index
-                            ? Theme.of(context).accentColor
-                            : Theme.of(context).primaryColor,
+                            ? [Theme.of(context).accentColor]
+                            : [Theme.of(context).primaryColor],
                         activeFgColor: Colors.white,
                         inactiveBgColor: Colors.grey[400],
                         inactiveFgColor: Colors.white,
